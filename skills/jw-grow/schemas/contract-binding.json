@@ -1,0 +1,781 @@
+{
+  "schema_version": "1.0-public",
+  "capability_id": "C40",
+  "skill_name": "jw-grow",
+  "release": "v1.0.0-rc1",
+  "public_sanitization": {
+    "runtime_semantics_preserved": true,
+    "private_source_paths_included": false,
+    "private_source_hashes_included": false,
+    "internal_approval_records_included": false,
+    "gold_answers_or_rubric_content_included": false
+  },
+  "compiled_contract": {
+    "schema_version": "1.0",
+    "contract_id": "CTR-C40",
+    "capability_id": "C40",
+    "name": "线索生客",
+    "contract_kind": "course_capability",
+    "status": "frozen",
+    "origin_policy": {
+      "contract_structure": "AI_ENGINEERING",
+      "course_rules": [
+        "COURSE_NEW"
+      ],
+      "approved_interpretations": [
+        {
+          "origin": "COURSE_INTERPRETATION"
+        }
+      ],
+      "forbidden": [
+        "未授权工程内容",
+        "未授权外部内容"
+      ]
+    },
+    "purpose": {
+      "core_question": "如何用统一理念引领需求，形成长期心智与复利？",
+      "owner_decisions": [
+        "创始人真正认同且能长期践行的核心理念",
+        "理念的简单性、方向性与长期复利边界",
+        "推广理念与践行理念的内容方向",
+        "理念型表达是否按已批准解释停在方向和价值判断",
+        "理念口号是否需要以及多条内容是否形成同一心智"
+      ],
+      "non_goals": [
+        "不修改 C00 定位、C10 人群/阶段或 C30 即时购买理由与旅程角色",
+        "不把方法、模型、产品功能、临时人设或口号当理念",
+        "不策划创始人本人不认同或不能长期践行的立场",
+        "不创建 C50 拍摄、场景、设备、妆造或灯光方案",
+        "不把 已批准解释 的派生解释伪装成无冲突的 COURSE_NEW 课程规则",
+        "不使用案例数字或短期爆款替代理念一致性"
+      ]
+    },
+    "input_contract": {
+      "value_origin_enum": [
+        "PROJECT_FACT",
+        "PROJECT_HYPOTHESIS",
+        "REAL_DATA"
+      ],
+      "truth_status_enum": [
+        "confirmed",
+        "hypothesis",
+        "unknown",
+        "contradicted"
+      ],
+      "preserve_raw_input": true,
+      "required_fields": [
+        {
+          "field": "positioning_baseline",
+          "type": "object",
+          "owner": "C00",
+          "minimum": [
+            "approved_direction",
+            "business_and_product_boundary",
+            "founder_fit_and_constraints",
+            "approval_state",
+            "version"
+          ],
+          "missing_action": "RETURN_C00",
+          "provenance_required": true
+        },
+        {
+          "field": "lock_baseline",
+          "type": "object",
+          "owner": "C10",
+          "minimum": [
+            "purchasable_audience",
+            "pre_purchase_stage",
+            "approval_state",
+            "version"
+          ],
+          "missing_action": "RETURN_C10",
+          "provenance_required": true
+        },
+        {
+          "field": "conversion_journey_brief",
+          "type": "object",
+          "owner": "C30",
+          "minimum": [
+            "product_fact_ref",
+            "immediate_purchase_reason",
+            "content_role_plan",
+            "idea_role_pointer",
+            "consumer_journey",
+            "approval_state",
+            "version"
+          ],
+          "missing_action": "RETURN_C30",
+          "provenance_required": true
+        },
+        {
+          "field": "founder_value_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "belief_or_value_direction",
+            "repeated_choice_or_behavior",
+            "story_or_experience",
+            "evidence_state"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "product_delivery_facts",
+          "type": "object",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "product_name",
+            "delivery_promise",
+            "delivery_limitations",
+            "evidence_state"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "existing_content_evidence",
+          "type": "array_or_explicit_none",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "content_ref",
+            "expressed_direction",
+            "observed_consistency",
+            "evidence_state"
+          ],
+          "missing_action": "MARK_FORMATION_CHECK_PENDING",
+          "provenance_required": true
+        }
+      ],
+      "optional_fields": [
+        {
+          "field": "founder_rejected_positions",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "existing_slogan",
+          "type": "string_or_none",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "known_value_conflicts",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        }
+      ]
+    },
+    "minimum_clarification": {
+      "ask_only_when": [
+        "任一 required_field 缺失、版本不明或只有不可追溯结论",
+        "候选理念无法从创始人长期认同、行为、经历或选择中得到支持",
+        "候选理念与定位、目标人、即时购买理由或交付事实冲突",
+        "用户要求不可逆地固定或更换核心理念与价值方向"
+      ],
+      "question_order": [
+        "先确认 C00、C10、C30 的批准版本与不冲突边界",
+        "再问创始人长期相信、反对、反复选择和真实践行什么",
+        "再补相关故事、经历、产品交付与反例",
+        "最后确认是否需要口号以及现有内容能否做一致性检查"
+      ],
+      "stop_rule": "只问足以区分真实理念与方法、口号或临时人设的最小问题；创始人未确认价值方向时不替其做不可逆选择。"
+    },
+    "decision_contract": [
+      {
+        "decision_id": "C40-D01",
+        "decision": "从账号起步同时考虑长期竞争、流量变化与内容资产终局",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.01",
+          "T011",
+          "T409"
+        ],
+        "evidence_required": [
+          "positioning_baseline",
+          "conversion_journey_brief"
+        ],
+        "result_state": [
+          "long_term_oriented",
+          "short_term_only",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C40-D02",
+        "decision": "从创始人真实认同与长期践行中找到问题解决方向和价值锚点，不把方法当理念",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.02",
+          "T401",
+          "T402"
+        ],
+        "evidence_required": [
+          "founder_value_evidence",
+          "positioning_baseline",
+          "product_delivery_facts"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "method_only",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C40-D03",
+        "decision": "检查复杂内容是否最终沉淀为用户可复述的同一简单感觉",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.03",
+          "T407"
+        ],
+        "evidence_required": [
+          "C40-D02",
+          "lock_baseline",
+          "existing_content_evidence"
+        ],
+        "result_state": [
+          "simple_and_repeatable",
+          "promising",
+          "fragmented",
+          "not_yet_testable"
+        ]
+      },
+      {
+        "decision_id": "C40-D04",
+        "decision": "检查理念是否为目标人指向更好的价值方向，而非只被动回答具体问题",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.04",
+          "T408"
+        ],
+        "evidence_required": [
+          "C40-D02",
+          "lock_baseline",
+          "conversion_journey_brief"
+        ],
+        "result_state": [
+          "directional",
+          "problem_answer_only",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C40-D05",
+        "decision": "用认同或反对的现象、底层逻辑和生活/行业案例解释同一理念",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.05",
+          "T403"
+        ],
+        "evidence_required": [
+          "C40-D02",
+          "founder_value_evidence"
+        ],
+        "result_state": [
+          "ready",
+          "conditional",
+          "off_idea",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C40-D06",
+        "decision": "理念型表达按已批准解释停在方向和价值判断，不默认展开具体解决方法",
+        "origin": "COURSE_INTERPRETATION",
+        "rule_refs": [
+          "C40.06",
+          "T404"
+        ],
+        "evidence_required": [
+          "C40-D02",
+          "C40-D05"
+        ],
+        "result_state": [
+          "interpretation_applied",
+          "method_expansion_requested",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C40-D07",
+        "decision": "检查故事、经历、观点、行为与内容是否持续回到同一理念内核",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.07",
+          "T405"
+        ],
+        "evidence_required": [
+          "founder_value_evidence",
+          "existing_content_evidence",
+          "C40-D02"
+        ],
+        "result_state": [
+          "consistent",
+          "partially_consistent",
+          "contradicted",
+          "not_yet_testable"
+        ]
+      },
+      {
+        "decision_id": "C40-D08",
+        "decision": "仅在不替代理念本体时把理念压缩为可记忆口号，口号不是必填",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.08",
+          "T406"
+        ],
+        "evidence_required": [
+          "C40-D02"
+        ],
+        "result_state": [
+          "optional_slogan_ready",
+          "not_needed",
+          "slogan_only_violation",
+          "missing_idea"
+        ]
+      },
+      {
+        "decision_id": "C40-D09",
+        "decision": "用三至五条内容能否让用户复述一贯相信和推崇什么检查理念成型，不把它当播放量指标",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.09",
+          "T410"
+        ],
+        "evidence_required": [
+          "existing_content_evidence",
+          "C40-D02",
+          "C40-D07"
+        ],
+        "result_state": [
+          "formed",
+          "partially_formed",
+          "not_formed",
+          "not_yet_testable"
+        ]
+      },
+      {
+        "decision_id": "C40-D10",
+        "decision": "检查长期内容与行为能否不断强化同一心智，不用短期爆款替代积累",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.10",
+          "T409"
+        ],
+        "evidence_required": [
+          "C40-D01",
+          "C40-D02",
+          "C40-D07",
+          "C40-D09"
+        ],
+        "result_state": [
+          "compounding_ready",
+          "conditional",
+          "short_term_substitution",
+          "blocked"
+        ]
+      }
+    ],
+    "output_contract": {
+      "artifact": "idea_baseline",
+      "required_fields": [
+        {
+          "field": "positioning_ref",
+          "type": "versioned_ref",
+          "owner": "C00"
+        },
+        {
+          "field": "lock_baseline_ref",
+          "type": "versioned_ref",
+          "owner": "C10"
+        },
+        {
+          "field": "conversion_brief_ref",
+          "type": "versioned_ref",
+          "owner": "C30"
+        },
+        {
+          "field": "core_idea",
+          "type": "bounded_statement",
+          "owner": "C40"
+        },
+        {
+          "field": "idea_direction",
+          "type": "bounded_statement",
+          "owner": "C40"
+        },
+        {
+          "field": "idea_extension_directions",
+          "type": "array",
+          "owner": "C40"
+        },
+        {
+          "field": "idea_expression_rules",
+          "type": "object",
+          "owner": "C40"
+        },
+        {
+          "field": "interpretation_trace",
+          "type": "object_or_not_applied",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "practice_evidence",
+          "type": "field_level_refs",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "consistency_filter",
+          "type": "object",
+          "owner": "C40"
+        },
+        {
+          "field": "optional_slogan",
+          "type": "string_or_none",
+          "owner": "C40"
+        },
+        {
+          "field": "formation_check",
+          "type": "observed_state",
+          "owner": "C40"
+        },
+        {
+          "field": "truth_status_by_field",
+          "type": "object",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "approval_state",
+          "type": "enum",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "uncertainties",
+          "type": "array",
+          "owner": "C40"
+        },
+        {
+          "field": "provenance",
+          "type": "field_level_refs",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "version",
+          "type": "string",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "payload_hash",
+          "type": "sha256",
+          "owner": "AI_ENGINEERING"
+        }
+      ],
+      "downstream_consumers": [
+        "C90"
+      ]
+    },
+    "invariants": [
+      {
+        "invariant_id": "C40-I01",
+        "statement": "理念是问题解决方向与价值锚点，不等于方法、模型、产品功能或口号。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "T401",
+          "T406"
+        ]
+      },
+      {
+        "invariant_id": "C40-I02",
+        "statement": "理念必须为创始人真正认同且能长期践行，不创建临时新人格。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.02",
+          "C40.07",
+          "T402",
+          "T405"
+        ]
+      },
+      {
+        "invariant_id": "C40-I03",
+        "statement": "理念必须继承定位、人群、购买理由和交付事实，不得反向改写其 owner 成果。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-04"
+        ]
+      },
+      {
+        "invariant_id": "C40-I04",
+        "statement": "理念型表达默认停在方向和价值判断，不展开具体解决方法。",
+        "origin": "COURSE_INTERPRETATION",
+        "rule_refs": [
+          "C40.06",
+          "T404"
+        ]
+      },
+      {
+        "invariant_id": "C40-I05",
+        "statement": "口号是可选压缩，不是理念成立的必要条件。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.08",
+          "T406"
+        ]
+      },
+      {
+        "invariant_id": "C40-I06",
+        "statement": "三至五条内容只用于理念一致性识别，不是播放量、成交量或固定内容漏斗 KPI。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C40.09",
+          "T410"
+        ]
+      },
+      {
+        "invariant_id": "C40-I07",
+        "statement": "C30 持有理念型角色在消费旅程中的位置；C40 持有理念本体、表达和长期一致性。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-04",
+          "I-06"
+        ]
+      }
+    ],
+    "failure_codes": [
+      {
+        "code": "C40-E001",
+        "trigger": "C00 定位基线缺失、未批准、版本不明或创始人真实方向已变化。",
+        "severity": "block",
+        "action": "RETURN_C00",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-04"
+        ]
+      },
+      {
+        "code": "C40-E002",
+        "trigger": "C10 人群/阶段或 C30 购买理由/旅程缺失、未批准、版本不明或互相冲突。",
+        "severity": "block",
+        "action": "RETURN_EARLIEST_CONFLICT_OWNER",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-04"
+        ]
+      },
+      {
+        "code": "C40-E003",
+        "trigger": "无法从创始人真实认同、行为、经历或长期选择中找到可追溯证据。",
+        "severity": "block",
+        "action": "CLARIFY_FOUNDER_VALUE_EVIDENCE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C40.02",
+          "C40.07",
+          "T402",
+          "T405"
+        ]
+      },
+      {
+        "code": "C40-E004",
+        "trigger": "候选理念实为具体方法、模型、产品功能或解决方案。",
+        "severity": "block",
+        "action": "REJECT_AND_RETURN_TO_VALUE_DIRECTION",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "T401"
+        ]
+      },
+      {
+        "code": "C40-E005",
+        "trigger": "候选理念只是口号、临时人设，或创始人本人不认同、无法践行。",
+        "severity": "block",
+        "action": "REJECT_AND_REQUEST_AUTHENTIC_DIRECTION",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "T402",
+          "T405",
+          "T406"
+        ]
+      },
+      {
+        "code": "C40-E006",
+        "trigger": "候选理念与定位、目标人、即时购买理由、产品承诺或交付事实冲突。",
+        "severity": "block",
+        "action": "RETURN_EARLIEST_CONFLICT_OWNER",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-04"
+        ]
+      },
+      {
+        "code": "C40-E007",
+        "trigger": "使用 C40.06/T404 却未显式标记 COURSE_INTERPRETATION、已批准解释 和 内部批准记录（公开版省略），或把解释写成 COURSE_NEW。",
+        "severity": "block",
+        "action": "REJECT_ORIGIN_MISLABEL",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C40.06",
+          "T404"
+        ]
+      },
+      {
+        "code": "C40-E008",
+        "trigger": "没有足够现有内容证据，却声称已通过三至五条理念成型检验。",
+        "severity": "warning",
+        "action": "MARK_FORMATION_CHECK_PENDING",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C40.09",
+          "T410"
+        ]
+      },
+      {
+        "code": "C40-E009",
+        "trigger": "请求 C40 修改人群/阶段、重写即时购买理由/旅程或决定拍摄设备与场景。",
+        "severity": "block",
+        "action": "ROUTE_TO_OWNER",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-04",
+          "I-06"
+        ]
+      },
+      {
+        "code": "C40-E010",
+        "trigger": "请求用短期爆款、案例数字或单次传播结果替代理念长期一致性。",
+        "severity": "block",
+        "action": "REJECT_SHORT_TERM_SUBSTITUTION",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C40.10",
+          "T409"
+        ]
+      }
+    ],
+    "invalidation_rules": [
+      {
+        "rule_id": "C40-X01",
+        "change": "C00 定位、产品边界或创始人真实方向变化",
+        "action": "INVALIDATE_ALL_AND_RETURN_C00",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "core_idea",
+          "idea_direction",
+          "idea_extension_directions",
+          "consistency_filter"
+        ],
+        "stale_targets": [
+          "idea_baseline",
+          "C90_assembled_journey",
+          "C90_assembled_ideology_route_package"
+        ],
+        "earliest_return_owner": "C00"
+      },
+      {
+        "rule_id": "C40-X02",
+        "change": "C10 目标人群或买单前阶段变化",
+        "action": "MARK_ALL_AUDIENCE_DEPENDENT_FIELDS_STALE",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "idea_direction",
+          "idea_extension_directions",
+          "idea_expression_rules",
+          "formation_check"
+        ],
+        "stale_targets": [
+          "idea_baseline",
+          "C90_assembled_journey",
+          "C90_assembled_ideology_route_package"
+        ],
+        "earliest_return_owner": "C10"
+      },
+      {
+        "rule_id": "C40-X03",
+        "change": "C30 即时购买理由、产品事实或消费旅程实质变化",
+        "action": "RECHECK_CONFLICT_AND_ROLE_COMPATIBILITY",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "core_idea",
+          "idea_direction",
+          "idea_expression_rules",
+          "consistency_filter"
+        ],
+        "stale_targets": [
+          "idea_baseline",
+          "C90_assembled_journey",
+          "C90_assembled_ideology_route_package"
+        ],
+        "earliest_return_owner": "C30"
+      },
+      {
+        "rule_id": "C40-X04",
+        "change": "新的创始人行为、经历或明确表态否定原理念",
+        "action": "REFRESH_PROJECT_FACTS_AND_REDECIDE_C40_D02_D07_D10",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "core_idea",
+          "practice_evidence",
+          "consistency_filter",
+          "formation_check"
+        ],
+        "stale_targets": [
+          "idea_baseline",
+          "C90_assembled_journey",
+          "C90_assembled_ideology_route_package"
+        ],
+        "earliest_return_owner": "C40"
+      },
+      {
+        "rule_id": "C40-X05",
+        "change": "新增内容无法让用户识别同一理念或持续偏离原内核",
+        "action": "REOPEN_CONSISTENCY_AND_FORMATION_CHECK",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "consistency_filter",
+          "formation_check"
+        ],
+        "stale_targets": [
+          "idea_baseline_consistency_status"
+        ],
+        "earliest_return_owner": "C40"
+      }
+    ],
+    "approval_points": [
+      {
+        "approval_id": "C40-A01",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "首次固定或实质更换核心理念与价值方向。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "core_idea"
+      },
+      {
+        "approval_id": "C40-A02",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "理念要求创始人公开持有长期价值立场或改变既有行为承诺。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "idea_direction_and_practice_commitment"
+      },
+      {
+        "approval_id": "C40-A03",
+        "risk": "medium",
+        "approver": "AI_full_review_user_diff_sample",
+        "trigger": "按 内部批准记录（公开版省略） 使用留白解释组织理念型表达，且未改变核心理念。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "idea_expression_rules"
+      },
+      {
+        "approval_id": "C40-A04",
+        "risk": "medium",
+        "approver": "AI_full_review_user_diff_sample",
+        "trigger": "只新增或调整可选理念口号，不改变理念本体。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "optional_slogan"
+      }
+    ]
+  }
+}

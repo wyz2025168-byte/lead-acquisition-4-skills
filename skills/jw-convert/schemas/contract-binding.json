@@ -1,0 +1,763 @@
+{
+  "schema_version": "1.0-public",
+  "capability_id": "C30",
+  "skill_name": "jw-convert",
+  "release": "v1.0.0-rc1",
+  "public_sanitization": {
+    "runtime_semantics_preserved": true,
+    "private_source_paths_included": false,
+    "private_source_hashes_included": false,
+    "internal_approval_records_included": false,
+    "gold_answers_or_rubric_content_included": false
+  },
+  "compiled_contract": {
+    "schema_version": "1.0",
+    "contract_id": "CTR-C30",
+    "capability_id": "C30",
+    "name": "线索成客",
+    "contract_kind": "course_capability",
+    "status": "frozen",
+    "origin_policy": {
+      "contract_structure": "AI_ENGINEERING",
+      "course_rules": [
+        "COURSE_NEW"
+      ],
+      "approved_interpretations": [],
+      "forbidden": [
+        "未授权工程内容",
+        "未授权外部内容"
+      ]
+    },
+    "purpose": {
+      "core_question": "如何让已经圈对的人形成信任、确定感和购买动作？",
+      "owner_decisions": [
+        "目标人买单前的专业识别差距",
+        "有真实事实承接的专业、靠谱与身份信号",
+        "目标人可感知的即时购买理由",
+        "信任型、成交型、通知型与理念型内容的旅程角色",
+        "由多条内容持续推进的消费旅程"
+      ],
+      "non_goals": [
+        "不修改 C10 已批准人群或买单前阶段",
+        "不修改 C20 四圈语义或用愿意看代替愿意买",
+        "不创造真实专业、身份、关系、结果或交付事实",
+        "不创建 C40 理念本体、理念表达或长期一致性规则",
+        "不创建 C50 场景、设备、机位、妆造或灯光方案",
+        "不把通知型视频混同已排除的付费产品介绍"
+      ]
+    },
+    "input_contract": {
+      "value_origin_enum": [
+        "PROJECT_FACT",
+        "PROJECT_HYPOTHESIS",
+        "REAL_DATA"
+      ],
+      "truth_status_enum": [
+        "confirmed",
+        "hypothesis",
+        "unknown",
+        "contradicted"
+      ],
+      "preserve_raw_input": true,
+      "required_fields": [
+        {
+          "field": "lock_baseline",
+          "type": "object",
+          "owner": "C10",
+          "minimum": [
+            "purchasable_audience",
+            "pre_purchase_stage",
+            "product_anchor",
+            "excluded_audiences",
+            "approval_state",
+            "version"
+          ],
+          "missing_action": "RETURN_C10",
+          "provenance_required": true
+        },
+        {
+          "field": "circle_brief",
+          "type": "object",
+          "owner": "C20",
+          "minimum": [
+            "same_target_audience_and_stage",
+            "opening_circle",
+            "visual_circle",
+            "content_circle",
+            "viewpoint_circle",
+            "same_person_continuity",
+            "approval_state",
+            "version"
+          ],
+          "missing_action": "RETURN_C20",
+          "provenance_required": true
+        },
+        {
+          "field": "product_delivery_facts",
+          "type": "object",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "product_name",
+            "delivery_promise",
+            "delivery_limitations",
+            "evidence_state"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "audience_purchase_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "audience_ref",
+            "pre_purchase_concern",
+            "recognition_gap",
+            "customer_language",
+            "evidence_state"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "trust_signal_facts",
+          "type": "array_or_explicit_none",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "signal_type",
+            "factual_basis",
+            "audience_meaning",
+            "evidence_state"
+          ],
+          "missing_action": "MARK_UNAVAILABLE_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "customer_decision_evidence",
+          "type": "array_or_explicit_none",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "similar_customer",
+            "problem",
+            "hesitation",
+            "choice_process",
+            "evidence_state"
+          ],
+          "missing_action": "MARK_UNAVAILABLE_DO_NOT_FABRICATE",
+          "provenance_required": true
+        }
+      ],
+      "optional_fields": [
+        {
+          "field": "offer_availability",
+          "type": "object",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "existing_content_roles",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "known_purchase_objections",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        }
+      ]
+    },
+    "minimum_clarification": {
+      "ask_only_when": [
+        "任一 required_field 缺失、版本不明或只有不可追溯结论",
+        "专业、靠谱、身份或结果信号没有真实事实承接",
+        "购买理由只有企业自认卖点，无法确认目标人能否理解和感知",
+        "用户要求不可逆地固定或更换即时购买理由与消费旅程"
+      ],
+      "question_order": [
+        "先确认 C10 人群/阶段与 C20 四圈批准版本",
+        "再补产品承诺、限制与真实交付事实",
+        "再补目标人的顾虑、识别差距与原话",
+        "最后补真实信任信号、客户决策过程与产品通知状态"
+      ],
+      "stop_rule": "只问足以判断信任、购买理由和旅程角色的最小事实；没有客户证言时明确保留缺口，不诱导或编造。"
+    },
+    "decision_contract": [
+      {
+        "decision_id": "C30-D01",
+        "decision": "将目标从关注、喜欢或认可校正为产生买单欲望与购买动作",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.01",
+          "T010"
+        ],
+        "evidence_required": [
+          "lock_baseline",
+          "audience_purchase_evidence"
+        ],
+        "result_state": [
+          "purchase_oriented",
+          "attention_only",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C30-D02",
+        "decision": "识别目标人无法直接判断真实专业度以及过深表达可能劝退的差距",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.02",
+          "T301",
+          "T302"
+        ],
+        "evidence_required": [
+          "lock_baseline",
+          "circle_brief",
+          "audience_purchase_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C30-D03",
+        "decision": "只用真实身份、关系、结果与交付事实组织目标人可理解的专业和靠谱感觉",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.03",
+          "C30.04",
+          "T302",
+          "T303"
+        ],
+        "evidence_required": [
+          "product_delivery_facts",
+          "trust_signal_facts",
+          "audience_purchase_evidence"
+        ],
+        "result_state": [
+          "fact_supported",
+          "partially_supported",
+          "unavailable",
+          "contradicted"
+        ]
+      },
+      {
+        "decision_id": "C30-D04",
+        "decision": "从目标用户可感知的世界形成为什么选择你的即时购买理由",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.05",
+          "T305"
+        ],
+        "evidence_required": [
+          "lock_baseline",
+          "product_delivery_facts",
+          "audience_purchase_evidence",
+          "C30-D02",
+          "C30-D03"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "company_claim_only",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C30-D05",
+        "decision": "区分信任型与成交型内容，并用相似客户的真实决策过程形成进一步笃定",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.06",
+          "C30.07",
+          "T304",
+          "T307",
+          "T308",
+          "T309"
+        ],
+        "evidence_required": [
+          "trust_signal_facts",
+          "customer_decision_evidence",
+          "C30-D04"
+        ],
+        "result_state": [
+          "both_supported",
+          "trust_only",
+          "conversion_evidence_missing",
+          "conflicted"
+        ]
+      },
+      {
+        "decision_id": "C30-D06",
+        "decision": "仅在产品确有购买机会时为已信任人群设置通知型角色，不以破圈流量判断其价值",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.08",
+          "T310"
+        ],
+        "evidence_required": [
+          "offer_availability",
+          "lock_baseline"
+        ],
+        "result_state": [
+          "applicable",
+          "not_applicable",
+          "availability_unknown",
+          "conflicted"
+        ]
+      },
+      {
+        "decision_id": "C30-D07",
+        "decision": "将理念、信任、成交、通知作为多条内容的旅程角色组合，不创建固定条数或单条全包规则",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.09",
+          "C30.10",
+          "T306",
+          "T311",
+          "T312"
+        ],
+        "evidence_required": [
+          "C30-D03",
+          "C30-D04",
+          "C30-D05",
+          "C30-D06"
+        ],
+        "result_state": [
+          "ready",
+          "conditional",
+          "role_gap",
+          "blocked"
+        ]
+      }
+    ],
+    "output_contract": {
+      "artifact": "conversion_journey_brief",
+      "required_fields": [
+        {
+          "field": "lock_baseline_ref",
+          "type": "versioned_ref",
+          "owner": "C10"
+        },
+        {
+          "field": "circle_brief_ref",
+          "type": "versioned_ref",
+          "owner": "C20"
+        },
+        {
+          "field": "product_fact_ref",
+          "type": "versioned_ref",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "audience_and_stage",
+          "type": "inherited_bounded_statement",
+          "owner": "C10"
+        },
+        {
+          "field": "professional_recognition_gap",
+          "type": "bounded_statement",
+          "owner": "C30"
+        },
+        {
+          "field": "trust_mechanism",
+          "type": "object",
+          "owner": "C30"
+        },
+        {
+          "field": "factual_support",
+          "type": "field_level_refs",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "immediate_purchase_reason",
+          "type": "bounded_statement",
+          "owner": "C30"
+        },
+        {
+          "field": "customer_decision_pattern",
+          "type": "object_or_explicit_unavailable",
+          "owner": "C30"
+        },
+        {
+          "field": "content_role_plan",
+          "type": "object",
+          "owner": "C30"
+        },
+        {
+          "field": "idea_role_pointer",
+          "type": "role_pointer_only",
+          "owner": "C30"
+        },
+        {
+          "field": "consumer_journey",
+          "type": "ordered_relationship_without_fixed_count",
+          "owner": "C30"
+        },
+        {
+          "field": "conversion_presentation_brief",
+          "type": "interface_projection",
+          "owner": "C30",
+          "interface_id": "I-05B",
+          "projection_fields": [
+            "target_audience_ref",
+            "content_role",
+            "trust_or_purchase_goal",
+            "factual_support",
+            "claim_constraints",
+            "approval_state",
+            "version"
+          ],
+          "derived_from": [
+            "audience_and_stage",
+            "trust_mechanism",
+            "factual_support",
+            "immediate_purchase_reason",
+            "content_role_plan"
+          ]
+        },
+        {
+          "field": "truth_status_by_field",
+          "type": "object",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "approval_state",
+          "type": "enum",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "uncertainties",
+          "type": "array",
+          "owner": "C30"
+        },
+        {
+          "field": "provenance",
+          "type": "field_level_refs",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "version",
+          "type": "string",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "payload_hash",
+          "type": "sha256",
+          "owner": "AI_ENGINEERING"
+        }
+      ],
+      "downstream_consumers": [
+        "C40",
+        "C50",
+        "C90"
+      ]
+    },
+    "invariants": [
+      {
+        "invariant_id": "C30-I01",
+        "statement": "目标人和买单前阶段必须继承 C10 批准版本，C30 不得重定义。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "I-03",
+          "C30.01"
+        ]
+      },
+      {
+        "invariant_id": "C30-I02",
+        "statement": "专业事实由真实交付承接，专业感只能组织可感知表达，不能制造能力。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "T301",
+          "T302",
+          "C30.03"
+        ]
+      },
+      {
+        "invariant_id": "C30-I03",
+        "statement": "信任不等于成交；成交还必须形成可感知购买理由与笃定。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "T304",
+          "T305",
+          "T308"
+        ]
+      },
+      {
+        "invariant_id": "C30-I04",
+        "statement": "购买理由必须从目标用户可理解、可感知的世界表达，并由真实事实承接。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.05",
+          "T305",
+          "T309"
+        ]
+      },
+      {
+        "invariant_id": "C30-I05",
+        "statement": "四类内容是多内容旅程角色，不允许单条全包或伪造固定条数。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.09",
+          "C30.10",
+          "T306",
+          "T311"
+        ]
+      },
+      {
+        "invariant_id": "C30-I06",
+        "statement": "C30 只持有理念型角色指针，理念本体与理念表达由 C40 持有。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-04"
+        ]
+      },
+      {
+        "invariant_id": "C30-I07",
+        "statement": "通知型视频只告知已信任人群真实存在的购买机会，不以破圈流量判断其价值。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C30.08",
+          "T310"
+        ]
+      },
+      {
+        "invariant_id": "C30-I08",
+        "statement": "通知型视频不得与 内部批准记录（公开版省略） 已排除的付费产品介绍合并或互相补写。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": []
+      }
+    ],
+    "failure_codes": [
+      {
+        "code": "C30-E001",
+        "trigger": "C10 锁客基线缺失、未批准、版本不明或人群/阶段自相矛盾。",
+        "severity": "block",
+        "action": "RETURN_C10",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-03"
+        ]
+      },
+      {
+        "code": "C30-E002",
+        "trigger": "C20 圈客 Brief 缺失、未批准、版本不明或吸引的并非 C10 可成交人。",
+        "severity": "block",
+        "action": "RETURN_C20_OR_C10_BY_ROOT_CAUSE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-03"
+        ]
+      },
+      {
+        "code": "C30-E003",
+        "trigger": "产品承诺、交付限制或承接事实缺失。",
+        "severity": "block",
+        "action": "CLARIFY_PRODUCT_FACTS",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "T301",
+          "T305"
+        ]
+      },
+      {
+        "code": "C30-E004",
+        "trigger": "专业、靠谱、身份、关系或结果信号没有真实事实支撑，或请求制造事实。",
+        "severity": "block",
+        "action": "REJECT_SIGNAL_AND_REQUEST_FACTS",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C30.03",
+          "C30.04",
+          "T301",
+          "T302",
+          "T303"
+        ]
+      },
+      {
+        "code": "C30-E005",
+        "trigger": "所谓购买理由只是企业自认卖点，无法说明目标用户为何能感知和理解。",
+        "severity": "block",
+        "action": "RETURN_TO_USER_WORLD_EVIDENCE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C30.05",
+          "T305"
+        ]
+      },
+      {
+        "code": "C30-E006",
+        "trigger": "把喜欢、认可、关注或初步信任直接判定为成交。",
+        "severity": "block",
+        "action": "SEPARATE_TRUST_FROM_CONVERSION",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C30.01",
+          "T304",
+          "T308"
+        ]
+      },
+      {
+        "code": "C30-E007",
+        "trigger": "没有真实客户决策过程，却请求生成成交证言、顾虑或选择理由。",
+        "severity": "warning",
+        "action": "MARK_UNAVAILABLE_DO_NOT_FABRICATE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C30.07",
+          "T309"
+        ]
+      },
+      {
+        "code": "C30-E008",
+        "trigger": "要求一条内容承担全部旅程，或要求固定通用内容条数和业务阈值。",
+        "severity": "block",
+        "action": "REJECT_AND_REBUILD_ROLE_RELATIONSHIP",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C30.09",
+          "C30.10",
+          "T306",
+          "T311"
+        ]
+      },
+      {
+        "code": "C30-E009",
+        "trigger": "请求 C30 改人群/阶段、创建理念本体或决定拍摄设备与场景。",
+        "severity": "block",
+        "action": "ROUTE_TO_OWNER",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-03",
+          "I-04",
+          "I-05B"
+        ]
+      },
+      {
+        "code": "C30-E010",
+        "trigger": "把通知型视频改写成被排除的付费产品介绍，或在产品不可购买时编造上线信息。",
+        "severity": "block",
+        "action": "REJECT_AND_PRESERVE_SCOPE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C30.08",
+          "T310"
+        ]
+      }
+    ],
+    "invalidation_rules": [
+      {
+        "rule_id": "C30-X01",
+        "change": "C10 目标人群或买单前阶段变化",
+        "action": "INVALIDATE_ALL_AND_RETURN_C10",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "audience_and_stage",
+          "professional_recognition_gap",
+          "immediate_purchase_reason",
+          "content_role_plan",
+          "consumer_journey",
+          "conversion_presentation_brief"
+        ],
+        "stale_targets": [
+          "conversion_journey_brief",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C10"
+      },
+      {
+        "rule_id": "C30-X02",
+        "change": "C20 四圈 Brief、认知跨度或画面/内容语义变化",
+        "action": "MARK_AFFECTED_FIELDS_STALE_AND_RETURN_C20",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "professional_recognition_gap",
+          "trust_mechanism",
+          "content_role_plan",
+          "conversion_presentation_brief"
+        ],
+        "stale_targets": [
+          "conversion_journey_brief",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C20"
+      },
+      {
+        "rule_id": "C30-X03",
+        "change": "产品承诺、交付限制、身份、关系或结果事实变化",
+        "action": "REFRESH_PROJECT_FACTS_AND_RECHECK_C30_FACT_DEPENDENT_DECISIONS",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "factual_support",
+          "trust_mechanism",
+          "immediate_purchase_reason",
+          "customer_decision_pattern",
+          "conversion_presentation_brief"
+        ],
+        "stale_targets": [
+          "conversion_journey_brief",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C30"
+      },
+      {
+        "rule_id": "C30-X04",
+        "change": "新的真实客户决策证据否定原购买理由或旅程角色",
+        "action": "MARK_STALE_AND_REDECIDE_C30_D04_D05_D07",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "immediate_purchase_reason",
+          "customer_decision_pattern",
+          "content_role_plan",
+          "consumer_journey",
+          "conversion_presentation_brief"
+        ],
+        "stale_targets": [
+          "conversion_journey_brief",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C30"
+      }
+    ],
+    "approval_points": [
+      {
+        "approval_id": "C30-A01",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "首次固定或实质更换即时购买理由。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "immediate_purchase_reason"
+      },
+      {
+        "approval_id": "C30-A02",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "首次固定或实质更换四类内容的消费旅程角色关系。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "content_role_plan_and_consumer_journey"
+      },
+      {
+        "approval_id": "C30-A03",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "拟使用身份、结果、关系或客户决策事实作为对外信任/成交证据。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "factual_support"
+      },
+      {
+        "approval_id": "C30-A04",
+        "risk": "medium",
+        "approver": "AI_full_review_user_diff_sample",
+        "trigger": "只调整旅程顺序或表达，不改人群、事实、购买理由或角色语义。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "consumer_journey_order"
+      }
+    ]
+  }
+}

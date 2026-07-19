@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-positioning.output.schema.json",
+  "title": "定位基座 result envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capability_id",
+    "artifact_type",
+    "decision_class",
+    "artifact",
+    "failure_codes",
+    "route_to",
+    "approval_requests"
+  ],
+  "properties": {
+    "capability_id": {
+      "const": "C00"
+    },
+    "artifact_type": {
+      "const": "positioning_baseline"
+    },
+    "decision_class": {
+      "type": "string",
+      "enum": [
+        "COMPLETE_FOR_APPROVAL",
+        "CONDITIONAL_HYPOTHESIS",
+        "NEED_INFO",
+        "REJECT_VIOLATION",
+        "RETURN_EARLIEST_DRIFT_OWNER"
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "business_and_product_boundary": {
+          "x-contract-type": "bounded_statement",
+          "type": [
+            "string",
+            "object"
+          ],
+          "x-owner": "C00"
+        },
+        "demand_direction_candidates": {
+          "x-contract-type": "array",
+          "type": "array",
+          "x-owner": "C00"
+        },
+        "competition_mindshare": {
+          "x-contract-type": "bounded_statement",
+          "type": [
+            "string",
+            "object"
+          ],
+          "x-owner": "C00"
+        },
+        "founder_fit_and_constraints": {
+          "x-contract-type": "object",
+          "type": "object",
+          "x-owner": "C00"
+        },
+        "approved_direction": {
+          "x-contract-type": "bounded_statement",
+          "type": [
+            "string",
+            "object"
+          ],
+          "x-owner": "C00"
+        },
+        "tradeoff_reasons": {
+          "x-contract-type": "array",
+          "type": "array",
+          "x-owner": "C00"
+        },
+        "discarded_directions": {
+          "x-contract-type": "array",
+          "type": "array",
+          "x-owner": "C00"
+        },
+        "truth_status_by_field": {
+          "x-contract-type": "object",
+          "type": "object",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "approval_state": {
+          "x-contract-type": "enum",
+          "type": "string",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "uncertainties": {
+          "x-contract-type": "array",
+          "type": "array",
+          "x-owner": "C00"
+        },
+        "provenance": {
+          "x-contract-type": "field_level_refs",
+          "type": "object",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "version": {
+          "x-contract-type": "string",
+          "type": "string",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "payload_hash": {
+          "x-contract-type": "sha256",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "x-owner": "AI_ENGINEERING"
+        }
+      }
+    },
+    "failure_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "C00-E001",
+          "C00-E002",
+          "C00-E003",
+          "C00-E004",
+          "C00-E005",
+          "C00-E006",
+          "C00-E007",
+          "C00-E008",
+          "C00-E009"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "route_to": {},
+    "approval_requests": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "C00-A01",
+          "C00-A02",
+          "C00-A03",
+          "C00-A04"
+        ]
+      },
+      "uniqueItems": true
+    }
+  },
+  "x-normal-artifact-required": [
+    "business_and_product_boundary",
+    "demand_direction_candidates",
+    "competition_mindshare",
+    "founder_fit_and_constraints",
+    "approved_direction",
+    "tradeoff_reasons",
+    "discarded_directions",
+    "truth_status_by_field",
+    "approval_state",
+    "uncertainties",
+    "provenance",
+    "version",
+    "payload_hash"
+  ],
+  "x-partial-artifact-minimum": [
+    "truth_status_by_field",
+    "approval_state",
+    "uncertainties",
+    "provenance",
+    "version",
+    "payload_hash"
+  ],
+  "x-complete-artifact-schema": "artifact.schema.json",
+  "x-payload-hash-canonicalization": "SHA-256 of UTF-8 canonical JSON for artifact excluding payload_hash; sort keys; compact separators; ensure_ascii=false."
+}

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-lock.artifact.schema.json",
+  "title": "线索锁客 complete artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "positioning_ref",
+    "product_anchor",
+    "purchasable_audience",
+    "founder_familiar_audience",
+    "pre_purchase_stage",
+    "pre_purchase_topics",
+    "four_lock_intersection",
+    "excluded_audiences",
+    "transaction_validation",
+    "truth_status_by_field",
+    "approval_state",
+    "uncertainties",
+    "provenance",
+    "version",
+    "payload_hash"
+  ],
+  "properties": {
+    "positioning_ref": {
+      "x-contract-type": "versioned_ref",
+      "type": "object",
+      "x-owner": "C00"
+    },
+    "product_anchor": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "PROJECT_FACT"
+    },
+    "purchasable_audience": {
+      "x-contract-type": "bounded_statement",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "C10"
+    },
+    "founder_familiar_audience": {
+      "x-contract-type": "bounded_statement",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "C10"
+    },
+    "pre_purchase_stage": {
+      "x-contract-type": "bounded_statement",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "C10"
+    },
+    "pre_purchase_topics": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "C10"
+    },
+    "four_lock_intersection": {
+      "x-contract-type": "bounded_statement",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "C10"
+    },
+    "excluded_audiences": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "C10"
+    },
+    "transaction_validation": {
+      "x-contract-type": "observed_state",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "PROJECT_FACT"
+    },
+    "truth_status_by_field": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "approval_state": {
+      "x-contract-type": "enum",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "uncertainties": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "C10"
+    },
+    "provenance": {
+      "x-contract-type": "field_level_refs",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "version": {
+      "x-contract-type": "string",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "payload_hash": {
+      "x-contract-type": "sha256",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "x-owner": "AI_ENGINEERING"
+    }
+  }
+}

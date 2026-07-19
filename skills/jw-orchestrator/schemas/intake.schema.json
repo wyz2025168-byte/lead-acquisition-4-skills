@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-orchestrator.intake.schema.json",
+  "title": "全案编排器 partial intake envelope",
+  "description": "允许部分输入进入最小追问；不得从缺失字段推断事实。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [],
+  "properties": {
+    "project_state": {
+      "description": "owner=AI_ENGINEERING; missing_action=BLOCK_AND_RESTORE_STATE",
+      "x-contract-type": "versioned_object",
+      "x-owner": "AI_ENGINEERING",
+      "x-minimum": [
+        "current_gate",
+        "gate_status",
+        "active_task",
+        "approved_decisions",
+        "stale_nodes",
+        "blocked_by",
+        "last_run"
+      ],
+      "x-missing-action": "BLOCK_AND_RESTORE_STATE",
+      "x-provenance-required": true,
+      "type": "object"
+    },
+    "artifact_registry": {
+      "description": "owner=AI_ENGINEERING; missing_action=BLOCK_AND_REQUEST_ARTIFACT_ENVELOPES",
+      "x-contract-type": "array",
+      "x-owner": "AI_ENGINEERING",
+      "x-minimum": [],
+      "x-missing-action": "BLOCK_AND_REQUEST_ARTIFACT_ENVELOPES",
+      "x-provenance-required": true,
+      "type": "array"
+    },
+    "dependency_graph": {
+      "description": "owner=AI_ENGINEERING; missing_action=BLOCK_AND_RESTORE_FROZEN_G1_BINDINGS",
+      "x-contract-type": "versioned_object",
+      "x-owner": "AI_ENGINEERING",
+      "x-minimum": [
+        "frozen_chain",
+        "adjacent_interfaces",
+        "owner_map",
+        "change_propagation_map",
+        "version"
+      ],
+      "x-missing-action": "BLOCK_AND_RESTORE_FROZEN_G1_BINDINGS",
+      "x-provenance-required": true,
+      "type": "object"
+    },
+    "gate_definition": {
+      "description": "owner=AI_ENGINEERING; missing_action=BLOCK_AND_CLARIFY_GATE",
+      "x-contract-type": "versioned_object",
+      "x-owner": "AI_ENGINEERING",
+      "x-minimum": [
+        "gate_id",
+        "definition_of_done",
+        "allowed_updates",
+        "forbidden_actions",
+        "approval_requirements",
+        "version"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY_GATE",
+      "x-provenance-required": true,
+      "type": "object"
+    },
+    "requested_operation": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY_REQUEST",
+      "x-contract-type": "object",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "objective",
+        "requested_scope",
+        "requested_by",
+        "truth_status"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY_REQUEST",
+      "x-provenance-required": true,
+      "type": "object"
+    },
+    "user_approvals": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "type": "array"
+    },
+    "validation_replay_packages": {
+      "description": "optional; owner=AI_ENGINEERING",
+      "x-contract-type": "array",
+      "x-owner": "AI_ENGINEERING",
+      "type": "array"
+    },
+    "observed_run_results": {
+      "description": "optional; owner=REAL_DATA",
+      "x-contract-type": "array",
+      "x-owner": "REAL_DATA",
+      "type": "array"
+    },
+    "change_event": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "object_or_explicit_none",
+      "x-owner": "PROJECT_FACT"
+    },
+    "ideology_production_route_request": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "conditional_object",
+      "x-owner": "PROJECT_FACT"
+    }
+  },
+  "x-contract-ready-required": [
+    "project_state",
+    "artifact_registry",
+    "dependency_graph",
+    "gate_definition",
+    "requested_operation"
+  ],
+  "x-value-origin-enum": [
+    "PROJECT_FACT",
+    "PROJECT_HYPOTHESIS",
+    "REAL_DATA"
+  ],
+  "x-truth-status-enum": [
+    "confirmed",
+    "hypothesis",
+    "unknown",
+    "contradicted"
+  ],
+  "x-preserve-raw-input": true
+}

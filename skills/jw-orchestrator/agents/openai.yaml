@@ -1,0 +1,4 @@
+interface:
+  display_name: "全案编排器"
+  short_description: "维护全课程能力的闸门、状态、版本、依赖、失效传播与下一步路由"
+  default_prompt: "Use $jw-orchestrator to route the next approved capability while preserving versions and gates."

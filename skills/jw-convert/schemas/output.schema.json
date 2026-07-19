@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-convert.output.schema.json",
+  "title": "线索成客 result envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capability_id",
+    "artifact_type",
+    "decision_class",
+    "artifact",
+    "failure_codes",
+    "route_to",
+    "approval_requests"
+  ],
+  "properties": {
+    "capability_id": {
+      "const": "C30"
+    },
+    "artifact_type": {
+      "const": "conversion_journey_brief"
+    },
+    "decision_class": {
+      "type": "string",
+      "enum": [
+        "COMPLETE_FOR_APPROVAL",
+        "CONDITIONAL_WITH_EVIDENCE_GAP",
+        "NEED_INFO_AND_RETURN_OWNER",
+        "REJECT_VIOLATION",
+        "RETURN_EARLIEST_DRIFT_OWNER"
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lock_baseline_ref": {
+          "x-contract-type": "versioned_ref",
+          "type": "object",
+          "x-owner": "C10"
+        },
+        "circle_brief_ref": {
+          "x-contract-type": "versioned_ref",
+          "type": "object",
+          "x-owner": "C20"
+        },
+        "product_fact_ref": {
+          "x-contract-type": "versioned_ref",
+          "type": "object",
+          "x-owner": "PROJECT_FACT"
+        },
+        "audience_and_stage": {
+          "x-contract-type": "inherited_bounded_statement",
+          "type": [
+            "string",
+            "object"
+          ],
+          "x-owner": "C10"
+        },
+        "professional_recognition_gap": {
+          "x-contract-type": "bounded_statement",
+          "type": [
+            "string",
+            "object"
+          ],
+          "x-owner": "C30"
+        },
+        "trust_mechanism": {
+          "x-contract-type": "object",
+          "type": "object",
+          "x-owner": "C30"
+        },
+        "factual_support": {
+          "x-contract-type": "field_level_refs",
+          "type": "object",
+          "x-owner": "PROJECT_FACT"
+        },
+        "immediate_purchase_reason": {
+          "x-contract-type": "bounded_statement",
+          "type": [
+            "string",
+            "object"
+          ],
+          "x-owner": "C30"
+        },
+        "customer_decision_pattern": {
+          "x-contract-type": "object_or_explicit_unavailable",
+          "type": [
+            "object",
+            "string",
+            "null"
+          ],
+          "x-owner": "C30"
+        },
+        "content_role_plan": {
+          "x-contract-type": "object",
+          "type": "object",
+          "x-owner": "C30"
+        },
+        "idea_role_pointer": {
+          "x-contract-type": "role_pointer_only",
+          "type": [
+            "string",
+            "object"
+          ],
+          "x-owner": "C30"
+        },
+        "consumer_journey": {
+          "x-contract-type": "ordered_relationship_without_fixed_count",
+          "type": "array",
+          "x-owner": "C30"
+        },
+        "conversion_presentation_brief": {
+          "x-contract-type": "interface_projection",
+          "type": "object",
+          "x-owner": "C30",
+          "x-interface-id": "I-05B",
+          "x-projection-fields": [
+            "target_audience_ref",
+            "content_role",
+            "trust_or_purchase_goal",
+            "factual_support",
+            "claim_constraints",
+            "approval_state",
+            "version"
+          ]
+        },
+        "truth_status_by_field": {
+          "x-contract-type": "object",
+          "type": "object",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "approval_state": {
+          "x-contract-type": "enum",
+          "type": "string",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "uncertainties": {
+          "x-contract-type": "array",
+          "type": "array",
+          "x-owner": "C30"
+        },
+        "provenance": {
+          "x-contract-type": "field_level_refs",
+          "type": "object",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "version": {
+          "x-contract-type": "string",
+          "type": "string",
+          "x-owner": "AI_ENGINEERING"
+        },
+        "payload_hash": {
+          "x-contract-type": "sha256",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "x-owner": "AI_ENGINEERING"
+        }
+      }
+    },
+    "failure_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "C30-E001",
+          "C30-E002",
+          "C30-E003",
+          "C30-E004",
+          "C30-E005",
+          "C30-E006",
+          "C30-E007",
+          "C30-E008",
+          "C30-E009",
+          "C30-E010"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "route_to": {},
+    "approval_requests": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "C30-A01",
+          "C30-A02",
+          "C30-A03",
+          "C30-A04"
+        ]
+      },
+      "uniqueItems": true
+    }
+  },
+  "x-normal-artifact-required": [
+    "lock_baseline_ref",
+    "circle_brief_ref",
+    "product_fact_ref",
+    "audience_and_stage",
+    "professional_recognition_gap",
+    "trust_mechanism",
+    "factual_support",
+    "immediate_purchase_reason",
+    "customer_decision_pattern",
+    "content_role_plan",
+    "idea_role_pointer",
+    "consumer_journey",
+    "conversion_presentation_brief",
+    "truth_status_by_field",
+    "approval_state",
+    "uncertainties",
+    "provenance",
+    "version",
+    "payload_hash"
+  ],
+  "x-partial-artifact-minimum": [
+    "truth_status_by_field",
+    "approval_state",
+    "uncertainties",
+    "provenance",
+    "version",
+    "payload_hash"
+  ],
+  "x-complete-artifact-schema": "artifact.schema.json",
+  "x-payload-hash-canonicalization": "SHA-256 of UTF-8 canonical JSON for artifact excluding payload_hash; sort keys; compact separators; ensure_ascii=false."
+}

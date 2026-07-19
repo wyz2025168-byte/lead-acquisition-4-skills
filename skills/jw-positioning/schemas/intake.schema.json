@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-positioning.intake.schema.json",
+  "title": "定位基座 partial intake envelope",
+  "description": "允许部分输入进入最小追问；不得从缺失字段推断事实。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [],
+  "properties": {
+    "business_and_product_context": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "object",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "business_goal",
+        "current_product_or_offer_boundary",
+        "delivery_promise",
+        "delivery_limitations"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "object"
+    },
+    "online_customer_need_evidence": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "need_candidate",
+        "customer_context",
+        "why_it_matters",
+        "evidence_state"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "array"
+    },
+    "competition_mindshare_evidence": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "competitor_or_alternative",
+        "occupied_mindshare",
+        "possible_gap",
+        "evidence_state"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "array"
+    },
+    "founder_fit_evidence": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "object",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "identity_and_experience",
+        "expression_and_performance",
+        "delivery_capability",
+        "resources_and_constraints"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "object"
+    },
+    "existing_positioning_claims": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "type": "array"
+    },
+    "discarded_or_failed_directions": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "type": "array"
+    },
+    "non_negotiable_business_constraints": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "type": "array"
+    }
+  },
+  "x-contract-ready-required": [
+    "business_and_product_context",
+    "online_customer_need_evidence",
+    "competition_mindshare_evidence",
+    "founder_fit_evidence"
+  ],
+  "x-value-origin-enum": [
+    "PROJECT_FACT",
+    "PROJECT_HYPOTHESIS",
+    "REAL_DATA"
+  ],
+  "x-truth-status-enum": [
+    "confirmed",
+    "hypothesis",
+    "unknown",
+    "contradicted"
+  ],
+  "x-preserve-raw-input": true
+}

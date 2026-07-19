@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-circle.artifact.schema.json",
+  "title": "线索圈客 complete artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "lock_baseline_ref",
+    "same_target_audience_and_stage",
+    "opening_circle",
+    "visual_circle",
+    "content_circle",
+    "viewpoint_circle",
+    "same_person_continuity",
+    "midstream_switch_risks",
+    "circle_visual_brief",
+    "truth_status_by_field",
+    "approval_state",
+    "uncertainties",
+    "provenance",
+    "version",
+    "payload_hash"
+  ],
+  "properties": {
+    "lock_baseline_ref": {
+      "x-contract-type": "versioned_ref",
+      "type": "object",
+      "x-owner": "C10"
+    },
+    "same_target_audience_and_stage": {
+      "x-contract-type": "bounded_statement",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "C20"
+    },
+    "opening_circle": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "C20"
+    },
+    "visual_circle": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "C20"
+    },
+    "content_circle": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "C20"
+    },
+    "viewpoint_circle": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "C20"
+    },
+    "same_person_continuity": {
+      "x-contract-type": "check_result",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "C20"
+    },
+    "midstream_switch_risks": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "C20"
+    },
+    "circle_visual_brief": {
+      "x-contract-type": "interface_projection",
+      "type": "object",
+      "x-owner": "C20",
+      "x-interface-id": "I-05A",
+      "x-projection-fields": [
+        "target_audience_ref",
+        "pre_purchase_stage_ref",
+        "audience_aesthetic_and_trust_intent",
+        "scene_and_image_semantics",
+        "included_and_excluded_viewers",
+        "content_context",
+        "approval_state",
+        "version"
+      ]
+    },
+    "truth_status_by_field": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "approval_state": {
+      "x-contract-type": "enum",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "uncertainties": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "C20"
+    },
+    "provenance": {
+      "x-contract-type": "field_level_refs",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "version": {
+      "x-contract-type": "string",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "payload_hash": {
+      "x-contract-type": "sha256",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "x-owner": "AI_ENGINEERING"
+    }
+  }
+}

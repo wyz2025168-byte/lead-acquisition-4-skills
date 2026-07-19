@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "name": "lead-acquisition-4-skills",
+  "version": "v1.0.0-rc1",
+  "publication_status": "PUBLIC_RC1_SANITIZED_RESTRICTED_EVALUATION",
+  "repository": "https://github.com/wyz2025168-byte/lead-acquisition-4-skills",
+  "license": "Restricted Evaluation License 1.0",
+  "installable_skills": [
+    "jw",
+    "jw-circle",
+    "jw-convert",
+    "jw-grow",
+    "jw-lock",
+    "jw-orchestrator",
+    "jw-positioning",
+    "jw-production"
+  ],
+  "course_capabilities": 7,
+  "engineering_router": "jw",
+  "private_source_files_included": 0,
+  "private_traceability_metadata_included": false,
+  "private_evaluation_materials_included": false,
+  "g7_real_project_shadow_included": false,
+  "installation_test": {
+    "skills_cli_version": "1.5.19",
+    "skills_discovered": 8,
+    "skills_installed": 8,
+    "post_install_bundle_checks": "8/8 PASS",
+    "environment": "isolated temporary HOME"
+  }
+}

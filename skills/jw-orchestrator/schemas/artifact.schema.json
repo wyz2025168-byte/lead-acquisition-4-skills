@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-orchestrator.artifact.schema.json",
+  "title": "全案编排器 complete artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "current_gate",
+    "active_task",
+    "route_decision",
+    "selected_owner",
+    "unique_next_task",
+    "artifact_registry_snapshot",
+    "input_versions_and_hashes",
+    "dependency_state",
+    "stale_targets",
+    "earliest_return_owner",
+    "gate_result",
+    "validation_replay_state",
+    "origin_partition",
+    "exclusions",
+    "truth_status_by_field",
+    "approval_state",
+    "provenance",
+    "version",
+    "payload_hash"
+  ],
+  "properties": {
+    "current_gate": {
+      "x-contract-type": "string",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "active_task": {
+      "x-contract-type": "string",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "route_decision": {
+      "x-contract-type": "enum",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "selected_owner": {
+      "x-contract-type": "capability_or_control_owner",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "unique_next_task": {
+      "x-contract-type": "bounded_statement",
+      "type": [
+        "string",
+        "object"
+      ],
+      "x-owner": "AI_ENGINEERING"
+    },
+    "artifact_registry_snapshot": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "input_versions_and_hashes": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "dependency_state": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "stale_targets": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "earliest_return_owner": {
+      "x-contract-type": "capability_or_control_owner_or_null",
+      "type": [
+        "string",
+        "null"
+      ],
+      "x-owner": "AI_ENGINEERING"
+    },
+    "gate_result": {
+      "x-contract-type": "enum",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "validation_replay_state": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "origin_partition": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "exclusions": {
+      "x-contract-type": "array",
+      "type": "array",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "truth_status_by_field": {
+      "x-contract-type": "object",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "approval_state": {
+      "x-contract-type": "enum",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "provenance": {
+      "x-contract-type": "field_level_refs",
+      "type": "object",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "version": {
+      "x-contract-type": "string",
+      "type": "string",
+      "x-owner": "AI_ENGINEERING"
+    },
+    "payload_hash": {
+      "x-contract-type": "sha256",
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "x-owner": "AI_ENGINEERING"
+    }
+  }
+}

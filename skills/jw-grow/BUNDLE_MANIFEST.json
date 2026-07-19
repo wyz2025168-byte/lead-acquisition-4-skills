@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0",
+  "skill": "jw-grow",
+  "release": "v1.0.0",
+  "files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "ca6d443be2f01c78ccb3e2344e6fdda9fb86c43d3a90d27a4ed3629492664757",
+      "bytes": 6192
+    },
+    {
+      "path": "agents/openai.yaml",
+      "sha256": "a5f48b049a7be3097e69451e4b69706c5e3ff465018a5a7e4107f5ea4854543c",
+      "bytes": 270
+    },
+    {
+      "path": "examples/normal-invocation.md",
+      "sha256": "42e60c6f7edc1be252e646cdf10d0cd93565c4bf3484a3af2550baf518d4d10b",
+      "bytes": 1200
+    },
+    {
+      "path": "references/course-rules.md",
+      "sha256": "2eb122fb154c395d7159af9df39cbd70a36aae6dbaf1bdd59bfc65219feb31fa",
+      "bytes": 3222
+    },
+    {
+      "path": "references/source-map.json",
+      "sha256": "41e9332e5b0cf3967eff5879bfcbf268a78503fdfe0d72c16f23fa2c39cc9fb7",
+      "bytes": 782
+    },
+    {
+      "path": "schemas/artifact.schema.json",
+      "sha256": "73f11523e80ec604fec846800d7de166179ca6524426106def1a26cf1d1ce3b9",
+      "bytes": 3129
+    },
+    {
+      "path": "schemas/contract-binding.json",
+      "sha256": "5b29ab1e91275290b94a42b6c0c7990bb327a0eb8d1160cd320c8b1bd6378886",
+      "bytes": 23125
+    },
+    {
+      "path": "schemas/input.schema.json",
+      "sha256": "e6c13e1bb1fdd3fe40511aeb93438605009584efd72799136254cc582bb74628",
+      "bytes": 4193
+    },
+    {
+      "path": "schemas/intake.schema.json",
+      "sha256": "813bab34ec97fc2795f78705f54d2a56e452d6cab541c2e8d3b92bafdf5c8fc7",
+      "bytes": 4005
+    },
+    {
+      "path": "schemas/output.schema.json",
+      "sha256": "bd0418c5ab18c00d1bf1c5aa9a67bc25cfbf5dd39f037e4d9de42a04d948b315",
+      "bytes": 5248
+    },
+    {
+      "path": "scripts/validate-bundle.py",
+      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
+      "bytes": 1079
+    },
+    {
+      "path": "tests/evaluation-binding.json",
+      "sha256": "01ac181a37342dfeaf816c8c465838442b9277e2ca733d187848e3dd53114b7f",
+      "bytes": 341
+    },
+    {
+      "path": "tests/gold-binding.json",
+      "sha256": "750c3291e86e9457b78eda87de9e37f7679d5f0b428ba042a5af2030eda02483",
+      "bytes": 338
+    }
+  ]
+}

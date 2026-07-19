@@ -1,0 +1,592 @@
+{
+  "schema_version": "1.0-public",
+  "capability_id": "C00",
+  "skill_name": "jw-positioning",
+  "release": "v1.0.0-rc1",
+  "public_sanitization": {
+    "runtime_semantics_preserved": true,
+    "private_source_paths_included": false,
+    "private_source_hashes_included": false,
+    "internal_approval_records_included": false,
+    "gold_answers_or_rubric_content_included": false
+  },
+  "compiled_contract": {
+    "schema_version": "1.0",
+    "contract_id": "CTR-C00",
+    "capability_id": "C00",
+    "name": "定位基座",
+    "contract_kind": "course_capability",
+    "status": "frozen",
+    "origin_policy": {
+      "contract_structure": "AI_ENGINEERING",
+      "course_rules": [
+        "COURSE_NEW"
+      ],
+      "approved_interpretations": [],
+      "forbidden": [
+        "未授权工程内容",
+        "未授权外部内容"
+      ]
+    },
+    "purpose": {
+      "core_question": "这件事最能成功的方向和打法是什么？",
+      "owner_decisions": [
+        "值得进入的线上客户真实需求方向",
+        "当前竞争心智与可选的心智空位",
+        "创始人身份、经历、表达、交付与资源的适配边界",
+        "需求、竞争与创始人条件三面交集中的方向候选与取舍"
+      ],
+      "non_goals": [
+        "不以流量热度、热门赛道或单条爆款代替商业定位",
+        "不把一句人设、职业或宽泛人群标签当完整定位",
+        "不越过创始人真实交付、表达和资源条件",
+        "不替 C10 决定最终产品可成交人群与买单前阶段",
+        "不设计 C20 四圈、C30 购买理由、C40 理念或 C50 制作方案"
+      ]
+    },
+    "input_contract": {
+      "value_origin_enum": [
+        "PROJECT_FACT",
+        "PROJECT_HYPOTHESIS",
+        "REAL_DATA"
+      ],
+      "truth_status_enum": [
+        "confirmed",
+        "hypothesis",
+        "unknown",
+        "contradicted"
+      ],
+      "preserve_raw_input": true,
+      "required_fields": [
+        {
+          "field": "business_and_product_context",
+          "type": "object",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "business_goal",
+            "current_product_or_offer_boundary",
+            "delivery_promise",
+            "delivery_limitations"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "online_customer_need_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "need_candidate",
+            "customer_context",
+            "why_it_matters",
+            "evidence_state"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "competition_mindshare_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "competitor_or_alternative",
+            "occupied_mindshare",
+            "possible_gap",
+            "evidence_state"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "founder_fit_evidence",
+          "type": "object",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "identity_and_experience",
+            "expression_and_performance",
+            "delivery_capability",
+            "resources_and_constraints"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        }
+      ],
+      "optional_fields": [
+        {
+          "field": "existing_positioning_claims",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "discarded_or_failed_directions",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "non_negotiable_business_constraints",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        }
+      ]
+    },
+    "minimum_clarification": {
+      "ask_only_when": [
+        "业务、产品或真实交付边界缺失",
+        "需求、竞争心智或创始人条件任一面只有结论而无事实/假设标签",
+        "多个方向之间存在高影响价值取舍或要求更换业务/产品边界"
+      ],
+      "question_order": [
+        "先补当前业务、产品、交付与不可突破的现实约束",
+        "再补线上客户真正关心且值得做的需求证据",
+        "再补已有竞争者/替代选择的心智与空位",
+        "最后补创始人身份、表达、交付和资源的适配证据"
+      ],
+      "stop_rule": "只问足以形成三面交集与明确取舍的最小问题；不要求 C10-C50 的下游产物。"
+    },
+    "decision_contract": [
+      {
+        "decision_id": "C00-D01",
+        "decision": "把定位首先视为消费者为什么选你的商业选择，不以流量问题替代。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C00.01",
+          "T001"
+        ],
+        "evidence_required": [
+          "business_and_product_context"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C00-D02",
+        "decision": "判断线上客户真正关心、具有价值且值得进入的需求方向。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C00.02",
+          "T003"
+        ],
+        "evidence_required": [
+          "online_customer_need_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C00-D03",
+        "decision": "识别竞争者与替代选择已占据的心智，判断可选的独特购买理由/心智空位前提。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C00.03",
+          "T004"
+        ],
+        "evidence_required": [
+          "competition_mindshare_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "occupied",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C00-D04",
+        "decision": "将创始人身份、经历、表达/表现、交付和资源条件纳入方向判断。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C00.04",
+          "T005"
+        ],
+        "evidence_required": [
+          "founder_fit_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "partial",
+          "conflicted",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C00-D05",
+        "decision": "在需求、竞争心智与创始人自身条件的交集中形成候选并保留取舍理由。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C00.05",
+          "T002"
+        ],
+        "evidence_required": [
+          "C00-D02",
+          "C00-D03",
+          "C00-D04"
+        ],
+        "result_state": [
+          "ready",
+          "conditional",
+          "conflicted",
+          "blocked"
+        ]
+      }
+    ],
+    "output_contract": {
+      "artifact": "positioning_baseline",
+      "required_fields": [
+        {
+          "field": "business_and_product_boundary",
+          "type": "bounded_statement",
+          "owner": "C00"
+        },
+        {
+          "field": "demand_direction_candidates",
+          "type": "array",
+          "owner": "C00"
+        },
+        {
+          "field": "competition_mindshare",
+          "type": "bounded_statement",
+          "owner": "C00"
+        },
+        {
+          "field": "founder_fit_and_constraints",
+          "type": "object",
+          "owner": "C00"
+        },
+        {
+          "field": "approved_direction",
+          "type": "bounded_statement",
+          "owner": "C00"
+        },
+        {
+          "field": "tradeoff_reasons",
+          "type": "array",
+          "owner": "C00"
+        },
+        {
+          "field": "discarded_directions",
+          "type": "array",
+          "owner": "C00"
+        },
+        {
+          "field": "truth_status_by_field",
+          "type": "object",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "approval_state",
+          "type": "enum",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "uncertainties",
+          "type": "array",
+          "owner": "C00"
+        },
+        {
+          "field": "provenance",
+          "type": "field_level_refs",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "version",
+          "type": "string",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "payload_hash",
+          "type": "sha256",
+          "owner": "AI_ENGINEERING"
+        }
+      ],
+      "downstream_consumers": [
+        "C10",
+        "C90"
+      ]
+    },
+    "invariants": [
+      {
+        "invariant_id": "C00-I01",
+        "statement": "定位必须同时考虑线上真实需求、竞争心智与创始人自身条件。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "T002",
+          "C00.02",
+          "C00.03",
+          "C00.04"
+        ]
+      },
+      {
+        "invariant_id": "C00-I02",
+        "statement": "定位首先是商业方向与打法的取舍，不是流量热度、一句人设或什么火就做什么。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C00.01",
+          "C00.05",
+          "T001"
+        ]
+      },
+      {
+        "invariant_id": "C00-I03",
+        "statement": "批准方向不得越过创始人真实交付、表达、身份和资源条件。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C00.04",
+          "T005"
+        ]
+      },
+      {
+        "invariant_id": "C00-I04",
+        "statement": "C00 只向 C10 交付定位与产品边界，不决定最终四锁人群、四圈、购买理由、理念或制作。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-01"
+        ]
+      },
+      {
+        "invariant_id": "C00-I05",
+        "statement": "定位基线必须携带取舍理由、未确定项、字段级来源、批准状态、版本与哈希。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.06",
+          "I-01"
+        ]
+      }
+    ],
+    "failure_codes": [
+      {
+        "code": "C00-E001",
+        "trigger": "业务目标、产品/服务边界、交付承诺或交付限制缺失。",
+        "severity": "block",
+        "action": "CLARIFY_BUSINESS_FACTS",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.01",
+          "C00.04"
+        ]
+      },
+      {
+        "code": "C00-E002",
+        "trigger": "只有创始人主观想做的方向，无线上客户真实需求的事实或假设标签。",
+        "severity": "block",
+        "action": "CLARIFY_OR_MARK_HYPOTHESIS",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.02",
+          "T003"
+        ]
+      },
+      {
+        "code": "C00-E003",
+        "trigger": "竞争者、替代选择、已占据心智或空位判断缺失。",
+        "severity": "block",
+        "action": "CLARIFY_COMPETITION_MIND_SHARE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.03",
+          "T004"
+        ]
+      },
+      {
+        "code": "C00-E004",
+        "trigger": "创始人适配只写愿意或喜欢，缺少身份、经历、表达、交付或资源事实。",
+        "severity": "block",
+        "action": "CLARIFY_FOUNDER_FIT",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.04",
+          "T005"
+        ]
+      },
+      {
+        "code": "C00-E005",
+        "trigger": "定位候选只满足需求、竞争或创始人其中一面，或三面直接冲突。",
+        "severity": "block",
+        "action": "STOP_AND_RESOLVE_TRIANGLE_CONFLICT",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.05",
+          "T002"
+        ]
+      },
+      {
+        "code": "C00-E006",
+        "trigger": "用流量大小、热门赛道或一句人设代替三面商业取舍。",
+        "severity": "block",
+        "action": "REJECT_TRAFFIC_PROXY",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.01",
+          "T001",
+          "T002"
+        ]
+      },
+      {
+        "code": "C00-E007",
+        "trigger": "请求 C00 直接输出最终四锁人群、四圈、购买理由、理念或制作方案。",
+        "severity": "block",
+        "action": "ROUTE_TO_OWNER",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-01"
+        ]
+      },
+      {
+        "code": "C00-E008",
+        "trigger": "未授权工程内容、未授权外部内容 或 课程历史资料/课程历史资料 案例数字与时效性设备建议被写成定位规则。",
+        "severity": "block",
+        "action": "SOURCE_FIREWALL_FAIL",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "SOURCE_POLICY"
+        ]
+      },
+      {
+        "code": "C00-E009",
+        "trigger": "定位方向完整但用户尚未批准，或要求无审批更换业务/产品边界。",
+        "severity": "block",
+        "action": "REQUEST_USER_APPROVAL_DO_NOT_EMIT_I01",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C00.06",
+          "I-01"
+        ]
+      }
+    ],
+    "invalidation_rules": [
+      {
+        "rule_id": "C00-X01",
+        "change": "业务目标、产品边界、交付承诺或交付限制实质变化",
+        "action": "INVALIDATE_POSITIONING_BASELINE",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "business_and_product_boundary",
+          "approved_direction"
+        ],
+        "stale_targets": [
+          "C10",
+          "C20",
+          "C30",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C00"
+      },
+      {
+        "rule_id": "C00-X02",
+        "change": "新的线上需求证据直接否定原需求方向",
+        "action": "REOPEN_C00_D02_D05",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "demand_direction_candidates",
+          "approved_direction",
+          "tradeoff_reasons"
+        ],
+        "stale_targets": [
+          "C10",
+          "C20",
+          "C30",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C00"
+      },
+      {
+        "rule_id": "C00-X03",
+        "change": "竞争心智或替代选择发生实质变化",
+        "action": "REOPEN_C00_D03_D05",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "competition_mindshare",
+          "approved_direction"
+        ],
+        "stale_targets": [
+          "C10",
+          "C20",
+          "C30",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C00"
+      },
+      {
+        "rule_id": "C00-X04",
+        "change": "创始人身份、表达/表现、交付能力或资源约束实质变化",
+        "action": "REOPEN_C00_D04_D05",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "founder_fit_and_constraints",
+          "approved_direction"
+        ],
+        "stale_targets": [
+          "C10",
+          "C20",
+          "C30",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C00"
+      },
+      {
+        "rule_id": "C00-X05",
+        "change": "C10 在已批准边界内无法形成可成交人群，并提供上游冲突证据",
+        "action": "REOPEN_AFFECTED_C00_FIELDS",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "business_and_product_boundary",
+          "approved_direction",
+          "tradeoff_reasons"
+        ],
+        "stale_targets": [
+          "C10",
+          "C20",
+          "C30",
+          "C40",
+          "C50"
+        ],
+        "earliest_return_owner": "C00"
+      }
+    ],
+    "approval_points": [
+      {
+        "approval_id": "C00-A01",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "首次固定或实质更换批准定位方向。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "approved_direction"
+      },
+      {
+        "approval_id": "C00-A02",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "更换业务、产品、交付边界或接受与创始人现实条件冲突的方向。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "business_and_product_boundary"
+      },
+      {
+        "approval_id": "C00-A03",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "多个三面交集候选均可行，需要做不可由 AI 代替的价值取舍。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "tradeoff_reasons"
+      },
+      {
+        "approval_id": "C00-A04",
+        "risk": "medium",
+        "approver": "AI_full_review_user_diff_sample",
+        "trigger": "仅调整定位基线的表达或排版，不改方向、业务、产品或取舍。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "positioning_baseline_wording"
+      }
+    ]
+  }
+}

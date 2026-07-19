@@ -1,0 +1,666 @@
+{
+  "schema_version": "1.0-public",
+  "capability_id": "C20",
+  "skill_name": "jw-circle",
+  "release": "v1.0.0-rc1",
+  "public_sanitization": {
+    "runtime_semantics_preserved": true,
+    "private_source_paths_included": false,
+    "private_source_hashes_included": false,
+    "internal_approval_records_included": false,
+    "gold_answers_or_rubric_content_included": false
+  },
+  "compiled_contract": {
+    "schema_version": "1.0",
+    "contract_id": "CTR-C20",
+    "capability_id": "C20",
+    "name": "线索圈客",
+    "contract_kind": "course_capability",
+    "status": "frozen",
+    "origin_policy": {
+      "contract_structure": "AI_ENGINEERING",
+      "course_rules": [
+        "COURSE_NEW"
+      ],
+      "approved_interpretations": [],
+      "forbidden": [
+        "未授权工程内容",
+        "未授权外部内容"
+      ]
+    },
+    "purpose": {
+      "core_question": "如何让看视频的人始终是 C10 要成交的那批人？",
+      "owner_decisions": [
+        "目标人的开头圈路线",
+        "由目标人定义的画面意图与筛选边界",
+        "持续对同一人说话的内容圈与认知跨度",
+        "目标人可接受且有启发的观点圈",
+        "开头、画面、内容与观点的同一人连续性"
+      ],
+      "non_goals": [
+        "不为提高播放量、热度或泛流量扩大或更换 C10 人群",
+        "不更改 C10 已批准的买单前阶段、价值感与话题边界",
+        "不用创作者个人审美、高成本或制作便利代替目标人画面判断",
+        "不创建 C30 购买理由、信任机制或消费旅程",
+        "不创建 C50 的场景、妆造、设备、机位或灯光方案"
+      ]
+    },
+    "input_contract": {
+      "value_origin_enum": [
+        "PROJECT_FACT",
+        "PROJECT_HYPOTHESIS",
+        "REAL_DATA"
+      ],
+      "truth_status_enum": [
+        "confirmed",
+        "hypothesis",
+        "unknown",
+        "contradicted"
+      ],
+      "preserve_raw_input": true,
+      "required_fields": [
+        {
+          "field": "lock_baseline",
+          "type": "object",
+          "owner": "C10",
+          "minimum": [
+            "product_anchor",
+            "four_lock_intersection",
+            "pre_purchase_stage",
+            "pre_purchase_topics",
+            "excluded_audiences",
+            "approval_state",
+            "version"
+          ],
+          "missing_action": "RETURN_C10",
+          "provenance_required": true
+        },
+        {
+          "field": "opening_audience_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "target_audience",
+            "interest_topic_expression_person_or_viewpoint",
+            "why_target_would_stay",
+            "who_should_be_filtered_out"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "visual_audience_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "target_audience",
+            "trusted_or_expected_visual_semantics",
+            "untrusted_or_mismatched_visual_semantics",
+            "evidence_state"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "content_cognition_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "target_audience",
+            "current_understanding",
+            "acceptable_cognitive_span",
+            "peer_or_other_audience_drift_risk"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        },
+        {
+          "field": "viewpoint_candidate_evidence",
+          "type": "array",
+          "owner": "PROJECT_FACT",
+          "minimum": [
+            "target_audience",
+            "viewpoint_candidate",
+            "why_acceptable_and_inspiring",
+            "rejection_or_drift_risk"
+          ],
+          "missing_action": "BLOCK_AND_CLARIFY",
+          "provenance_required": true
+        }
+      ],
+      "optional_fields": [
+        {
+          "field": "draft_content_or_brief",
+          "type": "object_or_array",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "audience_language_samples",
+          "type": "array",
+          "owner": "PROJECT_FACT"
+        },
+        {
+          "field": "observed_viewer_mismatch",
+          "type": "array",
+          "owner": "REAL_DATA"
+        }
+      ]
+    },
+    "minimum_clarification": {
+      "ask_only_when": [
+        "lock_baseline 缺失、未批准、已失效或版本不明",
+        "开头、画面、内容或观点的目标人判断只有结论而无事实/假设标签",
+        "四圈之间对象、阶段或认知跨度冲突"
+      ],
+      "question_order": [
+        "先确认 C10 已批准人群、阶段、话题边界与版本",
+        "再问目标人会因什么话题/表达/人物/观点开始停留",
+        "再问目标人如何判断画面合适、可信与不合适",
+        "最后补同一人的内容认知跨度与可接受观点"
+      ],
+      "stop_rule": "只问足以判断四圈是否继续面向同一批人的最小问题；不追问 C30 购买理由或 C50 技术方案。"
+    },
+    "decision_contract": [
+      {
+        "decision_id": "C20-D01",
+        "decision": "从目标人关心的兴趣话题、兴趣表达、兴趣人物或兴趣观点中选择开头圈路线，使正确人继续看。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C20.01",
+          "T202",
+          "T203"
+        ],
+        "evidence_required": [
+          "lock_baseline",
+          "opening_audience_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "broad_traffic_drift",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C20-D02",
+        "decision": "由目标客户对该业务的审美与信任判断定义画面圈，不用创作者个人审美或成本代替。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C20.02",
+          "T204"
+        ],
+        "evidence_required": [
+          "lock_baseline",
+          "visual_audience_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "creator_aesthetic_drift",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C20-D03",
+        "decision": "让内容每句话持续对同一类人说，并保持在目标人可理解的认知跨度内。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C20.03",
+          "T205"
+        ],
+        "evidence_required": [
+          "lock_baseline",
+          "content_cognition_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "audience_or_stage_drift",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C20-D04",
+        "decision": "输出目标人可接受且有启发的观点，不追求脱离目标人的抽象绝对正确。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C20.04",
+          "T206"
+        ],
+        "evidence_required": [
+          "lock_baseline",
+          "viewpoint_candidate_evidence"
+        ],
+        "result_state": [
+          "supported",
+          "hypothesis",
+          "audience_rejection_or_peer_drift",
+          "missing"
+        ]
+      },
+      {
+        "decision_id": "C20-D05",
+        "decision": "检查开头、画面、内容、观点与每一句表达是否始终面向同一批目标人。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C20.05",
+          "T201",
+          "T207"
+        ],
+        "evidence_required": [
+          "C20-D01",
+          "C20-D02",
+          "C20-D03",
+          "C20-D04"
+        ],
+        "result_state": [
+          "ready",
+          "conditional",
+          "conflicted",
+          "blocked"
+        ]
+      }
+    ],
+    "output_contract": {
+      "artifact": "circle_brief",
+      "required_fields": [
+        {
+          "field": "lock_baseline_ref",
+          "type": "versioned_ref",
+          "owner": "C10"
+        },
+        {
+          "field": "same_target_audience_and_stage",
+          "type": "bounded_statement",
+          "owner": "C20"
+        },
+        {
+          "field": "opening_circle",
+          "type": "object",
+          "owner": "C20"
+        },
+        {
+          "field": "visual_circle",
+          "type": "object",
+          "owner": "C20"
+        },
+        {
+          "field": "content_circle",
+          "type": "object",
+          "owner": "C20"
+        },
+        {
+          "field": "viewpoint_circle",
+          "type": "object",
+          "owner": "C20"
+        },
+        {
+          "field": "same_person_continuity",
+          "type": "check_result",
+          "owner": "C20"
+        },
+        {
+          "field": "midstream_switch_risks",
+          "type": "array",
+          "owner": "C20"
+        },
+        {
+          "field": "circle_visual_brief",
+          "type": "interface_projection",
+          "owner": "C20",
+          "interface_id": "I-05A",
+          "projection_fields": [
+            "target_audience_ref",
+            "pre_purchase_stage_ref",
+            "audience_aesthetic_and_trust_intent",
+            "scene_and_image_semantics",
+            "included_and_excluded_viewers",
+            "content_context",
+            "approval_state",
+            "version"
+          ],
+          "derived_from": [
+            "lock_baseline_ref",
+            "same_target_audience_and_stage",
+            "visual_circle",
+            "content_circle",
+            "midstream_switch_risks"
+          ]
+        },
+        {
+          "field": "truth_status_by_field",
+          "type": "object",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "approval_state",
+          "type": "enum",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "uncertainties",
+          "type": "array",
+          "owner": "C20"
+        },
+        {
+          "field": "provenance",
+          "type": "field_level_refs",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "version",
+          "type": "string",
+          "owner": "AI_ENGINEERING"
+        },
+        {
+          "field": "payload_hash",
+          "type": "sha256",
+          "owner": "AI_ENGINEERING"
+        }
+      ],
+      "downstream_consumers": [
+        "C30",
+        "C50",
+        "C90"
+      ]
+    },
+    "invariants": [
+      {
+        "invariant_id": "C20-I01",
+        "statement": "开头、画面、内容、观点与每一句表达必须面向 C10 已批准的同一批人与同一阶段。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "T201",
+          "T207",
+          "C20.05"
+        ]
+      },
+      {
+        "invariant_id": "C20-I02",
+        "statement": "开头圈四种圈法是开头圈的子结构，不得被误当成四个主圈。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "T201",
+          "T202",
+          "T203"
+        ]
+      },
+      {
+        "invariant_id": "C20-I03",
+        "statement": "画面圈由目标客户的审美和信任判断定义，不等于创作者个人审美、高成本或视觉炫技。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C20.02",
+          "T204"
+        ]
+      },
+      {
+        "invariant_id": "C20-I04",
+        "statement": "愿意看不等于愿意买；C20 不输出购买理由、消费旅程或制作方案。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-03",
+          "I-05A"
+        ]
+      },
+      {
+        "invariant_id": "C20-I05",
+        "statement": "播放量和其他流量指标可观察执行，但不能单独证明圈对人。",
+        "origin": "COURSE_NEW",
+        "rule_refs": [
+          "C20.05",
+          "T207"
+        ]
+      },
+      {
+        "invariant_id": "C20-I06",
+        "statement": "圈客 Brief 必须携带 C10 版本引用、中途换人风险、字段级来源、批准状态、版本与哈希。",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C20.06",
+          "I-03",
+          "I-05A"
+        ]
+      }
+    ],
+    "failure_codes": [
+      {
+        "code": "C20-E001",
+        "trigger": "C10 锁客基线缺失、未批准、已失效或版本不明。",
+        "severity": "block",
+        "action": "RETURN_C10",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-02"
+        ]
+      },
+      {
+        "code": "C20-E002",
+        "trigger": "C10 人群、买单前阶段、话题边界或排除人群任一缺失或相互矛盾。",
+        "severity": "block",
+        "action": "RETURN_C10_AFFECTED_FIELDS",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-02",
+          "T207"
+        ]
+      },
+      {
+        "code": "C20-E003",
+        "trigger": "开头为了泛流量吸引与 C10 不同的人、排除人群或同行。",
+        "severity": "block",
+        "action": "REJECT_AND_REBUILD_OPENING_CIRCLE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C20.01",
+          "T202",
+          "T207"
+        ]
+      },
+      {
+        "code": "C20-E004",
+        "trigger": "画面只以创作者喜好、更高级、更贵或制作方便为准。",
+        "severity": "block",
+        "action": "RETURN_TO_AUDIENCE_VISUAL_SEMANTICS",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C20.02",
+          "T204"
+        ]
+      },
+      {
+        "code": "C20-E005",
+        "trigger": "内容中途换对象、换阶段、滑向同行表达或超出目标人可理解认知跨度。",
+        "severity": "block",
+        "action": "REBUILD_CONTENT_CIRCLE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C20.03",
+          "T205",
+          "T207"
+        ]
+      },
+      {
+        "code": "C20-E006",
+        "trigger": "观点追求脱离目标人的抽象绝对正确、过度高深或无关极端。",
+        "severity": "block",
+        "action": "REBUILD_VIEWPOINT_CIRCLE",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C20.04",
+          "T206"
+        ]
+      },
+      {
+        "code": "C20-E007",
+        "trigger": "开头、画面、内容和观点并非同一批人的连续交集。",
+        "severity": "block",
+        "action": "STOP_AND_RESOLVE_SAME_PERSON_CONFLICT",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C20.05",
+          "T201",
+          "T207"
+        ]
+      },
+      {
+        "code": "C20-E008",
+        "trigger": "用高播放、热度或涨粉直接证明四圈人群正确。",
+        "severity": "block",
+        "action": "REJECT_TRAFFIC_PROXY",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "C20.05",
+          "T207"
+        ]
+      },
+      {
+        "code": "C20-E009",
+        "trigger": "请求 C20 输出购买理由、消费旅程、理念、完整脚本或场景/设备方案。",
+        "severity": "block",
+        "action": "ROUTE_TO_OWNER",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "I-03",
+          "I-05A"
+        ]
+      },
+      {
+        "code": "C20-E010",
+        "trigger": "未授权工程内容、未授权外部内容 或 课程历史资料/课程历史资料 案例数字被写成四圈规则、阈值或效果承诺。",
+        "severity": "block",
+        "action": "SOURCE_FIREWALL_FAIL",
+        "origin": "AI_ENGINEERING",
+        "rule_refs": [
+          "SOURCE_POLICY"
+        ]
+      }
+    ],
+    "invalidation_rules": [
+      {
+        "rule_id": "C20-X01",
+        "change": "C10 目标人群、买单前阶段、话题边界或锁客版本实质变化",
+        "action": "INVALIDATE_ALL_AND_RETURN_C10",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "circle_brief"
+        ],
+        "stale_targets": [
+          "C20",
+          "C30",
+          "C50"
+        ],
+        "earliest_return_owner": "C10"
+      },
+      {
+        "rule_id": "C20-X02",
+        "change": "开头圈路线或目标人的停留依据实质变化",
+        "action": "REOPEN_C20_D01_D05",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "opening_circle",
+          "same_person_continuity"
+        ],
+        "stale_targets": [
+          "C30"
+        ],
+        "earliest_return_owner": "C20"
+      },
+      {
+        "rule_id": "C20-X03",
+        "change": "画面意图、信任语义或需要筛出的对象实质变化",
+        "action": "REOPEN_C20_D02_D05",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "visual_circle",
+          "same_person_continuity",
+          "circle_visual_brief"
+        ],
+        "stale_targets": [
+          "C50"
+        ],
+        "earliest_return_owner": "C20"
+      },
+      {
+        "rule_id": "C20-X04",
+        "change": "内容认知跨度或观点方向实质变化",
+        "action": "REOPEN_C20_D03_D04_D05",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "content_circle",
+          "viewpoint_circle",
+          "same_person_continuity",
+          "circle_visual_brief"
+        ],
+        "stale_targets": [
+          "C30",
+          "C50"
+        ],
+        "earliest_return_owner": "C20"
+      },
+      {
+        "rule_id": "C20-X05",
+        "change": "C30 反馈在 C10 人群与阶段仍有效时，现有内容认知跨度或观点方向无法承载信任/购买理由",
+        "action": "REOPEN_C20_AFFECTED_FIELDS",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "content_circle",
+          "viewpoint_circle",
+          "same_person_continuity",
+          "circle_visual_brief"
+        ],
+        "stale_targets": [
+          "C30",
+          "C50"
+        ],
+        "earliest_return_owner": "C20"
+      },
+      {
+        "rule_id": "C20-X06",
+        "change": "C30 反馈现有四圈吸引的并非可成交人，且根因是 C10 人群或买单前阶段失效",
+        "action": "MARK_C20_DOWNSTREAM_STALE_AND_RETURN_C10",
+        "origin": "AI_ENGINEERING",
+        "affected_outputs": [
+          "same_target_audience_and_stage",
+          "opening_circle",
+          "visual_circle",
+          "content_circle",
+          "viewpoint_circle",
+          "circle_visual_brief"
+        ],
+        "stale_targets": [
+          "C20",
+          "C30",
+          "C50"
+        ],
+        "earliest_return_owner": "C10"
+      }
+    ],
+    "approval_points": [
+      {
+        "approval_id": "C20-A01",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "首次固定或实质更换将传给 C30/C50 的四圈目标人语义。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "circle_brief"
+      },
+      {
+        "approval_id": "C20-A02",
+        "risk": "high",
+        "approver": "user",
+        "trigger": "四圈冲突实际要求更换 C10 人群或买单前阶段。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "return_to_C10"
+      },
+      {
+        "approval_id": "C20-A03",
+        "risk": "medium",
+        "approver": "AI_full_review_user_diff_sample",
+        "trigger": "仅优化开头/画面/内容/观点 Brief 表达，不改人群、阶段、画面语义或观点方向。",
+        "origin": "AI_ENGINEERING",
+        "decision_object": "circle_brief_wording"
+      }
+    ]
+  }
+}

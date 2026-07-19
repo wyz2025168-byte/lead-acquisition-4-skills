@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "jw-circle.intake.schema.json",
+  "title": "线索圈客 partial intake envelope",
+  "description": "允许部分输入进入最小追问；不得从缺失字段推断事实。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [],
+  "properties": {
+    "lock_baseline": {
+      "description": "owner=C10; missing_action=RETURN_C10",
+      "x-contract-type": "object",
+      "x-owner": "C10",
+      "x-minimum": [
+        "product_anchor",
+        "four_lock_intersection",
+        "pre_purchase_stage",
+        "pre_purchase_topics",
+        "excluded_audiences",
+        "approval_state",
+        "version"
+      ],
+      "x-missing-action": "RETURN_C10",
+      "x-provenance-required": true,
+      "type": "object"
+    },
+    "opening_audience_evidence": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "target_audience",
+        "interest_topic_expression_person_or_viewpoint",
+        "why_target_would_stay",
+        "who_should_be_filtered_out"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "array"
+    },
+    "visual_audience_evidence": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "target_audience",
+        "trusted_or_expected_visual_semantics",
+        "untrusted_or_mismatched_visual_semantics",
+        "evidence_state"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "array"
+    },
+    "content_cognition_evidence": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "target_audience",
+        "current_understanding",
+        "acceptable_cognitive_span",
+        "peer_or_other_audience_drift_risk"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "array"
+    },
+    "viewpoint_candidate_evidence": {
+      "description": "owner=PROJECT_FACT; missing_action=BLOCK_AND_CLARIFY",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "x-minimum": [
+        "target_audience",
+        "viewpoint_candidate",
+        "why_acceptable_and_inspiring",
+        "rejection_or_drift_risk"
+      ],
+      "x-missing-action": "BLOCK_AND_CLARIFY",
+      "x-provenance-required": true,
+      "type": "array"
+    },
+    "draft_content_or_brief": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "object_or_array",
+      "x-owner": "PROJECT_FACT"
+    },
+    "audience_language_samples": {
+      "description": "optional; owner=PROJECT_FACT",
+      "x-contract-type": "array",
+      "x-owner": "PROJECT_FACT",
+      "type": "array"
+    },
+    "observed_viewer_mismatch": {
+      "description": "optional; owner=REAL_DATA",
+      "x-contract-type": "array",
+      "x-owner": "REAL_DATA",
+      "type": "array"
+    }
+  },
+  "x-contract-ready-required": [
+    "lock_baseline",
+    "opening_audience_evidence",
+    "visual_audience_evidence",
+    "content_cognition_evidence",
+    "viewpoint_candidate_evidence"
+  ],
+  "x-value-origin-enum": [
+    "PROJECT_FACT",
+    "PROJECT_HYPOTHESIS",
+    "REAL_DATA"
+  ],
+  "x-truth-status-enum": [
+    "confirmed",
+    "hypothesis",
+    "unknown",
+    "contradicted"
+  ],
+  "x-preserve-raw-input": true
+}

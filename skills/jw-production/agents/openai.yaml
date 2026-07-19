@@ -1,0 +1,4 @@
+interface:
+  display_name: "制作呈现"
+  short_description: "把已批准策略转成可重复拍摄与直播呈现Brief，并隔离时效性设备建议"
+  default_prompt: "Use $jw-production to turn approved strategy into a repeatable source-traceable production brief."

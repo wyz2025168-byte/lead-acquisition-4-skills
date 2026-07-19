@@ -1,0 +1,4 @@
+interface:
+  display_name: "线索成客"
+  short_description: "组织信任、购买理由、内容角色与消费旅程，输出可追溯成客Brief"
+  default_prompt: "Use $jw-convert to build a source-traceable conversion journey for an approved audience."
