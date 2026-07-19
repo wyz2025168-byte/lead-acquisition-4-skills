@@ -31,8 +31,8 @@
     },
     {
       "path": "RELEASE_MANIFEST.json",
-      "sha256": "6fc0184ba55298d3254ae324fae24302f822f72fe314d1409522bc32e8cca178",
-      "bytes": 920
+      "sha256": "7110c0f2ffe5489e8e417b5988bf648b6f262a5a8e820d2278803f1864738c00",
+      "bytes": 1090
     },
     {
       "path": "SOURCE_OF_TRUTH.md",
@@ -46,8 +46,8 @@
     },
     {
       "path": "docs/installation-test.md",
-      "sha256": "50921167a3eb327e499cd586f87050b5d1a4e2682d8dd916acd30fb4121124db",
-      "bytes": 1347
+      "sha256": "2b0dfc3895dec3876de16a83904c70514317c3399303c03a89b8e369514cfa58",
+      "bytes": 2291
     },
     {
       "path": "docs/installation.md",
@@ -586,8 +586,8 @@
     },
     {
       "path": "tools/build-release.py",
-      "sha256": "f5bb6bbaff0443e26b2625f65527c571525b0292b4c6fb46ec0d614f7a03122a",
-      "bytes": 4782
+      "sha256": "f43d05f525902eb10f7751c15bbaa426aa5adc520839d2953fc0ac8a5d675504",
+      "bytes": 4976
     },
     {
       "path": "tools/validate-package.py",

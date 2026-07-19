@@ -85,7 +85,10 @@ def main() -> None:
             "skills_discovered": 8,
             "skills_installed": 8,
             "post_install_bundle_checks": "8/8 PASS",
-            "environment": "isolated temporary HOME"
+            "environment": "isolated temporary HOME",
+            "local_release_candidate_verified": True,
+            "public_github_remote_install_verified": True,
+            "public_github_source": "wyz2025168-byte/lead-acquisition-4-skills"
         }
     }
     write_json(ROOT / "RELEASE_MANIFEST.json", release_manifest)
