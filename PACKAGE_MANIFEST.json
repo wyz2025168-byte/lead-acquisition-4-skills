@@ -26,18 +26,18 @@
     },
     {
       "path": "README.md",
-      "sha256": "7238b9f6c32a58f790310dd46b6cafa5652ff00f44a45e352f731b482743753c",
-      "bytes": 4650
+      "sha256": "49bf489d011efa2c799d2a3f289f7549c032178f7bb34da0c5c5970c88be9c87",
+      "bytes": 5442
     },
     {
       "path": "RELEASE_MANIFEST.json",
-      "sha256": "7110c0f2ffe5489e8e417b5988bf648b6f262a5a8e820d2278803f1864738c00",
-      "bytes": 1090
+      "sha256": "be9233cd19d46d35f0925b6d469e2bbbab3ced0d708cdb6ddcc5210c26e85d6f",
+      "bytes": 1386
     },
     {
       "path": "SOURCE_OF_TRUTH.md",
-      "sha256": "af3831540eb7267a7683123b92c1490661b94b015f9f170064994c1b7173c396",
-      "bytes": 1059
+      "sha256": "dcf4f3766d8daf6cb2de1c91f74d762ad5a8aaf33a1fb787001f4f86f68d1e0e",
+      "bytes": 1338
     },
     {
       "path": "docs/architecture.md",
@@ -66,8 +66,8 @@
     },
     {
       "path": "docs/release-evidence.md",
-      "sha256": "da05ae79cdcf2bef9d878c5214e07baa948550d3444e7949606e36d4ad884b9c",
-      "bytes": 1006
+      "sha256": "44c418e626304b56076087688887a8451f082781f3681ee0fd0474b88f387562",
+      "bytes": 1629
     },
     {
       "path": "skills/jw/BUNDLE_MANIFEST.json",
@@ -586,8 +586,8 @@
     },
     {
       "path": "tools/build-release.py",
-      "sha256": "f43d05f525902eb10f7751c15bbaa426aa5adc520839d2953fc0ac8a5d675504",
-      "bytes": 4976
+      "sha256": "588e4ed1e7e2fe80818c239f9e398922e6cbad953f6f9846fd98ec0b12ec2790",
+      "bytes": 5363
     },
     {
       "path": "tools/validate-package.py",

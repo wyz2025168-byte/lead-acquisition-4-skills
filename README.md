@@ -1,5 +1,9 @@
 # 线索获客 4.0 Agent Skills
 
+> **Preview / Structural Validation Only**
+>
+> 当前公开的 v1 已冻结，仅用于安装、结构、Schema、版本与留痕机制的预览测试。历史 `70 / 70` 是确定性结构测试结果，不是安装后真实调用 GPT 与 Skill 的业务能力验证，也不代表陌生行业判断、真实获客效果或生产可用性。v2 正在私有工作区重建；通过真实 G4–G8 前不会覆盖此公开版本。
+
 把“定位 → 锁客 → 圈客 → 成客 → 理念 → 制作 → 编排”整理成七个可独立调用、可组合的 Agent Skill，并提供一个统一入口 `$jw`。课程真源与完整追溯保留在私有编译项目中，公开包只提供经过脱敏的运行能力。
 
 适用于 Codex、Claude Code、Cursor、Trae Solo，以及其他支持 Agent Skills 的工具。
@@ -84,10 +88,10 @@ npx -y skills add "/absolute/path/to/lead-acquisition-4-skills" -g --all
 
 ## 公开验证摘要
 
-- 七个课程能力已在私有评测环境完成双次独立评测，汇总结果 70 / 70 通过；题目、答案和评分细则不公开
-- 接口、主链和端到端课程案例回放均已通过
-- 公开包额外执行 8 / 8 Skill 完整性检查和隔离安装验证
-- G7 真实项目影子运行不包含在本发行包中
+- 历史七能力 `70 / 70` 仅重新定性为确定性结构单元测试；它没有真实调用 GPT 或安装后的 Skill，不得作为业务能力 PASS
+- 历史接口与案例夹具只证明 Schema、依赖与预设数据可以贯通，不证明模型能从陌生、矛盾或缺失资料中得出正确业务结论
+- 公开包已完成 8 / 8 Skill 完整性检查和隔离安装验证；这证明“能安装、文件完整”，不证明“能独立做好项目”
+- G7 真实项目与 G8 连续运行均未通过；v1 的七个课程能力统一标记为 `PROVISIONAL_STRUCTURAL_VERIFIED`
 
 详细证据见 [发行证据说明](docs/release-evidence.md)。
 
@@ -118,6 +122,6 @@ npx -y skills add wyz2025168-byte/lead-acquisition-4-skills -g --all
 
 ## 发布状态
 
-当前是 `v1.0.0-rc1` 公开测试版，发布于 `wyz2025168-byte/lead-acquisition-4-skills`。仓库采用 [Restricted Evaluation License 1.0](LICENSE.md)：允许个人学习、非商业测试和组织内部评估，禁止未经书面许可的商业化、再分发与修改发布。
+当前是已冻结的 `v1.0.0-rc1` Preview，发布于 `wyz2025168-byte/lead-acquisition-4-skills`。它只适合结构评估和 v2 对照测试，不应直接用于生产决策或内容发布。仓库采用 [Restricted Evaluation License 1.0](LICENSE.md)：允许个人学习、非商业测试和组织内部评估，禁止未经书面许可的商业化、再分发与修改发布。
 
 发布决策与边界见 [GitHub 发布记录](docs/publication-checklist.md)。

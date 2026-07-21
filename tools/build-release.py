@@ -26,6 +26,7 @@ def files_under(root: Path, exclude_names: set[str] | None = None):
         p for p in root.rglob("*")
         if p.is_file()
         and p.name not in exclude_names
+        and p.name != ".DS_Store"
         and ".git" not in p.parts
         and "__pycache__" not in p.parts
         and "dist" not in p.relative_to(ROOT).parts
@@ -70,11 +71,17 @@ def main() -> None:
         "schema_version": "1.0",
         "name": REPO_NAME,
         "version": f"v{VERSION}-rc1",
-        "publication_status": "PUBLIC_RC1_SANITIZED_RESTRICTED_EVALUATION",
+        "publication_status": "PUBLIC_PREVIEW_V1_FROZEN_STRUCTURAL_VALIDATION_ONLY",
         "repository": "https://github.com/wyz2025168-byte/lead-acquisition-4-skills",
         "license": "Restricted Evaluation License 1.0",
         "installable_skills": [p.name for p in skill_dirs],
         "course_capabilities": 7,
+        "course_capability_status": "PROVISIONAL_STRUCTURAL_VERIFIED",
+        "business_validation_status": "NOT_PASSED",
+        "g7_status": "NOT_PASSED",
+        "g8_status": "NOT_RUN",
+        "historical_70_of_70_scope": "DETERMINISTIC_STRUCTURAL_UNIT_TEST_ONLY",
+        "v2_publication_blocked_until": "G8_PASSED",
         "engineering_router": "jw",
         "private_source_files_included": 0,
         "private_traceability_metadata_included": False,
@@ -117,7 +124,8 @@ def main() -> None:
     repo_pairs = [(p, f"{REPO_NAME}/{p.relative_to(ROOT).as_posix()}") for p in repo_files]
     write_zip(DIST / f"{REPO_NAME}-v{VERSION}.zip", repo_pairs)
 
-    dist_files = sorted(p for p in DIST.rglob("*") if p.is_file() and p.name != "SHA256SUMS.txt")
+    dist_files = [DIST / f"{REPO_NAME}-v{VERSION}.zip"]
+    dist_files.extend(sorted((DIST / "skills").glob("*.zip")))
     (DIST / "SHA256SUMS.txt").write_text(
         "".join(f"{sha256(p)}  {p.relative_to(DIST).as_posix()}\n" for p in dist_files),
         encoding="utf-8",
