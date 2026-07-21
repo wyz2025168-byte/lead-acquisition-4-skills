@@ -2,13 +2,8 @@
   "schema_version": "1.0",
   "name": "lead-acquisition-4-skills",
   "version": "v1.0.0-rc1",
-  "file_count": 119,
+  "file_count": 118,
   "files": [
-    {
-      "path": ".DS_Store",
-      "sha256": "be4e269a0ef3f692de6abd7adf07b4d39e3731eda8ac34dcf4e7231fde99a607",
-      "bytes": 6148
-    },
     {
       "path": ".github/workflows/validate.yml",
       "sha256": "55dc00c7ab0963c780aeb73f3a89fa5a663c677b400a13b7b02d4e54ef114739",
@@ -591,8 +586,8 @@
     },
     {
       "path": "tools/build-release.py",
-      "sha256": "469beb28c58a525d2ce4293741688099af3af05878686af5af30e16b0a564b2c",
-      "bytes": 5308
+      "sha256": "588e4ed1e7e2fe80818c239f9e398922e6cbad953f6f9846fd98ec0b12ec2790",
+      "bytes": 5363
     },
     {
       "path": "tools/validate-package.py",
