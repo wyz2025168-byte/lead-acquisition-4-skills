@@ -3,4 +3,4 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .skills-test-home/
-
+/dist/lead-acquisition-4-skills/

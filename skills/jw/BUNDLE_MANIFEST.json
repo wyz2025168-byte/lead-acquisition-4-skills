@@ -1,27 +1,77 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "skill": "jw",
-  "release": "v1.0.0",
+  "release": "v2.0.0",
   "files": [
     {
       "path": "SKILL.md",
-      "sha256": "4efc67beb688c892dd637f7036b174a3688a7d48a8d65ae749205f09807b7c41",
-      "bytes": 2011
+      "sha256": "7c77e24a04af2d87d15883fbd7f30df932cbd048113036074c2838314e1b4c66",
+      "bytes": 6785
     },
     {
       "path": "agents/openai.yaml",
-      "sha256": "2b4158da041fa54d22868e8e2b12d5ab39529c05fb9501411e0ae1d66897ad1d",
-      "bytes": 240
+      "sha256": "d72c2aac13e7cb2cbbe06d01f0dccefe6c2e647247e63120ab8caeb5f6f5df5c",
+      "bytes": 290
     },
     {
-      "path": "examples/normal-invocation.md",
-      "sha256": "c5d2d1a68b80e351420a1f9f746c85fe6c5a3c97b4ed76c96f98cdb0a2629df4",
-      "bytes": 334
+      "path": "references/critic-and-safety.md",
+      "sha256": "acf0698fe1054ec75b031d37f72a7c0ffc2793aab38bb827e530a5401747706e",
+      "bytes": 1901
     },
     {
-      "path": "scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
+      "path": "references/domain-dental.md",
+      "sha256": "fa3eceab1ce954464e6f8f70f8ba4b31e7ed913441d00d2cc2ea9ca71976eaf3",
+      "bytes": 1706
+    },
+    {
+      "path": "references/operating-system.md",
+      "sha256": "8334833e4e07ac2d9deffa4aafc9c8b800d27f3d3137b3b52dcee38a73bfbe7a",
+      "bytes": 2760
+    },
+    {
+      "path": "references/principles.md",
+      "sha256": "2e3b19af49122bc4c5aa216c822a9504d42673371bdde15770cf097c3f38492e",
+      "bytes": 2339
+    },
+    {
+      "path": "references/research-evidence.md",
+      "sha256": "405969c843ddb380ff4e60c8bd1cdf6ebb847ac4cad22934101fccfc1dbc5664",
+      "bytes": 1810
+    },
+    {
+      "path": "references/runtime.md",
+      "sha256": "8609f78d64956be9a51fe080e1a006d334e8e59d22cfaa186a5d84215faa46c1",
+      "bytes": 2420
+    },
+    {
+      "path": "references/stage-content.md",
+      "sha256": "2b19d0e04e51da9338f8eb4777ad833015b6ecd2a1b3dbb00e249408833e388b",
+      "bytes": 2675
+    },
+    {
+      "path": "references/stage-operations.md",
+      "sha256": "3038947a0e52f25be1352f8436a436880220c3dda6f35f8c45168e0c7cc14a3b",
+      "bytes": 2416
+    },
+    {
+      "path": "references/stage-portfolio.md",
+      "sha256": "93794377127e75aacc622318b75527f7f1bd8d5c281ec9f791b5deec10b3ce71",
+      "bytes": 1833
+    },
+    {
+      "path": "references/stage-positioning.md",
+      "sha256": "c271c7c521e79781b3a82ff410bfe4677385ecf896f1fd7241f058bff2854621",
+      "bytes": 2536
+    },
+    {
+      "path": "references/stage-production.md",
+      "sha256": "868474f0d5f68a24a6a4e59ff8ff007def8a519bbb365f4f405c4ef0f8b2f941",
+      "bytes": 2042
+    },
+    {
+      "path": "scripts/jw_project.py",
+      "sha256": "0d977ec5d2b9fb3b79137898d995991eec1c2cda8d3ffd9a19e8bf7b8c8f743f",
+      "bytes": 52146
     }
   ]
 }

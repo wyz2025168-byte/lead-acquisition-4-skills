@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build deterministic manifests and ZIP artifacts for the skills repository."""
+"""Rebuild public v2.0.0 manifests and deterministic archive."""
 
 from __future__ import annotations
 
@@ -10,127 +10,86 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SKILLS = ROOT / "skills"
+SKILL = ROOT / "skills" / "jw"
 DIST = ROOT / "dist"
-VERSION = "1.0.0"
-REPO_NAME = "lead-acquisition-4-skills"
+VERSION = "2.0.0"
+NAME = "lead-acquisition-4-skills"
 
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def files_under(root: Path, exclude_names: set[str] | None = None):
-    exclude_names = exclude_names or set()
+def files_under(root: Path, exclude: set[str] | None = None) -> list[Path]:
+    exclude = exclude or set()
     return sorted(
-        p for p in root.rglob("*")
-        if p.is_file()
-        and p.name not in exclude_names
-        and p.name != ".DS_Store"
-        and ".git" not in p.parts
-        and "__pycache__" not in p.parts
-        and "dist" not in p.relative_to(ROOT).parts
-        and p.suffix != ".pyc"
+        path for path in root.rglob("*")
+        if path.is_file()
+        and path.name not in exclude
+        and path.name != ".DS_Store"
+        and ".git" not in path.parts
+        and "__pycache__" not in path.parts
+        and path.suffix != ".pyc"
+        and "dist" not in path.relative_to(ROOT).parts
     )
 
 
-def write_json(path: Path, value) -> None:
+def write_json(path: Path, value: object) -> None:
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def write_zip(path: Path, pairs: list[tuple[Path, str]]) -> None:
+def write_zip(path: Path, members: list[Path]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         path.unlink()
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
-        for source, arcname in pairs:
-            info = zipfile.ZipInfo(arcname, date_time=(2026, 7, 19, 0, 0, 0))
+        for source in members:
+            relative = source.relative_to(ROOT).as_posix()
+            info = zipfile.ZipInfo(f"{NAME}/{relative}", date_time=(2026, 7, 22, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             archive.writestr(info, source.read_bytes())
 
 
 def main() -> None:
-    DIST.mkdir(parents=True, exist_ok=True)
-    (DIST / "skills").mkdir(parents=True, exist_ok=True)
-
-    skill_dirs = sorted(p for p in SKILLS.iterdir() if p.is_dir() and (p / "SKILL.md").is_file())
-    for skill_dir in skill_dirs:
-        manifest_path = skill_dir / "BUNDLE_MANIFEST.json"
-        files = [p for p in files_under(skill_dir, {"BUNDLE_MANIFEST.json"})]
-        write_json(manifest_path, {
-            "schema_version": "1.0",
-            "skill": skill_dir.name,
+    if not (SKILL / "SKILL.md").is_file():
+        raise SystemExit("Missing skills/jw/SKILL.md")
+    skill_files = files_under(SKILL, {"BUNDLE_MANIFEST.json"})
+    write_json(
+        SKILL / "BUNDLE_MANIFEST.json",
+        {
+            "schema_version": "2.0",
+            "skill": "jw",
             "release": f"v{VERSION}",
             "files": [
-                {"path": p.relative_to(skill_dir).as_posix(), "sha256": sha256(p), "bytes": p.stat().st_size}
-                for p in files
+                {"path": path.relative_to(SKILL).as_posix(), "sha256": sha256(path), "bytes": path.stat().st_size}
+                for path in skill_files
             ],
-        })
-
-    release_manifest = {
-        "schema_version": "1.0",
-        "name": REPO_NAME,
-        "version": f"v{VERSION}-rc1",
-        "publication_status": "PUBLIC_PREVIEW_V1_FROZEN_STRUCTURAL_VALIDATION_ONLY",
-        "repository": "https://github.com/wyz2025168-byte/lead-acquisition-4-skills",
-        "license": "Restricted Evaluation License 1.0",
-        "installable_skills": [p.name for p in skill_dirs],
-        "course_capabilities": 7,
-        "course_capability_status": "PROVISIONAL_STRUCTURAL_VERIFIED",
-        "business_validation_status": "NOT_PASSED",
-        "g7_status": "NOT_PASSED",
-        "g8_status": "NOT_RUN",
-        "historical_70_of_70_scope": "DETERMINISTIC_STRUCTURAL_UNIT_TEST_ONLY",
-        "v2_publication_blocked_until": "G8_PASSED",
-        "engineering_router": "jw",
-        "private_source_files_included": 0,
-        "private_traceability_metadata_included": False,
-        "private_evaluation_materials_included": False,
-        "g7_real_project_shadow_included": False,
-        "installation_test": {
-            "skills_cli_version": "1.5.19",
-            "skills_discovered": 8,
-            "skills_installed": 8,
-            "post_install_bundle_checks": "8/8 PASS",
-            "environment": "isolated temporary HOME",
-            "local_release_candidate_verified": True,
-            "public_github_remote_install_verified": True,
-            "public_github_source": "wyz2025168-byte/lead-acquisition-4-skills"
-        }
-    }
-    write_json(ROOT / "RELEASE_MANIFEST.json", release_manifest)
-
-    package_path = ROOT / "PACKAGE_MANIFEST.json"
-    sums_path = ROOT / "SHA256SUMS.txt"
-    package_files = [p for p in files_under(ROOT, {"PACKAGE_MANIFEST.json", "SHA256SUMS.txt"})]
-    write_json(package_path, {
-        "schema_version": "1.0",
-        "name": REPO_NAME,
-        "version": f"v{VERSION}-rc1",
-        "file_count": len(package_files),
-        "files": [
-            {"path": p.relative_to(ROOT).as_posix(), "sha256": sha256(p), "bytes": p.stat().st_size}
-            for p in package_files
-        ],
-    })
-    sum_files = [p for p in files_under(ROOT, {"SHA256SUMS.txt"})]
-    sums_path.write_text("".join(f"{sha256(p)}  {p.relative_to(ROOT).as_posix()}\n" for p in sum_files), encoding="utf-8")
-
-    for skill_dir in skill_dirs:
-        pairs = [(p, p.relative_to(skill_dir).as_posix()) for p in files_under(skill_dir)]
-        write_zip(DIST / "skills" / f"{skill_dir.name}-v{VERSION}.zip", pairs)
-
-    repo_files = [p for p in files_under(ROOT)]
-    repo_pairs = [(p, f"{REPO_NAME}/{p.relative_to(ROOT).as_posix()}") for p in repo_files]
-    write_zip(DIST / f"{REPO_NAME}-v{VERSION}.zip", repo_pairs)
-
-    dist_files = [DIST / f"{REPO_NAME}-v{VERSION}.zip"]
-    dist_files.extend(sorted((DIST / "skills").glob("*.zip")))
-    (DIST / "SHA256SUMS.txt").write_text(
-        "".join(f"{sha256(p)}  {p.relative_to(DIST).as_posix()}\n" for p in dist_files),
+        },
+    )
+    package_files = files_under(ROOT, {"PACKAGE_MANIFEST.json", "SHA256SUMS.txt"})
+    write_json(
+        ROOT / "PACKAGE_MANIFEST.json",
+        {
+            "schema_version": "2.0",
+            "name": NAME,
+            "version": f"v{VERSION}",
+            "file_count": len(package_files),
+            "files": [
+                {"path": path.relative_to(ROOT).as_posix(), "sha256": sha256(path), "bytes": path.stat().st_size}
+                for path in package_files
+            ],
+        },
+    )
+    sum_files = files_under(ROOT, {"SHA256SUMS.txt"})
+    (ROOT / "SHA256SUMS.txt").write_text(
+        "".join(f"{sha256(path)}  {path.relative_to(ROOT).as_posix()}\n" for path in sum_files),
         encoding="utf-8",
     )
-    print(json.dumps({"skills": len(skill_dirs), "package_files": len(package_files), "release_files": len(dist_files)}, ensure_ascii=False))
+    archive = DIST / f"{NAME}-v{VERSION}.zip"
+    write_zip(archive, files_under(ROOT))
+    (DIST / "SHA256SUMS.txt").write_text(f"{sha256(archive)}  {archive.name}\n", encoding="utf-8")
+    print(json.dumps({"skills": ["jw"], "package_files": len(package_files), "archive": str(archive), "sha256": sha256(archive)}, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "name": "lead-acquisition-4-skills",
-  "version": "v1.0.0-rc1",
-  "file_count": 118,
+  "version": "v2.0.0",
+  "file_count": 27,
   "files": [
     {
       "path": ".github/workflows/validate.yml",
@@ -11,13 +11,13 @@
     },
     {
       "path": ".gitignore",
-      "sha256": "6478500faea74396ad0b829e3ca3f15488480233d5aae06eac880843c4a7d3af",
-      "bytes": 64
+      "sha256": "62325f189e3314b42fb3ea018d15050ba3b1229f853f3020c4b152aeac0caa4d",
+      "bytes": 96
     },
     {
       "path": "AGENTS.md",
-      "sha256": "004984ef6160bfea764a2456ac8bee24043d58d081f2a0e64fec68a1ff8af381",
-      "bytes": 1254
+      "sha256": "f16405eaab6c8e40c52ddfe21df4c0663764506cc17bd7454bf7b9872f9177e2",
+      "bytes": 684
     },
     {
       "path": "LICENSE.md",
@@ -26,573 +26,118 @@
     },
     {
       "path": "README.md",
-      "sha256": "49bf489d011efa2c799d2a3f289f7549c032178f7bb34da0c5c5970c88be9c87",
-      "bytes": 5442
+      "sha256": "de2bff20eabc5e17946f78121003fbb26b089b4d98625834e6226e3415372cee",
+      "bytes": 1469
     },
     {
       "path": "RELEASE_MANIFEST.json",
-      "sha256": "be9233cd19d46d35f0925b6d469e2bbbab3ced0d708cdb6ddcc5210c26e85d6f",
-      "bytes": 1386
+      "sha256": "c8197b7a5b7ca9b62b4c9c106c7178d52016510b74c4ba4cb042f33b6a1fb603",
+      "bytes": 1029
+    },
+    {
+      "path": "RELEASE_NOTES.md",
+      "sha256": "32e6bb3cf094fcad5efaace8920c3cb53c3d4b008733b06c34ed26d1ea4ebec1",
+      "bytes": 711
     },
     {
       "path": "SOURCE_OF_TRUTH.md",
-      "sha256": "dcf4f3766d8daf6cb2de1c91f74d762ad5a8aaf33a1fb787001f4f86f68d1e0e",
-      "bytes": 1338
+      "sha256": "a3156a25320a0d62717c85fb689c6299d692a1cc823c5dc671f4e6beab802d9b",
+      "bytes": 255
     },
     {
-      "path": "docs/architecture.md",
-      "sha256": "c2c5b05c96044b828cdf34fdb696811e5203f21a8a21696fed140684b65d2820",
-      "bytes": 685
+      "path": "docs/FIELD_TESTING.md",
+      "sha256": "9a2b0273053db00c6a67f16ddddb8289afa9242b7c2bf5cc1eed639df8744bf0",
+      "bytes": 425
     },
     {
-      "path": "docs/installation-test.md",
-      "sha256": "2b0dfc3895dec3876de16a83904c70514317c3399303c03a89b8e369514cfa58",
-      "bytes": 2291
-    },
-    {
-      "path": "docs/installation.md",
-      "sha256": "55c2bd12e101fd3bd36f54ea0e4914c1bcc01f31706b14e6f46d98abc683c244",
-      "bytes": 763
-    },
-    {
-      "path": "docs/privacy-and-source-boundary.md",
-      "sha256": "6d6068b7ed53d01f6d9683e11f9f24aa99c8be8b6692b55672ea78f61023f3c2",
-      "bytes": 850
-    },
-    {
-      "path": "docs/publication-checklist.md",
-      "sha256": "77aef1557fdeed0d69e78c4aac7e4916174d455aff4bff1e57c63dfd663fb49c",
-      "bytes": 977
-    },
-    {
-      "path": "docs/release-evidence.md",
-      "sha256": "44c418e626304b56076087688887a8451f082781f3681ee0fd0474b88f387562",
-      "bytes": 1629
+      "path": "docs/UPGRADE.md",
+      "sha256": "40a318ed7846d2e4c752e4376b76240eea0cf17d2e75f5b1c5dc569df6e3b72b",
+      "bytes": 415
     },
     {
       "path": "skills/jw/BUNDLE_MANIFEST.json",
-      "sha256": "a4b28f8102cb22119b2f2e865a6fdedfe01a2e549edced28c733786d9ff49570",
-      "bytes": 706
+      "sha256": "e5524557cbe5ba233c1cb0410660eb2c9eb0bba023daa16d6b3c90ba4a7ebd0f",
+      "bytes": 2335
     },
     {
       "path": "skills/jw/SKILL.md",
-      "sha256": "4efc67beb688c892dd637f7036b174a3688a7d48a8d65ae749205f09807b7c41",
-      "bytes": 2011
+      "sha256": "7c77e24a04af2d87d15883fbd7f30df932cbd048113036074c2838314e1b4c66",
+      "bytes": 6785
     },
     {
       "path": "skills/jw/agents/openai.yaml",
-      "sha256": "2b4158da041fa54d22868e8e2b12d5ab39529c05fb9501411e0ae1d66897ad1d",
-      "bytes": 240
+      "sha256": "d72c2aac13e7cb2cbbe06d01f0dccefe6c2e647247e63120ab8caeb5f6f5df5c",
+      "bytes": 290
     },
     {
-      "path": "skills/jw/examples/normal-invocation.md",
-      "sha256": "c5d2d1a68b80e351420a1f9f746c85fe6c5a3c97b4ed76c96f98cdb0a2629df4",
-      "bytes": 334
+      "path": "skills/jw/references/critic-and-safety.md",
+      "sha256": "acf0698fe1054ec75b031d37f72a7c0ffc2793aab38bb827e530a5401747706e",
+      "bytes": 1901
     },
     {
-      "path": "skills/jw/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
+      "path": "skills/jw/references/domain-dental.md",
+      "sha256": "fa3eceab1ce954464e6f8f70f8ba4b31e7ed913441d00d2cc2ea9ca71976eaf3",
+      "bytes": 1706
     },
     {
-      "path": "skills/jw-circle/BUNDLE_MANIFEST.json",
-      "sha256": "2912d1377f47801aaea050cf567633c339db8148bd7800b67ae7cbd43edaa004",
-      "bytes": 2165
+      "path": "skills/jw/references/operating-system.md",
+      "sha256": "8334833e4e07ac2d9deffa4aafc9c8b800d27f3d3137b3b52dcee38a73bfbe7a",
+      "bytes": 2760
     },
     {
-      "path": "skills/jw-circle/SKILL.md",
-      "sha256": "983c422eb3fc8dad46faac230e1e9a42c50b7cee12883f7d7dd929895edf113d",
-      "bytes": 5611
+      "path": "skills/jw/references/principles.md",
+      "sha256": "2e3b19af49122bc4c5aa216c822a9504d42673371bdde15770cf097c3f38492e",
+      "bytes": 2339
     },
     {
-      "path": "skills/jw-circle/agents/openai.yaml",
-      "sha256": "e1e7c67f61f62f350b88d12ca13b086f202ff2fe8a9affa1fb0da1fb7354f5cf",
-      "bytes": 267
+      "path": "skills/jw/references/research-evidence.md",
+      "sha256": "405969c843ddb380ff4e60c8bd1cdf6ebb847ac4cad22934101fccfc1dbc5664",
+      "bytes": 1810
     },
     {
-      "path": "skills/jw-circle/examples/normal-invocation.md",
-      "sha256": "05f94c263b8513cbc33b8f0ca70d73c14a009356ee40626d5e82c64d3434fc48",
-      "bytes": 1101
+      "path": "skills/jw/references/runtime.md",
+      "sha256": "8609f78d64956be9a51fe080e1a006d334e8e59d22cfaa186a5d84215faa46c1",
+      "bytes": 2420
     },
     {
-      "path": "skills/jw-circle/references/course-rules.md",
-      "sha256": "777d490b454833db8582d0830515ee94cd47dccffe5811f4b773bbaaa2bb3a48",
-      "bytes": 2383
+      "path": "skills/jw/references/stage-content.md",
+      "sha256": "2b19d0e04e51da9338f8eb4777ad833015b6ecd2a1b3dbb00e249408833e388b",
+      "bytes": 2675
     },
     {
-      "path": "skills/jw-circle/references/source-map.json",
-      "sha256": "167e41b320831f0c6dcb5e9cdc0d70397f2c6572ff7c0e3de1c889497ddd8493",
-      "bytes": 784
+      "path": "skills/jw/references/stage-operations.md",
+      "sha256": "3038947a0e52f25be1352f8436a436880220c3dda6f35f8c45168e0c7cc14a3b",
+      "bytes": 2416
     },
     {
-      "path": "skills/jw-circle/schemas/artifact.schema.json",
-      "sha256": "b10d690ea82efa1e6ff4bbe1198249ae0ececfd83d196ec80b9a367c1ce1f04d",
-      "bytes": 2878
+      "path": "skills/jw/references/stage-portfolio.md",
+      "sha256": "93794377127e75aacc622318b75527f7f1bd8d5c281ec9f791b5deec10b3ce71",
+      "bytes": 1833
     },
     {
-      "path": "skills/jw-circle/schemas/contract-binding.json",
-      "sha256": "007a0ba9f3d41750cc8079427e459400b9d230ad0475ac294ae8d7562a0d3e3c",
-      "bytes": 19662
+      "path": "skills/jw/references/stage-positioning.md",
+      "sha256": "c271c7c521e79781b3a82ff410bfe4677385ecf896f1fd7241f058bff2854621",
+      "bytes": 2536
     },
     {
-      "path": "skills/jw-circle/schemas/input.schema.json",
-      "sha256": "8760d249fb6f2693625c527c5d6cf581b731c51eb97d2824aac470b1215513d1",
-      "bytes": 3808
+      "path": "skills/jw/references/stage-production.md",
+      "sha256": "868474f0d5f68a24a6a4e59ff8ff007def8a519bbb365f4f405c4ef0f8b2f941",
+      "bytes": 2042
     },
     {
-      "path": "skills/jw-circle/schemas/intake.schema.json",
-      "sha256": "4b33a872499fb5d78ecef007521ec0b3605c976f0421b739fb097e70cdbaab58",
-      "bytes": 3638
-    },
-    {
-      "path": "skills/jw-circle/schemas/output.schema.json",
-      "sha256": "06d5e4c4e40510010737de426c4ba9ba15d6f613fbb34de2ffbe8992f4f541eb",
-      "bytes": 4920
-    },
-    {
-      "path": "skills/jw-circle/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
-    },
-    {
-      "path": "skills/jw-circle/tests/evaluation-binding.json",
-      "sha256": "183339a3cb2ce0531f648cac9b0628bc0226040e57860ed490b4182756545b48",
-      "bytes": 341
-    },
-    {
-      "path": "skills/jw-circle/tests/gold-binding.json",
-      "sha256": "58d8b6eb940edc174587b9ffa2eb9218c872dd3281efd504d326b0675e35a105",
-      "bytes": 338
-    },
-    {
-      "path": "skills/jw-convert/BUNDLE_MANIFEST.json",
-      "sha256": "09b7598959bae941e83f437416c7e5c823451d2156b1a07d382a527a394fac4c",
-      "bytes": 2166
-    },
-    {
-      "path": "skills/jw-convert/SKILL.md",
-      "sha256": "717295a87728ba1fe04b34bc28469c3242d29b56d55da7c835291bf207861cdb",
-      "bytes": 5830
-    },
-    {
-      "path": "skills/jw-convert/agents/openai.yaml",
-      "sha256": "9d42517e3a2581db27f1bdcf2cb645ac9aa259acc74f57cb5bf87d7ec9148bfd",
-      "bytes": 261
-    },
-    {
-      "path": "skills/jw-convert/examples/normal-invocation.md",
-      "sha256": "4ddf42978623827967e857ca5a95eaab8eab58cec91b8b832899a55de07db62e",
-      "bytes": 1233
-    },
-    {
-      "path": "skills/jw-convert/references/course-rules.md",
-      "sha256": "81b552e3afc9d67cdccdad03179b7966af5bdce95ae75e87b8a7db4033e749f3",
-      "bytes": 2794
-    },
-    {
-      "path": "skills/jw-convert/references/source-map.json",
-      "sha256": "6a328dd926e140c66d7f787cd46a22f2693b5891ff748d9fe423758ad4d29129",
-      "bytes": 785
-    },
-    {
-      "path": "skills/jw-convert/schemas/artifact.schema.json",
-      "sha256": "b9b98b8bf782325dd2bbc1b8b96ec9887902c87719450331afcd78e71e9b50a8",
-      "bytes": 3671
-    },
-    {
-      "path": "skills/jw-convert/schemas/contract-binding.json",
-      "sha256": "bb617debf9a17100581207f0666a58634ab12b0e67cb20666eb7ea5bb04cafb8",
-      "bytes": 22374
-    },
-    {
-      "path": "skills/jw-convert/schemas/input.schema.json",
-      "sha256": "ae42e982af27f20352053b696db4780ad8f92ab5e3e9f196d2a7b832cd6711b2",
-      "bytes": 4348
-    },
-    {
-      "path": "skills/jw-convert/schemas/intake.schema.json",
-      "sha256": "93cc50a354d1d9ab7d09d36ab6b65e9e47002649af56e76a2215708b408f976e",
-      "bytes": 4169
-    },
-    {
-      "path": "skills/jw-convert/schemas/output.schema.json",
-      "sha256": "a7fffc972909b57b43e17bb440da1316201ef490e29b85b86b538a336ee4abad",
-      "bytes": 5853
-    },
-    {
-      "path": "skills/jw-convert/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
-    },
-    {
-      "path": "skills/jw-convert/tests/evaluation-binding.json",
-      "sha256": "d1b3edff717a75cd14171babde5ad3a4778045e02a0e48d9da5af0e69886f3cf",
-      "bytes": 341
-    },
-    {
-      "path": "skills/jw-convert/tests/gold-binding.json",
-      "sha256": "8ea27b5ff2e7b66c504a50ca535be148f9a8f981dcf1337013ffac63b32c5977",
-      "bytes": 338
-    },
-    {
-      "path": "skills/jw-grow/BUNDLE_MANIFEST.json",
-      "sha256": "b29488bb12784d9e33884ef912e2892e98b192eb50fe0e5e91824b8a78d79baa",
-      "bytes": 2163
-    },
-    {
-      "path": "skills/jw-grow/SKILL.md",
-      "sha256": "ca6d443be2f01c78ccb3e2344e6fdda9fb86c43d3a90d27a4ed3629492664757",
-      "bytes": 6192
-    },
-    {
-      "path": "skills/jw-grow/agents/openai.yaml",
-      "sha256": "a5f48b049a7be3097e69451e4b69706c5e3ff465018a5a7e4107f5ea4854543c",
-      "bytes": 270
-    },
-    {
-      "path": "skills/jw-grow/examples/normal-invocation.md",
-      "sha256": "42e60c6f7edc1be252e646cdf10d0cd93565c4bf3484a3af2550baf518d4d10b",
-      "bytes": 1200
-    },
-    {
-      "path": "skills/jw-grow/references/course-rules.md",
-      "sha256": "2eb122fb154c395d7159af9df39cbd70a36aae6dbaf1bdd59bfc65219feb31fa",
-      "bytes": 3222
-    },
-    {
-      "path": "skills/jw-grow/references/source-map.json",
-      "sha256": "41e9332e5b0cf3967eff5879bfcbf268a78503fdfe0d72c16f23fa2c39cc9fb7",
-      "bytes": 782
-    },
-    {
-      "path": "skills/jw-grow/schemas/artifact.schema.json",
-      "sha256": "73f11523e80ec604fec846800d7de166179ca6524426106def1a26cf1d1ce3b9",
-      "bytes": 3129
-    },
-    {
-      "path": "skills/jw-grow/schemas/contract-binding.json",
-      "sha256": "5b29ab1e91275290b94a42b6c0c7990bb327a0eb8d1160cd320c8b1bd6378886",
-      "bytes": 23125
-    },
-    {
-      "path": "skills/jw-grow/schemas/input.schema.json",
-      "sha256": "e6c13e1bb1fdd3fe40511aeb93438605009584efd72799136254cc582bb74628",
-      "bytes": 4193
-    },
-    {
-      "path": "skills/jw-grow/schemas/intake.schema.json",
-      "sha256": "813bab34ec97fc2795f78705f54d2a56e452d6cab541c2e8d3b92bafdf5c8fc7",
-      "bytes": 4005
-    },
-    {
-      "path": "skills/jw-grow/schemas/output.schema.json",
-      "sha256": "bd0418c5ab18c00d1bf1c5aa9a67bc25cfbf5dd39f037e4d9de42a04d948b315",
-      "bytes": 5248
-    },
-    {
-      "path": "skills/jw-grow/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
-    },
-    {
-      "path": "skills/jw-grow/tests/evaluation-binding.json",
-      "sha256": "01ac181a37342dfeaf816c8c465838442b9277e2ca733d187848e3dd53114b7f",
-      "bytes": 341
-    },
-    {
-      "path": "skills/jw-grow/tests/gold-binding.json",
-      "sha256": "750c3291e86e9457b78eda87de9e37f7679d5f0b428ba042a5af2030eda02483",
-      "bytes": 338
-    },
-    {
-      "path": "skills/jw-lock/BUNDLE_MANIFEST.json",
-      "sha256": "c10d868e49c0fab162279bb13a953c4796b3e8c9268365c2aed5a9066bea6843",
-      "bytes": 2163
-    },
-    {
-      "path": "skills/jw-lock/SKILL.md",
-      "sha256": "ce8beafeec60d45f543d36a945902b51833389dc557a7053717be23353cec20c",
-      "bytes": 5639
-    },
-    {
-      "path": "skills/jw-lock/agents/openai.yaml",
-      "sha256": "05d55f6402862a69efdac5058dea415b7d434703bbabbf067b37b90462afb131",
-      "bytes": 263
-    },
-    {
-      "path": "skills/jw-lock/examples/normal-invocation.md",
-      "sha256": "07558c4746862354f5fc2d2eb0c6d512dcce161e0f50ebf97a199c69b64661e7",
-      "bytes": 1164
-    },
-    {
-      "path": "skills/jw-lock/references/course-rules.md",
-      "sha256": "40a93af9ca97df95880c2b3360c21fa807d7db13ea0c26e2506a54dc631ee8d7",
-      "bytes": 2512
-    },
-    {
-      "path": "skills/jw-lock/references/source-map.json",
-      "sha256": "c00e360f5b52f3d9ac1df722b1d6f3b346edae18f78b33e250534bfb86b97b96",
-      "bytes": 782
-    },
-    {
-      "path": "skills/jw-lock/schemas/artifact.schema.json",
-      "sha256": "b60b30f9e13e43103889d56103f03e76653dbec1d1844576450ed314fa851b7e",
-      "bytes": 2699
-    },
-    {
-      "path": "skills/jw-lock/schemas/contract-binding.json",
-      "sha256": "18b96930cde5b4fceb6367e548546616d90deba1d4d27d9cad1cafd809f62de4",
-      "bytes": 19430
-    },
-    {
-      "path": "skills/jw-lock/schemas/input.schema.json",
-      "sha256": "ab25769fb95a17f88bd7e60cf554e6e0af2c6fc70317feefdfcdc80e56d38515",
-      "bytes": 4290
-    },
-    {
-      "path": "skills/jw-lock/schemas/intake.schema.json",
-      "sha256": "f1e7139bb884ea92c0af60aee04d01926fb59e56c69873931dc55e5f9e376395",
-      "bytes": 4087
-    },
-    {
-      "path": "skills/jw-lock/schemas/output.schema.json",
-      "sha256": "e774a925253ef7db16bd4c1273bc2101615fa9932ae6258aa459f58efd82dfac",
-      "bytes": 4739
-    },
-    {
-      "path": "skills/jw-lock/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
-    },
-    {
-      "path": "skills/jw-lock/tests/evaluation-binding.json",
-      "sha256": "ba9d21e86e929133c79505bd37051a4d5d6b00a77306b68ebd70b437dfb8d942",
-      "bytes": 341
-    },
-    {
-      "path": "skills/jw-lock/tests/gold-binding.json",
-      "sha256": "1125776f6329c74816e12d67f8e210b2feab0b52b6f18d247a322acd585bad49",
-      "bytes": 338
-    },
-    {
-      "path": "skills/jw-orchestrator/BUNDLE_MANIFEST.json",
-      "sha256": "1bcad7e3703ec37a8abc1fccd66b59c9c7e47905fae1ca2041eb220098fd0f80",
-      "bytes": 2171
-    },
-    {
-      "path": "skills/jw-orchestrator/SKILL.md",
-      "sha256": "84caf01f4def9ce299d3709c9c92ef44fd37593e2bf1737d6111bc74e97772bc",
-      "bytes": 6050
-    },
-    {
-      "path": "skills/jw-orchestrator/agents/openai.yaml",
-      "sha256": "bbb80bd57beedb8766485fe99ffc620c6853221ca5c972cbca5e2a448ad71adb",
-      "bytes": 275
-    },
-    {
-      "path": "skills/jw-orchestrator/examples/normal-invocation.md",
-      "sha256": "36c04231016adf36b874172f13e6083edf46260d456fbefb3443cc72bb1b8947",
-      "bytes": 1179
-    },
-    {
-      "path": "skills/jw-orchestrator/references/course-rules.md",
-      "sha256": "9e3cf13409460fbaf1e7860fb54b6d8470ea8f427b7a2301cdbd7f7459bd3843",
-      "bytes": 2990
-    },
-    {
-      "path": "skills/jw-orchestrator/references/source-map.json",
-      "sha256": "186920e19a7a14b599a66e07483111241707d8393cd93502a91dc6052b7cc8fc",
-      "bytes": 790
-    },
-    {
-      "path": "skills/jw-orchestrator/schemas/artifact.schema.json",
-      "sha256": "9624cdd99ecf4915aae5cb1b526a081b12d5c0b0805cd0c2563ada01ab714a24",
-      "bytes": 3244
-    },
-    {
-      "path": "skills/jw-orchestrator/schemas/contract-binding.json",
-      "sha256": "d497b8dc9cd59dad6481313215fd23e39e8863f4e220425452d6aa1663286e0a",
-      "bytes": 22860
-    },
-    {
-      "path": "skills/jw-orchestrator/schemas/input.schema.json",
-      "sha256": "2c91d596cc6a509f77a9264d83df0c42854c2c5b638fa324032ebf9acca18e50",
-      "bytes": 4023
-    },
-    {
-      "path": "skills/jw-orchestrator/schemas/intake.schema.json",
-      "sha256": "33bbabf3ced6f1ad08f3e4bb72482485f7abdecd37e06d1cb2bee9b9afcfa1be",
-      "bytes": 3889
-    },
-    {
-      "path": "skills/jw-orchestrator/schemas/output.schema.json",
-      "sha256": "7a8090c05b7b006aae3c3809a5ad6306ae00360512c17bf63ec57c88009f2d62",
-      "bytes": 5261
-    },
-    {
-      "path": "skills/jw-orchestrator/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
-    },
-    {
-      "path": "skills/jw-orchestrator/tests/evaluation-binding.json",
-      "sha256": "73b4bf7249eb4ae840fb54a2699fa5272bc12548c01f12febc15cb764e47bc9c",
-      "bytes": 341
-    },
-    {
-      "path": "skills/jw-orchestrator/tests/gold-binding.json",
-      "sha256": "fc9f72d10b8a575935eaee48cc65fa5e8b07fa54b40fb7ed878e95191f6742d0",
-      "bytes": 338
-    },
-    {
-      "path": "skills/jw-positioning/BUNDLE_MANIFEST.json",
-      "sha256": "ce182823876136a5f5684007a248e91d4da813224672a3034beaecd9febc1b84",
-      "bytes": 2170
-    },
-    {
-      "path": "skills/jw-positioning/SKILL.md",
-      "sha256": "1f14ad0368e03263f0c632d7e47d5b7db6d5ae339d6a69e28e789ecb84fe4e3a",
-      "bytes": 5537
-    },
-    {
-      "path": "skills/jw-positioning/agents/openai.yaml",
-      "sha256": "1e9ac6f79f9afb786b475bdac98b933fcd3abae553977286b5d8aaa4d099ca99",
-      "bytes": 275
-    },
-    {
-      "path": "skills/jw-positioning/examples/normal-invocation.md",
-      "sha256": "0ad5ca8a31f977e7b440017df05fbbbb35a239509020530fecf3fd1c3b9979f8",
-      "bytes": 1128
-    },
-    {
-      "path": "skills/jw-positioning/references/course-rules.md",
-      "sha256": "8709228bbd23023940eeb3ce8a8ac9db98f87c0e26a8396d3155ac8b4852fe6d",
-      "bytes": 2162
-    },
-    {
-      "path": "skills/jw-positioning/references/source-map.json",
-      "sha256": "22b7092626dfb4dca41afb1210e630302ec34508e2a4794a02b632ffe0057ce4",
-      "bytes": 789
-    },
-    {
-      "path": "skills/jw-positioning/schemas/artifact.schema.json",
-      "sha256": "4e1207331e3461cd7953a10e12cd8f3d3d3795981dbce887c4ffb9e13a8ca98b",
-      "bytes": 2344
-    },
-    {
-      "path": "skills/jw-positioning/schemas/contract-binding.json",
-      "sha256": "4bee0957bb923b89a5f7b192681d7b01119a15cfaf19a112b02283f889ef5479",
-      "bytes": 17284
-    },
-    {
-      "path": "skills/jw-positioning/schemas/input.schema.json",
-      "sha256": "f5c4b106631d2c07f279cf506d94a8216e8dea0f22e071de989e760062a6ba29",
-      "bytes": 3263
-    },
-    {
-      "path": "skills/jw-positioning/schemas/intake.schema.json",
-      "sha256": "e3b01ff29bf165159fc0e231de60d02f6ff955cd7fce35deff297a6597bbfdbc",
-      "bytes": 3110
-    },
-    {
-      "path": "skills/jw-positioning/schemas/output.schema.json",
-      "sha256": "cecc27d6306c4de0d0b6c7dd77f663955c57bee0f6b52a91ed3d968f87057329",
-      "bytes": 4288
-    },
-    {
-      "path": "skills/jw-positioning/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
-    },
-    {
-      "path": "skills/jw-positioning/tests/evaluation-binding.json",
-      "sha256": "b358f8088e4dfa4ee18c7d9eb60b672052404dc5f76e05deeeef51a18ce9b1a6",
-      "bytes": 341
-    },
-    {
-      "path": "skills/jw-positioning/tests/gold-binding.json",
-      "sha256": "0a746a84b0e32dea5e3e818c479dfcf9685bd044817964f9643e2ad378303bd9",
-      "bytes": 338
-    },
-    {
-      "path": "skills/jw-production/BUNDLE_MANIFEST.json",
-      "sha256": "19838b92f679b2a26bccd135475f6d5ccac092eb9cc386a652ccd59e674515d7",
-      "bytes": 2169
-    },
-    {
-      "path": "skills/jw-production/SKILL.md",
-      "sha256": "a2130bcc09a7e8f42372528cbce7500ddb7c8f63147530c2f550929062eef62d",
-      "bytes": 6080
-    },
-    {
-      "path": "skills/jw-production/agents/openai.yaml",
-      "sha256": "f35925e524e3093e2cb65bfd7683b022de983a1e498f290065c1c2455de57b10",
-      "bytes": 276
-    },
-    {
-      "path": "skills/jw-production/examples/normal-invocation.md",
-      "sha256": "1ede091a3af4586865b3d3f780e21b03983fc410ccae7b3333b0bf7b3213be3a",
-      "bytes": 1283
-    },
-    {
-      "path": "skills/jw-production/references/course-rules.md",
-      "sha256": "1e8eddb4a411c579537b4ec581167910e98170eaa730a8a8ae8e1eff9532a342",
-      "bytes": 3347
-    },
-    {
-      "path": "skills/jw-production/references/source-map.json",
-      "sha256": "9583d695f9459083ae8a25127a3ca403e10c53ae874e2ba0b72752fd102e327e",
-      "bytes": 788
-    },
-    {
-      "path": "skills/jw-production/schemas/artifact.schema.json",
-      "sha256": "d4693198c583ea7be4dc6b766facca949efdb151c53f4cf96388f6f562577f99",
-      "bytes": 3329
-    },
-    {
-      "path": "skills/jw-production/schemas/contract-binding.json",
-      "sha256": "37c642add7c4fe4d6bdda98a8cce724fd695fda16dd5b85092ca3395bd7706a9",
-      "bytes": 23452
-    },
-    {
-      "path": "skills/jw-production/schemas/input.schema.json",
-      "sha256": "3a014318781c7fded958751a58bedf3b070768a2133c96ec82b1d836d97b88c1",
-      "bytes": 3583
-    },
-    {
-      "path": "skills/jw-production/schemas/intake.schema.json",
-      "sha256": "3ecea3d8d1e1d73ae5e3c02fe8c2b95a22a33f0d59e7edcbc9d4842b8c3e401e",
-      "bytes": 3440
-    },
-    {
-      "path": "skills/jw-production/schemas/output.schema.json",
-      "sha256": "670977a53ba25bdd94fa629326ce305a03b4f75b970606a020c6707e8fdfe1f8",
-      "bytes": 5416
-    },
-    {
-      "path": "skills/jw-production/scripts/validate-bundle.py",
-      "sha256": "ad447e126df08a10bb20f81837aca37d4db44e6ec85a69c450025611d268cae3",
-      "bytes": 1079
-    },
-    {
-      "path": "skills/jw-production/tests/evaluation-binding.json",
-      "sha256": "be3ee2ba6a8ab1a0d6d595b361c0304cf1d182a19fe28950d83471b7186a3f74",
-      "bytes": 341
-    },
-    {
-      "path": "skills/jw-production/tests/gold-binding.json",
-      "sha256": "c05020dc09decab19177197cdb0b37996278520517eece12d8119ccaf6b22c5f",
-      "bytes": 338
+      "path": "skills/jw/scripts/jw_project.py",
+      "sha256": "0d977ec5d2b9fb3b79137898d995991eec1c2cda8d3ffd9a19e8bf7b8c8f743f",
+      "bytes": 52146
     },
     {
       "path": "tools/build-release.py",
-      "sha256": "588e4ed1e7e2fe80818c239f9e398922e6cbad953f6f9846fd98ec0b12ec2790",
-      "bytes": 5363
+      "sha256": "fb8ace5eee01e114cff4b31f38ed4cd3cae4921fbff797e63e2df8c07351f14f",
+      "bytes": 3296
     },
     {
       "path": "tools/validate-package.py",
-      "sha256": "bc7940ee1350314e8dbef3beebc9dd0345dadee629d64ef9cbf462210f783ae8",
-      "bytes": 4158
+      "sha256": "5813f281da132beae3ce3ad1254e1ddffe521820718febcce43912f7e3445109",
+      "bytes": 6943
     }
   ]
 }

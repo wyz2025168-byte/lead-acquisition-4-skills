@@ -1,4 +1,0 @@
-interface:
-  display_name: "定位基座"
-  short_description: "按新版课程诊断定位三角，形成带来源、审批、版本和失效规则的定位基线"
-  default_prompt: "Use $jw-positioning to form a source-traceable positioning baseline from confirmed facts."

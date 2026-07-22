@@ -1,4 +1,0 @@
-interface:
-  display_name: "线索锁客"
-  short_description: "按新版课程完成四锁判断，生成带来源、审批和版本信息的锁客基线"
-  default_prompt: "Use $jw-lock to build a source-traceable 四锁 baseline from confirmed project facts."

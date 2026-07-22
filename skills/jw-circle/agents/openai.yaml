@@ -1,4 +1,0 @@
-interface:
-  display_name: "线索圈客"
-  short_description: "让开头、画面、内容和观点始终圈向同一目标人，输出可追溯四圈Brief"
-  default_prompt: "Use $jw-circle to create a source-traceable four-circle brief for one approved audience."
