@@ -1,40 +1,33 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "name": "lead-acquisition-4-skills",
-  "version": "v1.0.0-rc1",
-  "publication_status": "PUBLIC_PREVIEW_V1_FROZEN_STRUCTURAL_VALIDATION_ONLY",
+  "version": "v2.0.0",
+  "runtime_version": "2.0.0",
+  "publication_status": "PUBLIC_FIELD_VALIDATION_RELEASE",
   "repository": "https://github.com/wyz2025168-byte/lead-acquisition-4-skills",
   "license": "Restricted Evaluation License 1.0",
   "installable_skills": [
-    "jw",
-    "jw-circle",
-    "jw-convert",
-    "jw-grow",
-    "jw-lock",
-    "jw-orchestrator",
-    "jw-positioning",
-    "jw-production"
+    "jw"
   ],
-  "course_capabilities": 7,
-  "course_capability_status": "PROVISIONAL_STRUCTURAL_VERIFIED",
-  "business_validation_status": "NOT_PASSED",
-  "g7_status": "NOT_PASSED",
-  "g8_status": "NOT_RUN",
-  "historical_70_of_70_scope": "DETERMINISTIC_STRUCTURAL_UNIT_TEST_ONLY",
-  "v2_publication_blocked_until": "G8_PASSED",
-  "engineering_router": "jw",
-  "private_source_files_included": 0,
-  "private_traceability_metadata_included": false,
-  "private_evaluation_materials_included": false,
-  "g7_real_project_shadow_included": false,
-  "installation_test": {
-    "skills_cli_version": "1.5.19",
-    "skills_discovered": 8,
-    "skills_installed": 8,
-    "post_install_bundle_checks": "8/8 PASS",
-    "environment": "isolated temporary HOME",
-    "local_release_candidate_verified": true,
-    "public_github_remote_install_verified": true,
-    "public_github_source": "wyz2025168-byte/lead-acquisition-4-skills"
-  }
+  "business_stages": [
+    "POSITIONING",
+    "CONTENT",
+    "PRODUCTION",
+    "PORTFOLIO",
+    "OPERATIONS"
+  ],
+  "validation": {
+    "runtime_unit_tests": "7/7 PASS",
+    "skill_quick_validation": "PASS",
+    "package_checks": "12/12 PASS",
+    "two_project_forward_test": "PASS",
+    "independent_critic": "PASS",
+    "isolated_invalidation_replay": "PASS_24_RELATED_STALE_19_UNRELATED_PRESERVED",
+    "G7": "DEFERRED_TO_FIELD_VALIDATION",
+    "G8": "DEFERRED_TO_FIELD_VALIDATION"
+  },
+  "business_effect_claim": "NOT_CLAIMED_FIELD_VALIDATION_IN_PROGRESS",
+  "field_validation_notice_required": true,
+  "raw_course_files_included": 0,
+  "real_customer_records_included": 0
 }

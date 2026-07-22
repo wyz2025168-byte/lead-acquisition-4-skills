@@ -1,9 +1,1 @@
-d00b0164f11aaadc194c078579394ce9669c107d200172146404a0ee364a6910  lead-acquisition-4-skills-v1.0.0.zip
-1bd68b1a0072f6216481adf8be151e3354336630e3d941f2e3591560f7e1b456  skills/jw-circle-v1.0.0.zip
-6d4fd6816b5ef5bfbfd5685442c21a14209c63d9365924e9570cb207bf10d7bf  skills/jw-convert-v1.0.0.zip
-5dd61040e9998e991c64c6dc5d060788861c37a92249ef32ba0d6a5e00344e44  skills/jw-grow-v1.0.0.zip
-33bb415faba84190cf1b021c7e6b6e0d1a17df3aba8037f06ebc92afbfc06ddf  skills/jw-lock-v1.0.0.zip
-4b78cf5d82248410eebdc405c61e742e8c3d8badd5356154b13cb22c698bdc15  skills/jw-orchestrator-v1.0.0.zip
-8a415e66961519bb55b36039630c950b29013ca34ca0136905f7f1deeb85a629  skills/jw-positioning-v1.0.0.zip
-d80dced86af6793aa82cec9d3abf13cbd6cee5b003c7f8bfa298e4ccda05b355  skills/jw-production-v1.0.0.zip
-5eee325b54fa8def82c02fd812d7cad51c8daa332da89246072e44e803e1a98e  skills/jw-v1.0.0.zip
+36f627c1b7024e753f3a1ef37937b05aada279ab21beb2d2226ae471ddaeda3a  lead-acquisition-4-skills-v2.0.0.zip

@@ -1,4 +1,0 @@
-interface:
-  display_name: "线索生客"
-  short_description: "提炼本人长期认同的理念与表达边界，形成带审批和版本的一致性基线"
-  default_prompt: "Use $jw-grow to form a source-traceable idea baseline with approved expression boundaries."
