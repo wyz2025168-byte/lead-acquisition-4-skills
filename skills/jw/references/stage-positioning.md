@@ -1,5 +1,7 @@
 # 定位系统
 
+调用：`positioning-competition`、`audience-stage`、`orchestration-control`；涉及购买角色和交易链时条件调用 `conversion-journey`。
+
 ## 目标
 
 决定“用什么产品，为哪种购买任务中的哪些角色，在什么替代环境下，以什么可兑现优势取得选择”，并确认这条路径在利润、交付、渠道和长期经营上可成立。

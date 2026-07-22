@@ -1,8 +1,8 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "name": "lead-acquisition-4-skills",
-  "version": "v2.0.0",
-  "file_count": 27,
+  "version": "v3.0.0",
+  "file_count": 36,
   "files": [
     {
       "path": ".github/workflows/validate.yml",
@@ -16,8 +16,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "f16405eaab6c8e40c52ddfe21df4c0663764506cc17bd7454bf7b9872f9177e2",
-      "bytes": 684
+      "sha256": "d035471f3fe125edcabd0e6f79cdd54c48965f45509a5fc1c7db0cd0b04d2c36",
+      "bytes": 720
     },
     {
       "path": "LICENSE.md",
@@ -26,48 +26,48 @@
     },
     {
       "path": "README.md",
-      "sha256": "de2bff20eabc5e17946f78121003fbb26b089b4d98625834e6226e3415372cee",
-      "bytes": 1469
+      "sha256": "d28a57d84082ff63c6a44ebb60b4bb056cc9609b1d6425e0d4f9f018a14ba03c",
+      "bytes": 1767
     },
     {
       "path": "RELEASE_MANIFEST.json",
-      "sha256": "c8197b7a5b7ca9b62b4c9c106c7178d52016510b74c4ba4cb042f33b6a1fb603",
-      "bytes": 1029
+      "sha256": "57ccb3b39cd95d534140f6c14c253eff27544f6969e45d97c0983d5011cdef22",
+      "bytes": 528
     },
     {
       "path": "RELEASE_NOTES.md",
-      "sha256": "32e6bb3cf094fcad5efaace8920c3cb53c3d4b008733b06c34ed26d1ea4ebec1",
-      "bytes": 711
+      "sha256": "e770ac8fc2f3fba5afbd88422031873d1829abb55d3a082f36f4b4dcfaa60a7b",
+      "bytes": 1109
     },
     {
       "path": "SOURCE_OF_TRUTH.md",
-      "sha256": "a3156a25320a0d62717c85fb689c6299d692a1cc823c5dc671f4e6beab802d9b",
-      "bytes": 255
+      "sha256": "4d2a5604ecce8e8c2df1ff1400b70385d391dbe101667bdaa5f769f15968d570",
+      "bytes": 420
     },
     {
       "path": "docs/FIELD_TESTING.md",
-      "sha256": "9a2b0273053db00c6a67f16ddddb8289afa9242b7c2bf5cc1eed639df8744bf0",
-      "bytes": 425
+      "sha256": "a37738ecc14f7f81c1cc9a5f90312e5889208cc0e4acfbced42fde5df7cba7b9",
+      "bytes": 1070
     },
     {
       "path": "docs/UPGRADE.md",
-      "sha256": "40a318ed7846d2e4c752e4376b76240eea0cf17d2e75f5b1c5dc569df6e3b72b",
-      "bytes": 415
+      "sha256": "e9b689441492efa85a948e3ef07b5612f4ee5c6479fb8def62d3bacc13b6baf7",
+      "bytes": 614
     },
     {
       "path": "skills/jw/BUNDLE_MANIFEST.json",
-      "sha256": "e5524557cbe5ba233c1cb0410660eb2c9eb0bba023daa16d6b3c90ba4a7ebd0f",
-      "bytes": 2335
+      "sha256": "77497e2718e5d71cb9b6c6a6c40089e0671e7575ed03328f4b13a358576aed5a",
+      "bytes": 3900
     },
     {
       "path": "skills/jw/SKILL.md",
-      "sha256": "7c77e24a04af2d87d15883fbd7f30df932cbd048113036074c2838314e1b4c66",
-      "bytes": 6785
+      "sha256": "b105d9e096033abd2d103bb25da9cbeab247afdf853087f492f65d45834ca8a8",
+      "bytes": 6872
     },
     {
       "path": "skills/jw/agents/openai.yaml",
-      "sha256": "d72c2aac13e7cb2cbbe06d01f0dccefe6c2e647247e63120ab8caeb5f6f5df5c",
-      "bytes": 290
+      "sha256": "41004043d6313d8fd61fae8c8e181fb58021cc467a10234805704240924bcc35",
+      "bytes": 271
     },
     {
       "path": "skills/jw/references/critic-and-safety.md",
@@ -76,18 +76,63 @@
     },
     {
       "path": "skills/jw/references/domain-dental.md",
-      "sha256": "fa3eceab1ce954464e6f8f70f8ba4b31e7ed913441d00d2cc2ea9ca71976eaf3",
-      "bytes": 1706
+      "sha256": "51ef071a0ee79f66e4fef0bd84ae4fed9f41dcdd4aa214a4ce4344f594f9d05b",
+      "bytes": 4650
+    },
+    {
+      "path": "skills/jw/references/method-audience-continuity.md",
+      "sha256": "b0c48ea81cc632aaedfd6251664ba4ab50864c15735c9b45c869c761e86be04b",
+      "bytes": 5799
+    },
+    {
+      "path": "skills/jw/references/method-audience-stage.md",
+      "sha256": "7f854a9ae9f91ba53e058ff70fecada9a7ff1fb08c3a5c8b4d3d1bf5a82c7584",
+      "bytes": 5674
+    },
+    {
+      "path": "skills/jw/references/method-belief-mindshare.md",
+      "sha256": "000e3dacfa7f44664cdd61510f36b367f6f7603a0cb7f233248c03900399aa9c",
+      "bytes": 6151
+    },
+    {
+      "path": "skills/jw/references/method-conversion-journey.md",
+      "sha256": "5c9076dd7ed01aac8f21b0b10ff04e0e886ed899e482087522062f6f5ecfc9c5",
+      "bytes": 7129
+    },
+    {
+      "path": "skills/jw/references/method-orchestration-control.md",
+      "sha256": "b151604b6fccad699e10d809b6d00f3b88fd22b581022952c3d4f974abe694f9",
+      "bytes": 6459
+    },
+    {
+      "path": "skills/jw/references/method-positioning.md",
+      "sha256": "1b0a734c21c7998ff9b27df17e6c90f2ab0e09d354bb5a107b4dc549ceaf56ea",
+      "bytes": 5272
+    },
+    {
+      "path": "skills/jw/references/method-production-presentation.md",
+      "sha256": "33157fc1efcc0ae4bf538d05df2f18ad1ac1876ec6e4935415295b8b54da55c5",
+      "bytes": 6647
+    },
+    {
+      "path": "skills/jw/references/method-registry.json",
+      "sha256": "55f42f4d436c6db2306a38c102bd388f98e546e5adc97620e69327972c9d4a9c",
+      "bytes": 13186
+    },
+    {
+      "path": "skills/jw/references/method-router.md",
+      "sha256": "996ffdfe6375fa813f54d406d1118f8178a5c421b69364350150c59ee234f4b1",
+      "bytes": 2571
     },
     {
       "path": "skills/jw/references/operating-system.md",
-      "sha256": "8334833e4e07ac2d9deffa4aafc9c8b800d27f3d3137b3b52dcee38a73bfbe7a",
-      "bytes": 2760
+      "sha256": "94873de4060a1bf4f9cacdf3a5c2b8dedee50b63fb4cc8d122e02b546a993ad5",
+      "bytes": 3868
     },
     {
       "path": "skills/jw/references/principles.md",
-      "sha256": "2e3b19af49122bc4c5aa216c822a9504d42673371bdde15770cf097c3f38492e",
-      "bytes": 2339
+      "sha256": "1f0f1d0962813ff72b0e0d73f510f6eb9d9888969c7a08f0128d75d7543862ed",
+      "bytes": 1990
     },
     {
       "path": "skills/jw/references/research-evidence.md",
@@ -96,48 +141,48 @@
     },
     {
       "path": "skills/jw/references/runtime.md",
-      "sha256": "8609f78d64956be9a51fe080e1a006d334e8e59d22cfaa186a5d84215faa46c1",
-      "bytes": 2420
+      "sha256": "7b8b3335387e09f18ad54e46ff77e40088d48a2fa08e49bbd4678f78a6156834",
+      "bytes": 3337
     },
     {
       "path": "skills/jw/references/stage-content.md",
-      "sha256": "2b19d0e04e51da9338f8eb4777ad833015b6ecd2a1b3dbb00e249408833e388b",
-      "bytes": 2675
+      "sha256": "9a7d251bc8ca62e15b5a3d8c112f78bc1f99adb2a89a6a7dbdea6abdf2b16193",
+      "bytes": 2876
     },
     {
       "path": "skills/jw/references/stage-operations.md",
-      "sha256": "3038947a0e52f25be1352f8436a436880220c3dda6f35f8c45168e0c7cc14a3b",
-      "bytes": 2416
+      "sha256": "8c62719045d9d9dae4a98f5d66794d6ff657089b47eae47a64bc17358c638944",
+      "bytes": 2572
     },
     {
       "path": "skills/jw/references/stage-portfolio.md",
-      "sha256": "93794377127e75aacc622318b75527f7f1bd8d5c281ec9f791b5deec10b3ce71",
-      "bytes": 1833
+      "sha256": "98cfb4946cfceb05a519225d3aaa94d9e9db0782cb37dc5d74c35e47b28bb78f",
+      "bytes": 2015
     },
     {
       "path": "skills/jw/references/stage-positioning.md",
-      "sha256": "c271c7c521e79781b3a82ff410bfe4677385ecf896f1fd7241f058bff2854621",
-      "bytes": 2536
+      "sha256": "def9cd5559a3751b440a493ebfc4af80a9244f1a47e10d60dcfced8dfd231b62",
+      "bytes": 2689
     },
     {
       "path": "skills/jw/references/stage-production.md",
-      "sha256": "868474f0d5f68a24a6a4e59ff8ff007def8a519bbb365f4f405c4ef0f8b2f941",
-      "bytes": 2042
+      "sha256": "5ec2bd53bcba2985e1c9ae501104bc23fe232b067a7ba7589c1d9147eaf19e49",
+      "bytes": 2206
     },
     {
       "path": "skills/jw/scripts/jw_project.py",
-      "sha256": "0d977ec5d2b9fb3b79137898d995991eec1c2cda8d3ffd9a19e8bf7b8c8f743f",
-      "bytes": 52146
+      "sha256": "ec56502194f150743dafd1953ef223bd3fd4bad3401bb89acd58a1c2bf391b37",
+      "bytes": 59863
     },
     {
       "path": "tools/build-release.py",
-      "sha256": "fb8ace5eee01e114cff4b31f38ed4cd3cae4921fbff797e63e2df8c07351f14f",
-      "bytes": 3296
+      "sha256": "5eb3f2a3df090e0d0e5254865f1c58d3a41688bddcf31be53b294c4a186b0a9d",
+      "bytes": 3328
     },
     {
       "path": "tools/validate-package.py",
-      "sha256": "5813f281da132beae3ce3ad1254e1ddffe521820718febcce43912f7e3445109",
-      "bytes": 6943
+      "sha256": "a536d792188bfe274d9c5f789d2a98437ce3bc3aa5b4093e9e264b9d8b0747ff",
+      "bytes": 8438
     }
   ]
 }

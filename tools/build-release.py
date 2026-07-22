@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild public v2.0.0 manifests and deterministic archive."""
+"""Rebuild public v3.0.0 manifests and deterministic archive."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "jw"
 DIST = ROOT / "dist"
-VERSION = "2.0.0"
+VERSION = "3.0.0"
 NAME = "lead-acquisition-4-skills"
 
 
@@ -58,8 +58,9 @@ def main() -> None:
     write_json(
         SKILL / "BUNDLE_MANIFEST.json",
         {
-            "schema_version": "2.0",
+            "schema_version": "3.0",
             "skill": "jw",
+            "version": VERSION,
             "release": f"v{VERSION}",
             "files": [
                 {"path": path.relative_to(SKILL).as_posix(), "sha256": sha256(path), "bytes": path.stat().st_size}
@@ -71,7 +72,7 @@ def main() -> None:
     write_json(
         ROOT / "PACKAGE_MANIFEST.json",
         {
-            "schema_version": "2.0",
+            "schema_version": "3.0",
             "name": NAME,
             "version": f"v{VERSION}",
             "file_count": len(package_files),

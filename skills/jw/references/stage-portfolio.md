@@ -1,5 +1,7 @@
 # 内容配比系统
 
+调用：`conversion-journey`、`belief-mindshare`、`orchestration-control`；用 `audience-continuity` 检查同一人，用 `production-presentation` 核验库存可实现性。
+
 ## 目标
 
 让内容库存覆盖客户从识别到行动的关键障碍，并使拍摄前计划与拍摄后实际资产一致。比例是当前项目的资源配置假设，不是课程通用公式。

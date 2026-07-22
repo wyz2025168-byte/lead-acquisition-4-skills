@@ -1,5 +1,7 @@
 # 内容系统
 
+调用：`audience-continuity`、`conversion-journey`、`orchestration-control`；长期心智内容条件调用 `belief-mindshare`，必要时回查 `positioning-competition` 与 `audience-stage`。
+
 ## 目标
 
 让已确定目标人在特定购买阶段完成一个可观察的心理或行动跃迁，并把策略转成可直接拍摄和承接的内容，而不是只生成选题名称。

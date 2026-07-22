@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a single-entry JW v2 candidate or public release."""
+"""Validate a single-entry JW v3 candidate or public release."""
 
 from __future__ import annotations
 
@@ -60,16 +60,36 @@ def main() -> None:
     skill_text = (skill / "SKILL.md").read_text(encoding="utf-8") if (skill / "SKILL.md").is_file() else ""
     frontmatter = re.match(r"^---\n(.*?)\n---\n", skill_text, re.S)
     checks.append(("skill_frontmatter", bool(frontmatter and re.search(r"^name:\s*jw\s*$", frontmatter.group(1), re.M) and re.search(r"^description:\s*\S", frontmatter.group(1), re.M)), "jw/SKILL.md"))
-    required = [skill / "agents" / "openai.yaml", skill / "scripts" / "jw_project.py", skill / "references" / "operating-system.md", skill / "references" / "stage-positioning.md", skill / "references" / "stage-content.md", skill / "references" / "stage-production.md", skill / "references" / "stage-portfolio.md", skill / "references" / "stage-operations.md"]
-    checks.append(("runtime_and_five_stages", all(path.is_file() for path in required), str(len(required))))
-    checks.append(("no_public_course_stage_codes", not any(re.search(r"\bC(?:00|10|20|30|40|50|90)\b", path.read_text(encoding="utf-8")) for path in skill.rglob("*") if path.is_file() and path.suffix in TEXT_SUFFIXES), "skills/jw"))
+    method_files = [
+        skill / "references" / name for name in (
+            "method-positioning.md", "method-audience-stage.md", "method-audience-continuity.md",
+            "method-conversion-journey.md", "method-belief-mindshare.md",
+            "method-production-presentation.md", "method-orchestration-control.md",
+        )
+    ]
+    stage_files = [skill / "references" / f"stage-{name}.md" for name in ("positioning", "content", "production", "portfolio", "operations")]
+    required = [skill / "agents" / "openai.yaml", skill / "scripts" / "jw_project.py", skill / "references" / "operating-system.md", skill / "references" / "method-router.md", skill / "references" / "method-registry.json", *method_files, *stage_files]
+    checks.append(("runtime_methods_and_five_stages", all(path.is_file() for path in required), str(len(required))))
+    business_interface_files = [skill / "SKILL.md", skill / "references" / "method-router.md", *stage_files]
+    checks.append(("no_public_course_stage_codes", not any(re.search(r"\bC(?:00|10|20|30|40|50|90)\b", path.read_text(encoding="utf-8")) for path in business_interface_files), "business interface"))
+    nine_sections = all(re.findall(r"^## ([1-9])\.", path.read_text(encoding="utf-8"), re.M) == list("123456789") for path in method_files)
+    checks.append(("seven_complete_method_programs", nine_sections, "9 sections x 7"))
+    registry_ok = False
+    try:
+        registry = json.loads((skill / "references" / "method-registry.json").read_text(encoding="utf-8"))
+        method_ids = {item.get("method_id") for item in registry.get("methods", [])}
+        classifications = {item.get("classification") for item in registry.get("items", [])}
+        registry_ok = len(method_ids) == 7 and classifications == {"VALID_PRINCIPLE", "PROJECT_HYPOTHESIS", "ENGINEERING_GUARD", "RETIRED"} and all(all(field in item for field in ("use_when", "degrade_when", "forbid_when")) for item in registry.get("items", []))
+    except Exception:
+        registry_ok = False
+    checks.append(("method_qualification_registry", registry_ok, "7 methods and 4 classifications"))
     bundle_path = skill / "BUNDLE_MANIFEST.json"
     bundle_ok = bundle_path.is_file()
     if bundle_ok:
         bundle = json.loads(bundle_path.read_text(encoding="utf-8"))
         declared = {item["path"]: item for item in bundle.get("files", [])}
         actual = files_under(skill) - {"BUNDLE_MANIFEST.json"}
-        bundle_ok = bundle.get("skill") == "jw" and set(declared) == actual and all(sha256(skill / relative) == item["sha256"] and (skill / relative).stat().st_size == item["bytes"] for relative, item in declared.items())
+        bundle_ok = bundle.get("skill") == "jw" and bundle.get("version") == "3.0.0" and set(declared) == actual and all(sha256(skill / relative) == item["sha256"] and (skill / relative).stat().st_size == item["bytes"] for relative, item in declared.items())
     checks.append(("bundle_integrity", bundle_ok, "jw/BUNDLE_MANIFEST.json"))
     leaked = []
     raw = []
@@ -116,7 +136,7 @@ def main() -> None:
             expected_names = {f"lead-acquisition-4-skills/{relative}" for relative in files_under(root)}
             archive_ok = archive_ok and set(handle.namelist()) == expected_names and handle.testzip() is None
     checks.append(("archive_integrity", archive_ok, archive.name))
-    checks.append(("field_validation_disclosure", bool(release.get("field_validation_notice_required")) and release.get("validation", {}).get("G7") == "DEFERRED_TO_FIELD_VALIDATION" and release.get("validation", {}).get("G8") == "DEFERRED_TO_FIELD_VALIDATION", str(release.get("publication_status"))))
+    checks.append(("field_validation_disclosure", release.get("version") == "v3.0.0" and bool(release.get("field_validation_notice_required")) and release.get("validation", {}).get("G7") == "DEFERRED_TO_FIELD_VALIDATION" and release.get("validation", {}).get("G8") == "DEFERRED_TO_FIELD_VALIDATION", str(release.get("publication_status"))))
     failed = [name for name, ok, _ in checks if not ok]
     for name, ok, detail in checks:
         print(f"{'PASS' if ok else 'FAIL'} {name}: {detail}")

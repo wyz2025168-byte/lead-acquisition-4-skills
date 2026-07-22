@@ -19,8 +19,9 @@ from pathlib import Path
 from typing import Any
 
 
-RUNTIME_VERSION = "2.0.0"
-STATE_SCHEMA = "jw.project-state.v2"
+RUNTIME_VERSION = "3.0.0"
+STATE_SCHEMA = "jw.project-state.v3"
+REGISTRY_SCHEMA = "3.0.0"
 STAGES = ("POSITIONING", "CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS")
 STAGE_ORDER = {stage: index for index, stage in enumerate(STAGES)}
 EVIDENCE_LEVELS = {
@@ -67,6 +68,8 @@ OBJECT_FILES = {
     "content": ("content-inventory.json", "content_id", "CNT"),
 }
 FORBIDDEN_VAGUE = ("若干", "足量", "适当", "尽量")
+DECISION_STATUSES = {"ACTIVE", "REJECTED", "NEEDS_REQUALIFICATION", "SUPERSEDED"}
+APPROVAL_STATES = {"UNAPPROVED", "FACT_CONFIRMED", "HYPOTHESIS_ACCEPTED", "EXPERIMENT_AUTHORIZED", "PRODUCTION_APPROVED", "NEEDS_REQUALIFICATION"}
 
 
 class RuntimeErrorUser(Exception):
@@ -230,6 +233,36 @@ class ProjectRuntime:
     def state_path(self) -> Path:
         return self.root / "project-state.json"
 
+    @property
+    def skill_dir(self) -> Path:
+        return Path(__file__).resolve().parents[1]
+
+    @property
+    def registry_path(self) -> Path:
+        return self.skill_dir / "references" / "method-registry.json"
+
+    def method_registry(self) -> dict[str, Any]:
+        registry = load_json(self.registry_path, {})
+        if not isinstance(registry, dict) or registry.get("registry_version") != REGISTRY_SCHEMA:
+            raise RuntimeErrorUser("方法注册表缺失或版本不匹配")
+        methods = registry.get("methods", [])
+        items = registry.get("items", [])
+        if not isinstance(methods, list) or len(methods) != 7:
+            raise RuntimeErrorUser("方法注册表必须包含七个方法")
+        method_ids = {item.get("method_id") for item in methods}
+        if len(method_ids) != 7 or None in method_ids:
+            raise RuntimeErrorUser("方法 ID 缺失或重复")
+        allowed = set(registry.get("classification_enum", []))
+        if allowed != {"VALID_PRINCIPLE", "PROJECT_HYPOTHESIS", "ENGINEERING_GUARD", "RETIRED"}:
+            raise RuntimeErrorUser("方法资格分类不完整")
+        for item in items:
+            if item.get("method_id") not in method_ids or item.get("classification") not in allowed:
+                raise RuntimeErrorUser(f"方法资格项无效: {item.get('item_id')}")
+        return registry
+
+    def method_ids(self) -> set[str]:
+        return {item["method_id"] for item in self.method_registry()["methods"]}
+
     def ensure_initialized(self) -> None:
         if not self.state_path.is_file():
             raise RuntimeErrorUser(f"未找到 {self.state_path}；先运行 init 或 migrate")
@@ -263,7 +296,7 @@ class ProjectRuntime:
             "objective_30d": {"statement": "待确定", "leading_indicators": [], "checkpoints": []},
             "forecast_90d": {"baseline": "待确定", "upside": "待确定", "risk": "待确定", "triggers": []},
             "stage_status": {stage: "NOT_STARTED" for stage in STAGES},
-            "migration_status": "FRESH_V2",
+            "migration_status": "FRESH_V3",
             "next_action": initial_next,
             "created_at": now,
             "updated_at": now,
@@ -376,9 +409,18 @@ class ProjectRuntime:
             if not isinstance(record["confidence"], (int, float)) or not 0 <= record["confidence"] <= 1:
                 raise RuntimeErrorUser("confidence 必须在 0 到 1")
         elif kind == "decisions":
-            require(record, {"statement", "business_stage", "alternatives", "selected_path", "rationale_summary", "evidence_refs", "counterevidence", "downstream_impacts", "depends_on", "status"}, "decision")
+            require(record, {"statement", "business_stage", "method_refs", "alternatives", "selected_path", "rationale_summary", "evidence_refs", "counterevidence", "depends_on", "upstream_impacts", "downstream_impacts", "horizon_30d", "horizon_90d", "approval_state", "status"}, "decision")
             if not isinstance(record["alternatives"], list) or len(record["alternatives"]) < 3:
                 raise RuntimeErrorUser("高影响 decision 至少需要两个候选和一个维持现状路径")
+            if not isinstance(record["method_refs"], list) or not record["method_refs"]:
+                raise RuntimeErrorUser("高影响 decision 至少需要一个 method_ref")
+            unknown_methods = sorted(set(record["method_refs"]) - self.method_ids())
+            if unknown_methods:
+                raise RuntimeErrorUser(f"decision.method_refs 未注册: {unknown_methods}")
+            if record["approval_state"] not in APPROVAL_STATES:
+                raise RuntimeErrorUser("decision.approval_state 无效")
+            if record["status"] not in DECISION_STATUSES:
+                raise RuntimeErrorUser("decision.status 无效")
         elif kind == "approvals":
             require(record, {"approval_type", "approved_by", "scope", "status"}, "approval")
             if "target_ids" not in record or not isinstance(record["target_ids"], list):
@@ -407,7 +449,14 @@ class ProjectRuntime:
         elif kind == "entities":
             require(record, {"display_name", "preferred_reference", "role", "authority", "professional_boundary", "touchpoints", "capacity", "source_refs", "unknown_fields"}, "entity")
         elif kind == "artifacts":
-            require(record, {"relative_path", "artifact_type", "business_stage", "depends_on", "privacy", "status"}, "artifact")
+            require(record, {"relative_path", "artifact_type", "business_stage", "method_refs", "evidence_refs", "counterevidence", "depends_on", "upstream_impacts", "downstream_impacts", "horizon_30d", "horizon_90d", "approval_state", "privacy", "status"}, "artifact")
+            if not isinstance(record["method_refs"], list) or not record["method_refs"]:
+                raise RuntimeErrorUser("artifact 至少需要一个 method_ref")
+            unknown_methods = sorted(set(record["method_refs"]) - self.method_ids())
+            if unknown_methods:
+                raise RuntimeErrorUser(f"artifact.method_refs 未注册: {unknown_methods}")
+            if record["approval_state"] not in APPROVAL_STATES:
+                raise RuntimeErrorUser("artifact.approval_state 无效")
             relative = Path(record["relative_path"])
             if relative.is_absolute() or ".." in relative.parts:
                 raise RuntimeErrorUser("artifact.relative_path 必须位于 .jw-project 内")
@@ -473,6 +522,10 @@ class ProjectRuntime:
         if set(state.get("next_action", {})) != NEXT_ACTION_FIELDS:
             errors.append("next_action 字段不完整")
         try:
+            self.method_registry()
+        except RuntimeErrorUser as error:
+            errors.append(str(error))
+        try:
             records = self.all_latest()
         except RuntimeErrorUser as error:
             records = {}
@@ -498,6 +551,17 @@ class ProjectRuntime:
                     target = self.root / relative
                     if not target.is_file() or sha256_file(target) != record.get("content_sha256"):
                         errors.append(f"{identifier} 成果内容不存在或哈希不匹配")
+        registered_paths = {
+            str(record.get("relative_path"))
+            for identifier, record in records.items()
+            if identifier.startswith("ART-") and record.get("relative_path")
+        }
+        artifacts_root = self.root / "artifacts"
+        if artifacts_root.is_dir():
+            for target in sorted(path for path in artifacts_root.rglob("*") if path.is_file() and not path.name.startswith(".")):
+                relative = target.relative_to(self.root).as_posix()
+                if relative not in registered_paths:
+                    errors.append(f"成果文件未登记: {relative}")
         for approval in self.ndjson_latest("approvals").values():
             for target in approval.get("target_ids", []):
                 if target not in records:
@@ -527,6 +591,68 @@ class ProjectRuntime:
             "counts": counts,
             "effective_approval_types": dict(Counter(record["approval_type"] for record in effective_approvals)),
             "legacy_skill_warning": legacy,
+        }
+
+    def capabilities(self) -> dict[str, Any]:
+        registry = self.method_registry()
+        stage_map: dict[str, list[str]] = {stage: [] for stage in STAGES}
+        for method in registry["methods"]:
+            for stage in method["stages"]:
+                stage_map[stage].append(method["method_id"])
+        public_methods = [{key: value for key, value in method.items() if key != "source_lineage"} for method in registry["methods"]]
+        return {
+            "skill": "$jw",
+            "version": RUNTIME_VERSION,
+            "business_stages": list(STAGES),
+            "stage_method_map": stage_map,
+            "methods": public_methods,
+            "qualification_counts": dict(Counter(item["classification"] for item in registry["items"])),
+            "commands": ["doctor", "capabilities", "init", "validate", "status", "handoff", "migrate", "invalidate", "reconcile-portfolio", "can-publish", "export-feedback"],
+        }
+
+    def doctor(self) -> dict[str, Any]:
+        registry = self.method_registry()
+        manifest_path = self.skill_dir / "BUNDLE_MANIFEST.json"
+        manifest = load_json(manifest_path, {})
+        errors: list[str] = []
+        checked = 0
+        if manifest.get("version") != RUNTIME_VERSION:
+            errors.append("BUNDLE_MANIFEST 版本不匹配")
+        for entry in manifest.get("files", []):
+            path = self.skill_dir / entry.get("path", "")
+            if not path.is_file():
+                errors.append(f"缺少包文件: {entry.get('path')}")
+                continue
+            checked += 1
+            if sha256_file(path) != entry.get("sha256") or path.stat().st_size != entry.get("bytes"):
+                errors.append(f"包文件哈希或大小不匹配: {entry.get('path')}")
+        discovery_roots = [self.skill_dir.parent, self.project_root / ".agents" / "skills", Path.home() / ".agents" / "skills"]
+        legacy: list[str] = []
+        jw_installations: list[str] = []
+        for root in discovery_roots:
+            if not root.is_dir():
+                continue
+            for path in root.glob("jw*"):
+                if not path.is_dir():
+                    continue
+                if path.name == "jw":
+                    jw_installations.append(str(path.resolve()))
+                elif path.name.startswith("jw-"):
+                    legacy.append(str(path.resolve()))
+        return {
+            "ok": not errors and not legacy,
+            "skill": "$jw",
+            "version": RUNTIME_VERSION,
+            "schema": STATE_SCHEMA,
+            "python": sys.version.split()[0],
+            "skill_dir": str(self.skill_dir),
+            "bundle_manifest": str(manifest_path),
+            "checked_files": checked,
+            "method_count": len(registry["methods"]),
+            "qualification_item_count": len(registry["items"]),
+            "jw_installations": sorted(set(jw_installations)),
+            "legacy_skill_residue": sorted(set(legacy)),
+            "errors": errors,
         }
 
     def approval_effective(self, record: dict[str, Any]) -> bool:
@@ -602,7 +728,15 @@ class ProjectRuntime:
             "relative_path": relative,
             "artifact_type": "PORTFOLIO_RECONCILIATION",
             "business_stage": "PORTFOLIO",
+            "method_refs": ["conversion-journey", "belief-mindshare", "orchestration-control"],
+            "evidence_refs": [claim for record in contents for claim in record.get("target_claim_ids", [])],
+            "counterevidence": [],
             "depends_on": [record["content_id"] for record in contents],
+            "upstream_impacts": [],
+            "downstream_impacts": ["OPERATIONS"],
+            "horizon_30d": "用实际素材库存修正未来30天发布与补拍安排",
+            "horizon_90d": "观察内容角色长期失衡是否导致心智或转化断点",
+            "approval_state": "UNAPPROVED",
             "privacy": "PROJECT_PRIVATE",
             "status": "ACTIVE",
         }
@@ -701,9 +835,7 @@ class ProjectRuntime:
         return {"allowed": bool(matches), "matching_approvals": matches, "execution_status": "APPROVAL_MATCHED_TOOL_STILL_REQUIRED" if matches else "NOT_EXECUTED_NO_MATCHING_PRODUCTION_APPROVAL"}
 
     def legacy_scan(self) -> dict[str, Any]:
-        skill_dir = Path(__file__).resolve().parents[1]
-        sibling_root = skill_dir.parent
-        legacy = sorted(path.name for path in sibling_root.glob("jw-*") if path.is_dir())
+        legacy = sorted(path.name for path in self.skill_dir.parent.glob("jw-*") if path.is_dir())
         return {"found": bool(legacy), "skills": legacy, "action": "提示用户按升级说明清理；运行时不会调用或删除" if legacy else "none"}
 
     def migrate(self, project_id: str | None, name: str | None) -> dict[str, Any]:
@@ -711,7 +843,7 @@ class ProjectRuntime:
             raise RuntimeErrorUser("没有可迁移的 .jw-project")
         old_state = load_json(self.state_path, {})
         if old_state.get("runtime_version") == RUNTIME_VERSION and old_state.get("schema_version") == STATE_SCHEMA:
-            return {"migrated": False, "reason": "already_v2.0.0"}
+            return {"migrated": False, "reason": "already_v3.0.0"}
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         backup = self.project_root / f".jw-project-legacy-{timestamp}"
         if backup.exists():
@@ -861,7 +993,7 @@ class ProjectRuntime:
         corrections = sum(len(item.get("user_corrections", [])) for item in latest_feedback)
         repeated = sum(len(item.get("repeated_questions", [])) for item in latest_feedback)
         markdown = [
-            "# JW v2.0.0 实测反馈",
+            "# JW v3.0.0 实测反馈",
             "",
             f"- 项目：{redact(state['project_name'])}",
             f"- 当前阶段：{state['active_stage']}",
@@ -883,7 +1015,7 @@ class ProjectRuntime:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="线索获客4.0 v2.0.0 项目运行时")
+    parser = argparse.ArgumentParser(description="线索获客4.0 v3.0.0 项目运行时")
     sub = parser.add_subparsers(dest="command", required=True)
 
     def project_command(name: str, help_text: str) -> argparse.ArgumentParser:
@@ -896,6 +1028,8 @@ def build_parser() -> argparse.ArgumentParser:
     init.add_argument("--name", required=True)
     project_command("validate", "校验项目")
     project_command("status", "读取当前状态")
+    project_command("doctor", "检查 Skill 版本、完整性、旧版残留和运行环境")
+    project_command("capabilities", "显示五阶段、七方法和调用关系")
     project_command("handoff", "生成交接")
     project_command("legacy-scan", "检测旧 Skill")
     migrate = project_command("migrate", "迁移旧项目")
@@ -955,6 +1089,10 @@ def main() -> int:
             result = runtime.validate()
         elif args.command == "status":
             result = runtime.status()
+        elif args.command == "doctor":
+            result = runtime.doctor()
+        elif args.command == "capabilities":
+            result = runtime.capabilities()
         elif args.command == "handoff":
             result = {"handoff": str(runtime.handoff())}
         elif args.command == "legacy-scan":
@@ -988,7 +1126,7 @@ def main() -> int:
         else:
             raise RuntimeErrorUser("未知命令")
         print(json.dumps(result, ensure_ascii=False, indent=2))
-        if args.command == "validate" and not result.get("ok"):
+        if args.command in {"validate", "doctor"} and not result.get("ok"):
             return 2
         return 0
     except RuntimeErrorUser as error:

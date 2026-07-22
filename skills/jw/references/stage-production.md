@@ -1,5 +1,7 @@
 # 拍摄系统
 
+调用：`production-presentation`、`orchestration-control`，并继承 `audience-continuity`、`conversion-journey` 和需要时的 `belief-mindshare` 语义。
+
 ## 目标
 
 把有效内容语义转成可持续、可批量、可复用且不改变业务承诺的拍摄资产。拍摄层解决“如何稳定实现”，不修补错误定位或购买理由。

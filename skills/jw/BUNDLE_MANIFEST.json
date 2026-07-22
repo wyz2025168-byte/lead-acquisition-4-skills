@@ -1,17 +1,18 @@
 {
-  "schema_version": "2.0",
+  "schema_version": "3.0",
   "skill": "jw",
-  "release": "v2.0.0",
+  "version": "3.0.0",
+  "release": "v3.0.0",
   "files": [
     {
       "path": "SKILL.md",
-      "sha256": "7c77e24a04af2d87d15883fbd7f30df932cbd048113036074c2838314e1b4c66",
-      "bytes": 6785
+      "sha256": "b105d9e096033abd2d103bb25da9cbeab247afdf853087f492f65d45834ca8a8",
+      "bytes": 6872
     },
     {
       "path": "agents/openai.yaml",
-      "sha256": "d72c2aac13e7cb2cbbe06d01f0dccefe6c2e647247e63120ab8caeb5f6f5df5c",
-      "bytes": 290
+      "sha256": "41004043d6313d8fd61fae8c8e181fb58021cc467a10234805704240924bcc35",
+      "bytes": 271
     },
     {
       "path": "references/critic-and-safety.md",
@@ -20,18 +21,63 @@
     },
     {
       "path": "references/domain-dental.md",
-      "sha256": "fa3eceab1ce954464e6f8f70f8ba4b31e7ed913441d00d2cc2ea9ca71976eaf3",
-      "bytes": 1706
+      "sha256": "51ef071a0ee79f66e4fef0bd84ae4fed9f41dcdd4aa214a4ce4344f594f9d05b",
+      "bytes": 4650
+    },
+    {
+      "path": "references/method-audience-continuity.md",
+      "sha256": "b0c48ea81cc632aaedfd6251664ba4ab50864c15735c9b45c869c761e86be04b",
+      "bytes": 5799
+    },
+    {
+      "path": "references/method-audience-stage.md",
+      "sha256": "7f854a9ae9f91ba53e058ff70fecada9a7ff1fb08c3a5c8b4d3d1bf5a82c7584",
+      "bytes": 5674
+    },
+    {
+      "path": "references/method-belief-mindshare.md",
+      "sha256": "000e3dacfa7f44664cdd61510f36b367f6f7603a0cb7f233248c03900399aa9c",
+      "bytes": 6151
+    },
+    {
+      "path": "references/method-conversion-journey.md",
+      "sha256": "5c9076dd7ed01aac8f21b0b10ff04e0e886ed899e482087522062f6f5ecfc9c5",
+      "bytes": 7129
+    },
+    {
+      "path": "references/method-orchestration-control.md",
+      "sha256": "b151604b6fccad699e10d809b6d00f3b88fd22b581022952c3d4f974abe694f9",
+      "bytes": 6459
+    },
+    {
+      "path": "references/method-positioning.md",
+      "sha256": "1b0a734c21c7998ff9b27df17e6c90f2ab0e09d354bb5a107b4dc549ceaf56ea",
+      "bytes": 5272
+    },
+    {
+      "path": "references/method-production-presentation.md",
+      "sha256": "33157fc1efcc0ae4bf538d05df2f18ad1ac1876ec6e4935415295b8b54da55c5",
+      "bytes": 6647
+    },
+    {
+      "path": "references/method-registry.json",
+      "sha256": "55f42f4d436c6db2306a38c102bd388f98e546e5adc97620e69327972c9d4a9c",
+      "bytes": 13186
+    },
+    {
+      "path": "references/method-router.md",
+      "sha256": "996ffdfe6375fa813f54d406d1118f8178a5c421b69364350150c59ee234f4b1",
+      "bytes": 2571
     },
     {
       "path": "references/operating-system.md",
-      "sha256": "8334833e4e07ac2d9deffa4aafc9c8b800d27f3d3137b3b52dcee38a73bfbe7a",
-      "bytes": 2760
+      "sha256": "94873de4060a1bf4f9cacdf3a5c2b8dedee50b63fb4cc8d122e02b546a993ad5",
+      "bytes": 3868
     },
     {
       "path": "references/principles.md",
-      "sha256": "2e3b19af49122bc4c5aa216c822a9504d42673371bdde15770cf097c3f38492e",
-      "bytes": 2339
+      "sha256": "1f0f1d0962813ff72b0e0d73f510f6eb9d9888969c7a08f0128d75d7543862ed",
+      "bytes": 1990
     },
     {
       "path": "references/research-evidence.md",
@@ -40,38 +86,38 @@
     },
     {
       "path": "references/runtime.md",
-      "sha256": "8609f78d64956be9a51fe080e1a006d334e8e59d22cfaa186a5d84215faa46c1",
-      "bytes": 2420
+      "sha256": "7b8b3335387e09f18ad54e46ff77e40088d48a2fa08e49bbd4678f78a6156834",
+      "bytes": 3337
     },
     {
       "path": "references/stage-content.md",
-      "sha256": "2b19d0e04e51da9338f8eb4777ad833015b6ecd2a1b3dbb00e249408833e388b",
-      "bytes": 2675
+      "sha256": "9a7d251bc8ca62e15b5a3d8c112f78bc1f99adb2a89a6a7dbdea6abdf2b16193",
+      "bytes": 2876
     },
     {
       "path": "references/stage-operations.md",
-      "sha256": "3038947a0e52f25be1352f8436a436880220c3dda6f35f8c45168e0c7cc14a3b",
-      "bytes": 2416
+      "sha256": "8c62719045d9d9dae4a98f5d66794d6ff657089b47eae47a64bc17358c638944",
+      "bytes": 2572
     },
     {
       "path": "references/stage-portfolio.md",
-      "sha256": "93794377127e75aacc622318b75527f7f1bd8d5c281ec9f791b5deec10b3ce71",
-      "bytes": 1833
+      "sha256": "98cfb4946cfceb05a519225d3aaa94d9e9db0782cb37dc5d74c35e47b28bb78f",
+      "bytes": 2015
     },
     {
       "path": "references/stage-positioning.md",
-      "sha256": "c271c7c521e79781b3a82ff410bfe4677385ecf896f1fd7241f058bff2854621",
-      "bytes": 2536
+      "sha256": "def9cd5559a3751b440a493ebfc4af80a9244f1a47e10d60dcfced8dfd231b62",
+      "bytes": 2689
     },
     {
       "path": "references/stage-production.md",
-      "sha256": "868474f0d5f68a24a6a4e59ff8ff007def8a519bbb365f4f405c4ef0f8b2f941",
-      "bytes": 2042
+      "sha256": "5ec2bd53bcba2985e1c9ae501104bc23fe232b067a7ba7589c1d9147eaf19e49",
+      "bytes": 2206
     },
     {
       "path": "scripts/jw_project.py",
-      "sha256": "0d977ec5d2b9fb3b79137898d995991eec1c2cda8d3ffd9a19e8bf7b8c8f743f",
-      "bytes": 52146
+      "sha256": "ec56502194f150743dafd1953ef223bd3fd4bad3401bb89acd58a1c2bf391b37",
+      "bytes": 59863
     }
   ]
 }

@@ -1,0 +1,125 @@
+{
+  "registry_version": "3.0.0",
+  "classification_enum": [
+    "VALID_PRINCIPLE",
+    "PROJECT_HYPOTHESIS",
+    "ENGINEERING_GUARD",
+    "RETIRED"
+  ],
+  "required_sections": [
+    "definition_boundary",
+    "facts_evidence",
+    "derivation",
+    "causality",
+    "non_substitutable_concepts",
+    "examples_counterexamples",
+    "counterfactuals",
+    "research_experiment",
+    "stop_handoff"
+  ],
+  "methods": [
+    {
+      "method_id": "positioning-competition",
+      "public_name": "定位与竞争选择",
+      "source_lineage": ["C00"],
+      "file": "method-positioning.md",
+      "stages": ["POSITIONING", "OPERATIONS"],
+      "inputs": ["product", "price", "demand_evidence", "alternatives", "founder_fit", "delivery_capacity"],
+      "outputs": ["positioning_candidates", "tradeoff_decision", "excluded_directions", "downstream_feasibility"]
+    },
+    {
+      "method_id": "audience-stage",
+      "public_name": "正价人群与购买阶段",
+      "source_lineage": ["C10"],
+      "file": "method-audience-stage.md",
+      "stages": ["POSITIONING", "CONTENT", "OPERATIONS"],
+      "inputs": ["approved_offer", "paid_transactions", "failed_transactions", "payer_roles", "pre_purchase_events"],
+      "outputs": ["primary_audience", "payer_user_roles", "purchase_stage", "why_now", "why_category"]
+    },
+    {
+      "method_id": "audience-continuity",
+      "public_name": "开头画面内容观点的人群连续性",
+      "source_lineage": ["C20"],
+      "file": "method-audience-continuity.md",
+      "stages": ["CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS"],
+      "inputs": ["primary_audience", "purchase_stage", "audience_language", "script", "visual_sequence"],
+      "outputs": ["continuity_brief", "audience_drift_risks", "exclusion_signals"]
+    },
+    {
+      "method_id": "conversion-journey",
+      "public_name": "六问人物选择与客户关卡",
+      "source_lineage": ["C30"],
+      "file": "method-conversion-journey.md",
+      "stages": ["POSITIONING", "CONTENT", "PORTFOLIO", "OPERATIONS"],
+      "inputs": ["audience_stage", "person_facts", "delivery_evidence", "journey_records", "capacity"],
+      "outputs": ["six_why_answers", "person_routes", "customer_gates", "content_roles", "cta_handoff"]
+    },
+    {
+      "method_id": "belief-mindshare",
+      "public_name": "长期理念与内容心智",
+      "source_lineage": ["C40"],
+      "file": "method-belief-mindshare.md",
+      "stages": ["CONTENT", "PORTFOLIO", "OPERATIONS"],
+      "inputs": ["long_term_choices", "founder_actions", "belief_counterevidence", "offer_delivery_alignment"],
+      "outputs": ["belief_baseline", "story_assets", "consistency_rules", "recognition_signals"]
+    },
+    {
+      "method_id": "production-presentation",
+      "public_name": "拍摄呈现与批量生产",
+      "source_lineage": ["C50"],
+      "file": "method-production-presentation.md",
+      "stages": ["PRODUCTION", "PORTFOLIO", "OPERATIONS"],
+      "inputs": ["approved_content_semantics", "person_facts", "location", "equipment", "budget", "production_capacity"],
+      "outputs": ["production_brief", "shot_list", "batch_schedule", "compatibility_checks", "fallback_plan"]
+    },
+    {
+      "method_id": "orchestration-control",
+      "public_name": "项目编排审批反馈与失效传播",
+      "source_lineage": ["C90"],
+      "file": "method-orchestration-control.md",
+      "stages": ["POSITIONING", "CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS"],
+      "inputs": ["project_state", "claims", "decisions", "approvals", "dependencies", "feedback"],
+      "outputs": ["current_bottleneck", "next_action", "dependency_graph", "stale_propagation", "handoff"]
+    }
+  ],
+  "items": [
+    {"item_id":"P-001","method_id":"positioning-competition","statement":"定位是客户心智中的选择位置","classification":"VALID_PRINCIPLE","use_when":"比较商业方向","degrade_when":"缺少需求或竞争证据","forbid_when":"被当作职业标签"},
+    {"item_id":"P-002","method_id":"positioning-competition","statement":"真实需求竞争替代创始人适配三面校验","classification":"VALID_PRINCIPLE","use_when":"筛选定位候选","degrade_when":"仅有类比证据","forbid_when":"任一面被直接省略"},
+    {"item_id":"P-003","method_id":"positioning-competition","statement":"具体定位候选","classification":"PROJECT_HYPOTHESIS","use_when":"逐项目提出候选","degrade_when":"无本地交易证据","forbid_when":"冒充课程结论"},
+    {"item_id":"P-004","method_id":"positioning-competition","statement":"赛道热度证明定位成立","classification":"RETIRED","use_when":"never","degrade_when":"never","forbid_when":"always"},
+    {"item_id":"A-001","method_id":"audience-stage","statement":"从正价产品反推可成交人","classification":"VALID_PRINCIPLE","use_when":"选择主人群","degrade_when":"只有低价或留资证据","forbid_when":"先追流量再拼产品"},
+    {"item_id":"A-002","method_id":"audience-stage","statement":"产品人群阶段买前话题属于同一人","classification":"VALID_PRINCIPLE","use_when":"合并目标人定义","degrade_when":"信息不足则保留缺口","forbid_when":"拼接不同人群"},
+    {"item_id":"A-003","method_id":"audience-stage","statement":"正价成交优先于播放留资","classification":"VALID_PRINCIPLE","use_when":"判断交易方向","degrade_when":"样本不足标证据受限","forbid_when":"用互动替代购买"},
+    {"item_id":"A-004","method_id":"audience-stage","statement":"单笔成交证明规模复制性","classification":"RETIRED","use_when":"never","degrade_when":"never","forbid_when":"always"},
+    {"item_id":"A-005","method_id":"audience-stage","statement":"规模渠道可达性与获客成本","classification":"PROJECT_HYPOTHESIS","use_when":"逐项目研究","degrade_when":"缺渠道或利润数据","forbid_when":"写成固定规律"},
+    {"item_id":"C-001","method_id":"audience-continuity","statement":"开头画面内容观点持续服务同一目标人","classification":"VALID_PRINCIPLE","use_when":"设计或审查内容","degrade_when":"语言仅为类比","forbid_when":"中途换人"},
+    {"item_id":"C-002","method_id":"audience-continuity","statement":"圈对不等于信任或购买","classification":"VALID_PRINCIPLE","use_when":"解释观看信号","degrade_when":"none","forbid_when":"直接推导下游转化"},
+    {"item_id":"C-003","method_id":"audience-continuity","statement":"本地语言不足时研究或实验","classification":"ENGINEERING_GUARD","use_when":"缺本地平台证据","degrade_when":"平台阻断则记录失败","forbid_when":"AI发明客户语言"},
+    {"item_id":"C-004","method_id":"audience-continuity","statement":"高播放证明人群连续性正确","classification":"RETIRED","use_when":"never","degrade_when":"never","forbid_when":"always"},
+    {"item_id":"C-005","method_id":"audience-continuity","statement":"具体开头画面观点","classification":"PROJECT_HYPOTHESIS","use_when":"设计内容实验","degrade_when":"缺平台样本","forbid_when":"当成熟结论"},
+    {"item_id":"J-001","method_id":"conversion-journey","statement":"六个为什么必须拆开","classification":"VALID_PRINCIPLE","use_when":"构建购买因果","degrade_when":"未知项可留空并研究","forbid_when":"用抽象词合并"},
+    {"item_id":"J-002","method_id":"conversion-journey","statement":"信任适合咨询到店方案付款是不同跃迁","classification":"VALID_PRINCIPLE","use_when":"建立客户关卡","degrade_when":"缺数据时仅作假设","forbid_when":"自动线性推导"},
+    {"item_id":"J-003","method_id":"conversion-journey","statement":"专业优势翻译为客户可感知信号","classification":"VALID_PRINCIPLE","use_when":"构建人物与信任理由","degrade_when":"信号未验证则实验","forbid_when":"用头衔替代机制"},
+    {"item_id":"J-004","method_id":"conversion-journey","statement":"认出自己会自然购买","classification":"RETIRED","use_when":"never","degrade_when":"never","forbid_when":"always"},
+    {"item_id":"J-005","method_id":"conversion-journey","statement":"具体人物路线与购买原因","classification":"PROJECT_HYPOTHESIS","use_when":"逐项目建立路线","degrade_when":"权限或兑现事实未知","forbid_when":"猜身份或权限"},
+    {"item_id":"B-001","method_id":"belief-mindshare","statement":"理念来自长期选择拒绝与行为一致","classification":"VALID_PRINCIPLE","use_when":"形成长期内容心智","degrade_when":"只有口头陈述","forbid_when":"AI代替本人确认"},
+    {"item_id":"B-002","method_id":"belief-mindshare","statement":"理念不能替代即时购买理由","classification":"VALID_PRINCIPLE","use_when":"规划内容组合","degrade_when":"none","forbid_when":"让价值观承担全部转化"},
+    {"item_id":"B-003","method_id":"belief-mindshare","statement":"复制他人理念或临时口号","classification":"RETIRED","use_when":"never","degrade_when":"never","forbid_when":"always"},
+    {"item_id":"B-004","method_id":"belief-mindshare","statement":"某理念适合当前项目","classification":"PROJECT_HYPOTHESIS","use_when":"本人确认并实验","degrade_when":"缺行为证据","forbid_when":"由AI直接批准"},
+    {"item_id":"R-001","method_id":"production-presentation","statement":"制作继承目标人信任与行动语义","classification":"VALID_PRINCIPLE","use_when":"将内容变为拍摄方案","degrade_when":"上游未批准则停止","forbid_when":"因制作方便重写策略"},
+    {"item_id":"R-002","method_id":"production-presentation","statement":"简单稳定可重复优先于昂贵设备","classification":"VALID_PRINCIPLE","use_when":"比较制作形式","degrade_when":"特殊需求有事实支持","forbid_when":"用价格代表质量"},
+    {"item_id":"R-003","method_id":"production-presentation","statement":"设备兼容性实时核验","classification":"ENGINEERING_GUARD","use_when":"提出设备和接口建议","degrade_when":"不能核验则按功能规格给回退","forbid_when":"把历史型号当当前事实"},
+    {"item_id":"R-004","method_id":"production-presentation","statement":"缺失来源文本不得补写","classification":"ENGINEERING_GUARD","use_when":"资料截断或接口不完整","degrade_when":"保留未知","forbid_when":"按常识补齐"},
+    {"item_id":"R-005","method_id":"production-presentation","statement":"豪华强磨皮高成本代表高质感","classification":"RETIRED","use_when":"never","degrade_when":"never","forbid_when":"always"},
+    {"item_id":"R-006","method_id":"production-presentation","statement":"具体设备场景镜头","classification":"PROJECT_HYPOTHESIS","use_when":"现场约束下设计","degrade_when":"未样测则待核验","forbid_when":"保证兼容或效果"},
+    {"item_id":"O-001","method_id":"orchestration-control","statement":"项目状态持久化与新任务恢复","classification":"ENGINEERING_GUARD","use_when":"每次启动与写入","degrade_when":"运行时损坏则停止","forbid_when":"靠聊天记忆重建"},
+    {"item_id":"O-002","method_id":"orchestration-control","statement":"证据等级与审批类型分账","classification":"ENGINEERING_GUARD","use_when":"登记任何判断与批准","degrade_when":"审批歧义则保持未知","forbid_when":"批准提高证据等级"},
+    {"item_id":"O-003","method_id":"orchestration-control","statement":"上游变化局部失效传播","classification":"ENGINEERING_GUARD","use_when":"事实或决定被推翻","degrade_when":"依赖不完整则阻断","forbid_when":"全盘重写或保留失效后代"},
+    {"item_id":"O-004","method_id":"orchestration-control","statement":"版本哈希ID时间戳由脚本生成","classification":"ENGINEERING_GUARD","use_when":"任何状态写入","degrade_when":"脚本不可用则停止","forbid_when":"模型手写控制字段"},
+    {"item_id":"O-005","method_id":"orchestration-control","statement":"按课程章节顺序机械推进","classification":"RETIRED","use_when":"never","degrade_when":"never","forbid_when":"always"},
+    {"item_id":"O-006","method_id":"orchestration-control","statement":"项目材料优先外部研究补缺","classification":"ENGINEERING_GUARD","use_when":"陌生行业与事实不足","degrade_when":"访问失败则记录阻断","forbid_when":"外部常识覆盖项目事实"},
+    {"item_id":"O-007","method_id":"orchestration-control","statement":"比较替代路径和维持现状","classification":"ENGINEERING_GUARD","use_when":"高影响决策","degrade_when":"路径被事实排除需说明","forbid_when":"只给一个未经比较的答案"},
+    {"item_id":"O-008","method_id":"orchestration-control","statement":"同时分析30天执行和90天二阶效应","classification":"ENGINEERING_GUARD","use_when":"高影响决策","degrade_when":"标记为情景预测","forbid_when":"把预测写成承诺"},
+    {"item_id":"O-009","method_id":"orchestration-control","statement":"反馈回溯最早因果节点","classification":"ENGINEERING_GUARD","use_when":"真实运营反馈进入","degrade_when":"证据不足则并列原因","forbid_when":"只改末端指标或整库推倒"}
+  ]
+}
