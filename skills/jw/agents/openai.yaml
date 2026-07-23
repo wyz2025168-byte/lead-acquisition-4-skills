@@ -1,6 +1,6 @@
 interface:
   display_name: "线索获客4.0"
-  short_description: "从定位到运营，主动研究、判断、产出并持续修正的完整获客经营系统"
+  short_description: "从真实成交倒推定位、人群、内容与运营，并拒绝错误因果链"
   default_prompt: "使用 $jw，初始化并接管这个项目。"
 policy:
   allow_implicit_invocation: true

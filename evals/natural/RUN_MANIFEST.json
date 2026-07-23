@@ -1,0 +1,42 @@
+{
+  "schema_version": "jw.natural-eval-manifest.v1",
+  "rubric_version": "v4-natural-rubric-1",
+  "rubric_sha256": "51b77d618f32f5408f032f5dd5cf64a21c3d9375f2fe106343c2c9c86b4de690",
+  "scenario_count": 7,
+  "scenarios": [
+    {
+      "path": "evals/natural/scenarios/01_dental_high_ticket.md",
+      "sha256": "c702874d67d0143bee2f28dca8bad8e167de490f1c7fa73627886d3e0d29b93a"
+    },
+    {
+      "path": "evals/natural/scenarios/02_local_premium_service.md",
+      "sha256": "deef172f02a30ad984a27253284544a0abb89cf1f92f04b7a23f89239ce97de0"
+    },
+    {
+      "path": "evals/natural/scenarios/03_b2b_professional.md",
+      "sha256": "c29f7ef3a0db2c27cb073af1b38a23c48780654e6f1b3ebc22c90c8cb10d126d"
+    },
+    {
+      "path": "evals/natural/scenarios/04_low_ticket_standard.md",
+      "sha256": "f59372943e719e44b30636c149def4485f002d0827419f97c7122e90d936f0a8"
+    },
+    {
+      "path": "evals/natural/scenarios/05_minimal_information.md",
+      "sha256": "946602999a69b7ec28b5bec3ec89a809196a9dc8bc1b77ffe9d2f80ff90ac0e6"
+    },
+    {
+      "path": "evals/natural/scenarios/06_conflicting_materials.md",
+      "sha256": "fa3f979d580912014947c58d97384692558f3878170a8404a9c474343471adec"
+    },
+    {
+      "path": "evals/natural/scenarios/07_v3_recovery.md",
+      "sha256": "d886f4b32c74ae52c3f0aeaf1aa748e4a79ef4843b0b8247542023d66ca71ee6"
+    }
+  ],
+  "generator_visibility": "scenario + candidate skill only",
+  "judge_visibility": "anonymous output + frozen rubric only",
+  "implementation_details_visible_to_judge": false,
+  "scan_failures": [],
+  "status": "PASS",
+  "note": "This manifest validates isolation and freeze state; model execution evidence is stored outside the public package."
+}

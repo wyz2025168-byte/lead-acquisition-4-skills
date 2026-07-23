@@ -1,5 +1,5 @@
 {
-  "registry_version": "3.0.0",
+  "registry_version": "4.0.0",
   "classification_enum": [
     "VALID_PRINCIPLE",
     "PROJECT_HYPOTHESIS",
@@ -25,7 +25,11 @@
       "file": "method-positioning.md",
       "stages": ["POSITIONING", "OPERATIONS"],
       "inputs": ["product", "price", "demand_evidence", "alternatives", "founder_fit", "delivery_capacity"],
-      "outputs": ["positioning_candidates", "tradeoff_decision", "excluded_directions", "downstream_feasibility"]
+      "outputs": ["positioning_candidates", "tradeoff_decision", "excluded_directions", "downstream_feasibility"],
+      "reads_nodes": ["B0", "B1", "B2", "B3", "B4"],
+      "writes_nodes": ["B0", "B1"],
+      "required_evidence": ["offer_boundary", "value_exchange", "economics", "alternatives"],
+      "stop_conditions": ["success_event_substituted", "offer_boundary_unknown"]
     },
     {
       "method_id": "audience-stage",
@@ -34,7 +38,11 @@
       "file": "method-audience-stage.md",
       "stages": ["POSITIONING", "CONTENT", "OPERATIONS"],
       "inputs": ["approved_offer", "paid_transactions", "failed_transactions", "payer_roles", "pre_purchase_events"],
-      "outputs": ["primary_audience", "payer_user_roles", "purchase_stage", "why_now", "why_category"]
+      "outputs": ["primary_audience", "payer_user_roles", "purchase_stage", "why_now", "why_category"],
+      "reads_nodes": ["B0", "B1", "B2", "B3", "B4", "B6", "B7"],
+      "writes_nodes": ["B2", "B3", "B4", "B5"],
+      "required_evidence": ["transaction_roles", "purchase_trigger", "online_convertibility"],
+      "stop_conditions": ["B0_missing", "B4_unknown", "W3_W6_precheck_missing"]
     },
     {
       "method_id": "audience-continuity",
@@ -43,7 +51,11 @@
       "file": "method-audience-continuity.md",
       "stages": ["CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS"],
       "inputs": ["primary_audience", "purchase_stage", "audience_language", "script", "visual_sequence"],
-      "outputs": ["continuity_brief", "audience_drift_risks", "exclusion_signals"]
+      "outputs": ["continuity_brief", "audience_drift_risks", "exclusion_signals"],
+      "reads_nodes": ["B5", "B6", "B7", "C1"],
+      "writes_nodes": ["C2"],
+      "required_evidence": ["approved_audience", "audience_language", "content_mechanism"],
+      "stop_conditions": ["B5_not_approved", "audience_drift"]
     },
     {
       "method_id": "conversion-journey",
@@ -52,7 +64,11 @@
       "file": "method-conversion-journey.md",
       "stages": ["POSITIONING", "CONTENT", "PORTFOLIO", "OPERATIONS"],
       "inputs": ["audience_stage", "person_facts", "delivery_evidence", "journey_records", "capacity"],
-      "outputs": ["six_why_answers", "person_routes", "customer_gates", "content_roles", "cta_handoff"]
+      "outputs": ["six_why_answers", "person_routes", "customer_gates", "content_roles", "cta_handoff"],
+      "reads_nodes": ["B0", "B2", "B3", "B4", "B5"],
+      "writes_nodes": ["B6", "B7", "C1"],
+      "required_evidence": ["customer_side_reason", "title_free_test", "payment_barrier"],
+      "stop_conditions": ["inside_out_persona", "leading_event_substitution"]
     },
     {
       "method_id": "belief-mindshare",
@@ -61,7 +77,11 @@
       "file": "method-belief-mindshare.md",
       "stages": ["CONTENT", "PORTFOLIO", "OPERATIONS"],
       "inputs": ["long_term_choices", "founder_actions", "belief_counterevidence", "offer_delivery_alignment"],
-      "outputs": ["belief_baseline", "story_assets", "consistency_rules", "recognition_signals"]
+      "outputs": ["belief_baseline", "story_assets", "consistency_rules", "recognition_signals"],
+      "reads_nodes": ["B5", "B6", "B7", "C1"],
+      "writes_nodes": ["C1"],
+      "required_evidence": ["long_term_behavior", "delivery_alignment"],
+      "stop_conditions": ["founder_confirmation_missing", "behavior_conflict"]
     },
     {
       "method_id": "production-presentation",
@@ -70,7 +90,11 @@
       "file": "method-production-presentation.md",
       "stages": ["PRODUCTION", "PORTFOLIO", "OPERATIONS"],
       "inputs": ["approved_content_semantics", "person_facts", "location", "equipment", "budget", "production_capacity"],
-      "outputs": ["production_brief", "shot_list", "batch_schedule", "compatibility_checks", "fallback_plan"]
+      "outputs": ["production_brief", "shot_list", "batch_schedule", "compatibility_checks", "fallback_plan"],
+      "reads_nodes": ["C1", "C2", "B6", "B7"],
+      "writes_nodes": ["P1"],
+      "required_evidence": ["approved_script", "person_facts", "resource_constraints"],
+      "stop_conditions": ["C2_not_approved", "permission_unknown"]
     },
     {
       "method_id": "orchestration-control",
@@ -79,7 +103,11 @@
       "file": "method-orchestration-control.md",
       "stages": ["POSITIONING", "CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS"],
       "inputs": ["project_state", "claims", "decisions", "approvals", "dependencies", "feedback"],
-      "outputs": ["current_bottleneck", "next_action", "dependency_graph", "stale_propagation", "handoff"]
+      "outputs": ["current_bottleneck", "next_action", "dependency_graph", "stale_propagation", "handoff"],
+      "reads_nodes": ["B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "C1", "C2", "P1", "O1"],
+      "writes_nodes": ["B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "C1", "C2", "P1", "O1"],
+      "required_evidence": ["state", "provenance", "dependencies", "approvals"],
+      "stop_conditions": ["structural_error", "business_invariant_failure", "unauthorized_external_action"]
     }
   ],
   "items": [

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild public v3.0.0 manifests and deterministic archive."""
+"""Rebuild v4.0.0-rc.1 manifests and deterministic candidate archive."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "jw"
 DIST = ROOT / "dist"
-VERSION = "3.0.0"
+VERSION = "4.0.0-rc.1"
 NAME = "lead-acquisition-4-skills"
 
 
@@ -45,7 +45,7 @@ def write_zip(path: Path, members: list[Path]) -> None:
     with zipfile.ZipFile(path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for source in members:
             relative = source.relative_to(ROOT).as_posix()
-            info = zipfile.ZipInfo(f"{NAME}/{relative}", date_time=(2026, 7, 22, 0, 0, 0))
+            info = zipfile.ZipInfo(f"{NAME}/{relative}", date_time=(2026, 7, 23, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             archive.writestr(info, source.read_bytes())
@@ -58,7 +58,7 @@ def main() -> None:
     write_json(
         SKILL / "BUNDLE_MANIFEST.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.0",
             "skill": "jw",
             "version": VERSION,
             "release": f"v{VERSION}",
@@ -72,7 +72,7 @@ def main() -> None:
     write_json(
         ROOT / "PACKAGE_MANIFEST.json",
         {
-            "schema_version": "3.0",
+            "schema_version": "4.0",
             "name": NAME,
             "version": f"v{VERSION}",
             "file_count": len(package_files),
