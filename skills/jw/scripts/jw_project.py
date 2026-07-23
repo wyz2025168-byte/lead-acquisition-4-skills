@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic local runtime for the public $jw business operating system."""
+"""Deterministic v4 runtime for the public $jw business reasoning system."""
 
 from __future__ import annotations
 
@@ -19,9 +19,9 @@ from pathlib import Path
 from typing import Any
 
 
-RUNTIME_VERSION = "3.0.0"
-STATE_SCHEMA = "jw.project-state.v3"
-REGISTRY_SCHEMA = "3.0.0"
+RUNTIME_VERSION = "4.0.0-rc.1"
+STATE_SCHEMA = "jw.project-state.v4"
+REGISTRY_SCHEMA = "4.0.0"
 STAGES = ("POSITIONING", "CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS")
 STAGE_ORDER = {stage: index for index, stage in enumerate(STAGES)}
 EVIDENCE_LEVELS = {
@@ -39,7 +39,8 @@ TRUTH_STATUSES = {
     "DISPUTED",
     "REJECTED",
 }
-APPROVAL_TYPES = {
+APPROVAL_TYPES = {"DIRECTION", "EXPERIMENT", "ARTIFACT", "PUBLISH"}
+LEGACY_APPROVAL_TYPES = {
     "FACT_CONFIRMED",
     "HYPOTHESIS_ACCEPTED",
     "EXPERIMENT_AUTHORIZED",
@@ -66,10 +67,50 @@ OBJECT_FILES = {
     "entities": ("entities.json", "entity_id", "ENT"),
     "artifacts": ("artifact-registry.json", "artifact_id", "ART"),
     "content": ("content-inventory.json", "content_id", "CNT"),
+    "outcomes": ("outcome-contracts.json", "id", "OUTCOME"),
+    "nodes": ("business-nodes.json", "node_id", "NODE"),
+    "alternatives": ("alternatives.json", "candidate_id", "ALT"),
+    "information_requests": ("information-requests.json", "request_id", "IRQ"),
 }
 FORBIDDEN_VAGUE = ("若干", "足量", "适当", "尽量")
 DECISION_STATUSES = {"ACTIVE", "REJECTED", "NEEDS_REQUALIFICATION", "SUPERSEDED"}
-APPROVAL_STATES = {"UNAPPROVED", "FACT_CONFIRMED", "HYPOTHESIS_ACCEPTED", "EXPERIMENT_AUTHORIZED", "PRODUCTION_APPROVED", "NEEDS_REQUALIFICATION"}
+APPROVAL_STATES = {"UNAPPROVED", "DIRECTION", "EXPERIMENT", "ARTIFACT", "PUBLISH", "NEEDS_RECONFIRMATION"}
+NODE_STATUSES = {"UNKNOWN", "HYPOTHESIS", "NEEDS_EVIDENCE", "NEEDS_APPROVAL", "APPROVED", "INVALIDATED", "SUPERSEDED"}
+NODE_ORDER = ("B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "C1", "C2", "P1", "O1")
+NODE_NAMES = {
+    "B0": "结果合同",
+    "B1": "业务/产品边界",
+    "B2": "交易角色链",
+    "B3": "购买触发与阶段",
+    "B4": "线上可转化性",
+    "B5": "W1/W2 目标人和阶段",
+    "B6": "W3/W4 信任与选择理由",
+    "B7": "W5/W6 行动与付款理由",
+    "C1": "内容策略",
+    "C2": "四圈与脚本",
+    "P1": "生产呈现",
+    "O1": "组合与运营",
+}
+NODE_DEPENDENCIES = {
+    "B0": [],
+    "B1": ["B0"],
+    "B2": ["B1"],
+    "B3": ["B1", "B2"],
+    "B4": ["B2", "B3"],
+    "B5": ["B0", "B1", "B2", "B3", "B4"],
+    "B6": ["B5"],
+    "B7": ["B5", "B6"],
+    "C1": ["B0", "B5", "B6", "B7"],
+    "C2": ["C1"],
+    "P1": ["C2"],
+    "O1": ["B0", "C1", "P1"],
+}
+NODE_STAGE = {
+    "B0": "POSITIONING", "B1": "POSITIONING", "B2": "POSITIONING", "B3": "POSITIONING",
+    "B4": "POSITIONING", "B5": "POSITIONING", "B6": "POSITIONING", "B7": "POSITIONING",
+    "C1": "CONTENT", "C2": "CONTENT", "P1": "PRODUCTION", "O1": "OPERATIONS",
+}
+AMBIGUOUS_APPROVAL_QUOTES = {"可以继续看看", "继续看看", "先看看", "可以继续", "继续推进", "可以"}
 
 
 class RuntimeErrorUser(Exception):
@@ -241,6 +282,10 @@ class ProjectRuntime:
     def registry_path(self) -> Path:
         return self.skill_dir / "references" / "method-registry.json"
 
+    @property
+    def invariant_path(self) -> Path:
+        return self.skill_dir / "references" / "business-invariants.json"
+
     def method_registry(self) -> dict[str, Any]:
         registry = load_json(self.registry_path, {})
         if not isinstance(registry, dict) or registry.get("registry_version") != REGISTRY_SCHEMA:
@@ -263,6 +308,22 @@ class ProjectRuntime:
     def method_ids(self) -> set[str]:
         return {item["method_id"] for item in self.method_registry()["methods"]}
 
+    def invariant_registry(self) -> dict[str, Any]:
+        registry = load_json(self.invariant_path, {})
+        rules = registry.get("rules", []) if isinstance(registry, dict) else []
+        required = {
+            "E-OUTCOME-MISSING", "E-OUTCOME-SUBSTITUTION", "E-CONTENT-BEFORE-AUDIENCE",
+            "E-PERSONA-BEFORE-W3-W6", "E-PERSONA-INSIDE-OUT",
+            "E-LOCAL-RANKING-BY-GENERAL-RESEARCH", "E-ONLINE-CONVERTIBILITY-UNKNOWN",
+            "E-DATA-REQUEST-NO-DECISION", "E-DATA-REQUEST-OVERSIZED",
+            "E-APPROVAL-NO-PROVENANCE", "E-EVIDENCE-SCOPE-MISMATCH",
+            "W-LEADING-METRIC-ONLY", "W-W6-UNKNOWN",
+        }
+        codes = {item.get("code") for item in rules}
+        if not required.issubset(codes) or any(not all(key in item for key in ("code", "severity", "relation", "message", "minimal_repair")) for item in rules):
+            raise RuntimeErrorUser("业务不变量注册表缺失或不完整")
+        return registry
+
     def ensure_initialized(self) -> None:
         if not self.state_path.is_file():
             raise RuntimeErrorUser(f"未找到 {self.state_path}；先运行 init 或 migrate")
@@ -279,12 +340,12 @@ class ProjectRuntime:
         now = utc_now()
         initial_next = {
             "owner": "project_owner",
-            "minimum_input": "提供现有产品、客户、交易、内容或运营资料；无需预先整理",
+            "minimum_input": "提供核心产品、正价口径和什么事件才算真实成功；无需预先整理全量资料",
             "timebox": "首次接管会话",
-            "artifact": "项目事实与最早业务瓶颈摘要",
-            "decision_threshold": "能够区分至少两个业务解释并确定最早瓶颈",
+            "artifact": "B0 结果合同候选",
+            "decision_threshold": "能区分真实价值交换与咨询、预约、到店等领先事件",
             "stop_rule": "出现隐私、权限、合规或关键事实冲突时停止下传",
-            "expansion_condition": "只有现有资料无法区分候选时再索取最小补充",
+            "expansion_condition": "只有两个结果口径会导致不同上游路径时再索取最小补充",
         }
         state = {
             "schema_version": STATE_SCHEMA,
@@ -292,11 +353,12 @@ class ProjectRuntime:
             "project_id": project_id,
             "project_name": name,
             "active_stage": "POSITIONING",
-            "current_bottleneck": "等待读取项目资料并识别最早业务瓶颈",
+            "current_node": "NODE-B0",
+            "current_bottleneck": "尚未批准真实业务结果合同",
             "objective_30d": {"statement": "待确定", "leading_indicators": [], "checkpoints": []},
             "forecast_90d": {"baseline": "待确定", "upside": "待确定", "risk": "待确定", "triggers": []},
             "stage_status": {stage: "NOT_STARTED" for stage in STAGES},
-            "migration_status": "FRESH_V3",
+            "migration_status": "FRESH_V4",
             "next_action": initial_next,
             "created_at": now,
             "updated_at": now,
@@ -304,6 +366,30 @@ class ProjectRuntime:
         }
         state = stamped_state(state)
         write_json(self.state_path, state)
+        nodes = []
+        for code in NODE_ORDER:
+            nodes.append(
+                stamped_record(
+                    {
+                        "node_id": f"NODE-{code}",
+                        "code": code,
+                        "name": NODE_NAMES[code],
+                        "business_stage": NODE_STAGE[code],
+                        "status": "UNKNOWN",
+                        "summary": "待判断",
+                        "method_refs": ["orchestration-control"],
+                        "evidence_refs": [],
+                        "counterevidence": [],
+                        "alternative_ids": [],
+                        "depends_on": [f"NODE-{item}" for item in NODE_DEPENDENCIES[code]],
+                        "invalidation_conditions": [],
+                        "approval_state": "UNAPPROVED",
+                    },
+                    identifier_field="node_id",
+                    prefix="NODE",
+                )
+            )
+        self.write_object_records("nodes", nodes)
         self.handoff()
         return state
 
@@ -422,17 +508,16 @@ class ProjectRuntime:
             if record["status"] not in DECISION_STATUSES:
                 raise RuntimeErrorUser("decision.status 无效")
         elif kind == "approvals":
-            require(record, {"approval_type", "approved_by", "scope", "status"}, "approval")
-            if "target_ids" not in record or not isinstance(record["target_ids"], list):
-                raise RuntimeErrorUser("approval.target_ids 必须是数组")
-            if record["status"] == "ACTIVE" and not record["target_ids"]:
-                raise RuntimeErrorUser("有效审批必须包含 target_ids")
+            require(record, {"target_id", "approval_type", "user_quote", "interpreted_scope", "explicit_exclusions", "assumptions_acknowledged", "source_turn_or_file", "status"}, "approval")
             if record["approval_type"] not in APPROVAL_TYPES:
                 raise RuntimeErrorUser("无效 approval_type")
-            if record["status"] not in {"ACTIVE", "REVOKED", "NEEDS_REQUALIFICATION", "EXPIRED"}:
+            if record["status"] not in {"ACTIVE", "REVOKED", "NEEDS_RECONFIRMATION", "INVALIDATED", "EXPIRED"}:
                 raise RuntimeErrorUser("无效 approval status")
-            if record["approval_type"] == "PRODUCTION_APPROVED" and record["status"] == "ACTIVE":
-                require(record["scope"], {"channel", "audience", "action", "valid_until", "version_refs"}, "生产批准 scope")
+            if not isinstance(record["explicit_exclusions"], list) or not isinstance(record["assumptions_acknowledged"], list):
+                raise RuntimeErrorUser("approval exclusions/assumptions 必须是数组")
+            if record["approval_type"] == "PUBLISH" and record["status"] == "ACTIVE":
+                require(record, {"scope"}, "发布批准")
+                require(record["scope"], {"channel", "audience", "action", "valid_until", "version_refs"}, "发布批准 scope")
         elif kind == "experiments":
             require(record, {"title", "business_stage", "hypothesis_claim_ids", "owner", "minimum_input", "timebox", "artifact", "decision_threshold", "stop_rule", "expansion_condition", "depends_on", "status"}, "experiment")
             for field in ("minimum_input", "timebox", "decision_threshold", "stop_rule", "expansion_condition"):
@@ -474,6 +559,48 @@ class ProjectRuntime:
                 raise RuntimeErrorUser("actual_units 必须是非负数")
             if not record["target_claim_ids"]:
                 raise RuntimeErrorUser("content 至少需要一个 target claim")
+        elif kind == "outcomes":
+            fields = {"id", "version", "core_offer", "success_event", "leading_events", "excluded_success_events", "economics", "status", "sources", "approved_by", "approved_at"}
+            missing = sorted(fields - set(record))
+            if missing:
+                raise RuntimeErrorUser(f"outcome contract 缺少字段: {', '.join(missing)}")
+            require(record["core_offer"], {"name", "scope", "price_basis", "capacity_constraints", "material_exclusions"}, "outcome.core_offer")
+            require(record["success_event"], {"name", "definition", "requires_full_price", "evidence_required", "attribution_window"}, "outcome.success_event")
+            require(record["economics"], {"minimum_viable_margin_basis", "capacity_basis", "repeatability_basis"}, "outcome.economics")
+            if not isinstance(record["core_offer"]["capacity_constraints"], list) or not isinstance(record["core_offer"]["material_exclusions"], list):
+                raise RuntimeErrorUser("outcome.core_offer capacity_constraints/material_exclusions 必须是数组")
+            if not isinstance(record["success_event"]["evidence_required"], list):
+                raise RuntimeErrorUser("outcome.success_event.evidence_required 必须是数组")
+            if record["status"] not in {"HYPOTHESIS", "APPROVED", "INVALIDATED"}:
+                raise RuntimeErrorUser("outcome.status 无效")
+            if not isinstance(record["leading_events"], list) or not isinstance(record["excluded_success_events"], list):
+                raise RuntimeErrorUser("outcome leading/excluded events 必须是数组")
+        elif kind == "nodes":
+            require(record, {"node_id", "code", "status", "summary", "method_refs", "evidence_refs", "counterevidence", "alternative_ids", "invalidation_conditions", "approval_state"}, "business node")
+            if record["code"] not in NODE_ORDER or record["node_id"] != f"NODE-{record['code']}":
+                raise RuntimeErrorUser("node code/id 无效")
+            if record["status"] not in NODE_STATUSES:
+                raise RuntimeErrorUser("node.status 无效")
+            if record["approval_state"] not in APPROVAL_STATES:
+                raise RuntimeErrorUser("node.approval_state 无效")
+            unknown_methods = sorted(set(record["method_refs"]) - self.method_ids())
+            if unknown_methods:
+                raise RuntimeErrorUser(f"node.method_refs 未注册: {unknown_methods}")
+        elif kind == "alternatives":
+            require(record, {"candidate_id", "target_node", "statement", "mechanism", "supporting_evidence", "counterevidence", "unknowns", "online_convertibility", "smallest_disconfirming_test", "decision_effect"}, "alternative")
+            if record["target_node"] not in {f"NODE-{code}" for code in NODE_ORDER}:
+                raise RuntimeErrorUser("alternative.target_node 无效")
+            require(record["online_convertibility"], {"reachable", "identifiable", "influenceable", "attributable"}, "alternative.online_convertibility")
+            allowed = {"YES", "NO", "UNKNOWN"}
+            if any(value not in allowed for value in record["online_convertibility"].values()):
+                raise RuntimeErrorUser("online_convertibility 必须是 YES/NO/UNKNOWN")
+        elif kind == "information_requests":
+            fields = {"question", "target_decision", "current_alternatives", "how_answer_changes_decision", "minimum_sample", "why_smaller_is_insufficient", "fallback_if_unavailable", "blocking"}
+            missing = sorted(fields - set(record))
+            if missing:
+                raise RuntimeErrorUser(f"information request 缺少字段: {', '.join(missing)}")
+            if not isinstance(record["blocking"], bool):
+                raise RuntimeErrorUser("information_request.blocking 必须是布尔值")
 
     def touch_stage(self, stage: Any) -> None:
         if stage not in STAGES:
@@ -507,71 +634,282 @@ class ProjectRuntime:
         self.handoff()
         return result
 
-    def validate(self) -> dict[str, Any]:
+    def node_records(self) -> dict[str, dict[str, Any]]:
+        return {record["code"]: record for record in self.object_records("nodes")}
+
+    def set_outcome(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """Create or revise the single current outcome contract."""
+        payload = copy.deepcopy(payload)
+        payload.setdefault("id", "OUTCOME-001")
+        existing = next((item for item in self.object_records("outcomes") if item.get("id") == payload["id"]), None)
+        result = self.add_object("outcomes", payload, replace=bool(existing))
+        if existing and digest_value(without_hash(existing)) != digest_value(without_hash(result)):
+            self.invalidate(["NODE-B0"], "结果合同发生语义变化")
+        return result
+
+    def set_node(self, code: str, payload: dict[str, Any]) -> dict[str, Any]:
+        if code not in NODE_ORDER:
+            raise RuntimeErrorUser(f"未知业务节点: {code}")
+        current = self.node_records()[code]
+        value = copy.deepcopy(current)
+        value.update(copy.deepcopy(payload))
+        value.update(
+            {
+                "node_id": f"NODE-{code}",
+                "code": code,
+                "name": NODE_NAMES[code],
+                "business_stage": NODE_STAGE[code],
+                "depends_on": [f"NODE-{item}" for item in NODE_DEPENDENCIES[code]],
+            }
+        )
+        result = self.add_object("nodes", value, replace=True)
+        semantic_fields = ("summary", "status", "evidence_refs", "alternative_ids", "counterevidence")
+        changed = any(current.get(field) != result.get(field) for field in semantic_fields)
+        if current.get("status") == "APPROVED" and changed:
+            self.invalidate([f"NODE-{code}"], f"{code} 已批准结论被修订")
+        current_node = self._earliest_open_node()
+        self.write_state({"current_node": f"NODE-{current_node}", "active_stage": NODE_STAGE[current_node]})
+        self.handoff()
+        return result
+
+    def add_alternative(self, payload: dict[str, Any], *, replace: bool = False) -> dict[str, Any]:
+        return self.add_object("alternatives", payload, replace=replace)
+
+    def add_information_request(self, payload: dict[str, Any], *, replace: bool = False) -> dict[str, Any]:
+        return self.add_object("information_requests", payload, replace=replace)
+
+    def _earliest_open_node(self) -> str:
+        nodes = self.node_records()
+        for code in NODE_ORDER:
+            if nodes.get(code, {}).get("status") not in {"APPROVED", "SUPERSEDED"}:
+                return code
+        return "O1"
+
+    def preflight(self, target: str) -> dict[str, Any]:
+        code = target.removeprefix("NODE-")
+        if code not in NODE_ORDER:
+            raise RuntimeErrorUser(f"未知业务节点: {target}")
+        nodes = self.node_records()
+        dependencies = NODE_DEPENDENCIES[code]
+        missing = []
+        invalid = []
+        unknown = []
+        for dependency in dependencies:
+            status = nodes[dependency]["status"]
+            if status == "INVALIDATED":
+                invalid.append(f"NODE-{dependency}")
+            elif status not in {"APPROVED", "SUPERSEDED"}:
+                unknown.append(f"NODE-{dependency}")
+        blocking = sorted(set(missing + invalid + unknown))
+        warnings = []
+        if code == "B5":
+            for precheck in ("B6", "B7"):
+                candidate_ids = nodes[precheck].get("alternative_ids", [])
+                if len(candidate_ids) < 2:
+                    warnings.append({"code": "W-W3-W6-PRECHECK", "node": f"NODE-{precheck}", "message": "锁定 W1/W2 前需要至少两个 W3–W6 候选及最小反证"})
+        return {
+            "target": f"NODE-{code}",
+            "dependencies": [f"NODE-{item}" for item in dependencies],
+            "missing_dependency_ids": missing,
+            "unknown_dependency_ids": unknown,
+            "invalidated_dependency_ids": invalid,
+            "blocking_dependency_ids": blocking,
+            "warnings": warnings,
+            "allowed": not blocking,
+            "minimal_repairs": [f"先把 {identifier} 推进到 APPROVED，并保留证据、反证与审批溯源" for identifier in blocking],
+        }
+
+    @staticmethod
+    def _issue(code: str, record_id: str, relation: str, message: str, repair: str) -> dict[str, str]:
+        return {
+            "code": code,
+            "record_id": record_id,
+            "violated_relation": relation,
+            "message": message,
+            "minimal_repair": repair,
+        }
+
+    def business_validate(self, records: dict[str, dict[str, Any]]) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
+        errors: list[dict[str, str]] = []
+        warnings: list[dict[str, str]] = []
+        nodes = self.node_records()
+        outcomes = [item for item in self.object_records("outcomes") if not item.get("stale") and item.get("status") == "APPROVED"]
+        high_impact_active = any(nodes[code]["status"] == "APPROVED" for code in ("B5", "B6", "B7", "C1", "C2", "P1", "O1"))
+        if high_impact_active and not outcomes:
+            errors.append(self._issue("E-OUTCOME-MISSING", "NODE-B0", "B0 -> B5..O1", "高影响定位或下游节点已批准，但没有批准的结果合同。", "先定义核心正价/等价价值交换成功事件、领先事件和排除事件。"))
+        for outcome in outcomes:
+            success = outcome.get("success_event", {})
+            name = str(success.get("name", "")).strip().lower()
+            leading = {str(item.get("name", "")).strip().lower() for item in outcome.get("leading_events", [])}
+            excluded = {str(item).strip().lower() for item in outcome.get("excluded_success_events", [])}
+            if name in leading or name in excluded or success.get("event_category") == "LEADING_EVENT" or not success.get("requires_full_price", False):
+                errors.append(self._issue("E-OUTCOME-SUBSTITUTION", outcome["id"], "success_event != leading_event", "咨询、预约、到店、留资、检查或方案沟通不能替代批准的真实价值交换。", "把该事件移入 leading_events，并定义真实正价或等价价值交换事件。"))
+
+        for code in NODE_ORDER:
+            node = nodes[code]
+            if node.get("status") != "APPROVED":
+                continue
+            for dependency in NODE_DEPENDENCIES[code]:
+                if nodes[dependency].get("status") not in {"APPROVED", "SUPERSEDED"}:
+                    errors.append(self._issue("E-NODE-DEPENDENCY", node["node_id"], f"NODE-{dependency} -> NODE-{code}", f"{code} 已批准，但依赖 {dependency} 尚未批准。", f"先推进 NODE-{dependency}，或把 NODE-{code} 降为 HYPOTHESIS。"))
+        if any(nodes[code]["status"] == "APPROVED" for code in ("C1", "C2", "P1")) and nodes["B5"]["status"] != "APPROVED":
+            errors.append(self._issue("E-CONTENT-BEFORE-AUDIENCE", "NODE-C1", "B5 -> C1/C2/P1", "目标人和阶段未批准，内容或生产却已批准。", "先完成 B5 的目标人、阶段、排除对象、替代方案和反证。"))
+        if nodes["B5"]["status"] == "APPROVED" and nodes["B4"]["status"] != "APPROVED":
+            errors.append(self._issue("E-ONLINE-CONVERTIBILITY-UNKNOWN", "NODE-B5", "B4 -> B5", "未分别判断可触达、可识别、可影响和可归因，就锁定了目标人。", "先完成 B4 四维线上可转化判断；不成立时换人群、阶段或渠道。"))
+        if nodes["B5"]["status"] == "APPROVED":
+            for code in ("B6", "B7"):
+                if len(nodes[code].get("alternative_ids", [])) < 2:
+                    errors.append(self._issue("E-PERSONA-BEFORE-W3-W6", "NODE-B5", f"{code} precheck -> B5", "锁定目标人前缺少 W3–W6 客户侧候选、反证和最小验证。", f"为 NODE-{code} 建立至少两个真实候选及最小否证测试。"))
+        if nodes["B7"]["status"] in {"HYPOTHESIS", "NEEDS_EVIDENCE"} and len(nodes["B7"].get("alternative_ids", [])) >= 2:
+            warnings.append(self._issue("W-W6-UNKNOWN", "NODE-B7", "W6 hypothesis", "最终付款理由尚未证实，但已有候选和最小验证，可继续探索。", "保持 HYPOTHESIS/NEEDS_EVIDENCE；不得升级为批准或把领先事件当付款。"))
+
+        sources = {item["source_id"]: item for item in self.object_records("sources")}
+        b5 = nodes["B5"]
+        if b5.get("status") == "APPROVED" and b5.get("decision_scope", {}).get("locality") == "local":
+            evidence_sources = [sources[item] for item in b5.get("evidence_refs", []) if item in sources]
+            if evidence_sources and all(item.get("evidence_level") in {"E3_EXTERNAL_SAME_PATTERN", "E4_RESEARCH_ANALOG"} for item in evidence_sources):
+                errors.append(self._issue("E-LOCAL-RANKING-BY-GENERAL-RESEARCH", "NODE-B5", "external evidence -> local ranking", "泛行业或外地研究只能生成候选，不能单独批准本地第一目标人。", "补一条能改变排序的 E1/E2 本地证据，或把排序降为待验证假设。"))
+
+        for identifier, decision in self.ndjson_latest("decisions").items():
+            if decision.get("stale") or decision.get("decision_type") != "PERSONA":
+                continue
+            test = decision.get("customer_side_test", {})
+            required = ("passes_title_free", "customer_barrier", "perceivable_behavior", "why_not_any_peer", "disconfirming_signal")
+            if not all(test.get(field) not in (None, "", "UNKNOWN") for field in required) or test.get("passes_title_free") is not True:
+                errors.append(self._issue("E-PERSONA-INSIDE-OUT", identifier, "internal responsibility != customer purchase reason", "人物理由删除姓名和职务后无法说明客户障碍、可感知行为、独特性和反证。", "从客户当前障碍重写 title-free 理由，并登记可感知证据和否证信号。"))
+
+        for request in self.object_records("information_requests"):
+            if request.get("stale"):
+                continue
+            if not request.get("target_decision") or not request.get("how_answer_changes_decision"):
+                errors.append(self._issue("E-DATA-REQUEST-NO-DECISION", request["request_id"], "information request -> decision", "信息请求没有说明会改变哪个决定。", "补 target_decision、当前候选和两种答案分别如何改变选择。"))
+            sample = f"{request.get('question', '')} {request.get('minimum_sample', '')}".lower()
+            oversized = any(token in sample for token in ("12个月", "6个月", "全部客户", "完整客户", "全量"))
+            if oversized and not request.get("why_smaller_is_insufficient"):
+                errors.append(self._issue("E-DATA-REQUEST-OVERSIZED", request["request_id"], "requested sample > minimum necessary", "索取超量资料但没有证明更小样本为何不足。", "先用现有资料和 2–3 个候选；将样本缩到能区分当前决定的最小范围。"))
+
+        for identifier, approval in self.ndjson_latest("approvals").items():
+            if approval.get("status") != "ACTIVE" or approval.get("stale"):
+                continue
+            quote = str(approval.get("user_quote", "")).strip()
+            if quote in AMBIGUOUS_APPROVAL_QUOTES or not approval.get("source_turn_or_file") or not approval.get("interpreted_scope"):
+                errors.append(self._issue("E-APPROVAL-NO-PROVENANCE", identifier, "user quote -> interpreted approval scope", "模糊肯定或缺少来源，不能扩大为方向、实验、成果或发布批准。", "保留用户原话、精确范围、明确排除和来源；不清楚时保持 NEEDS_RECONFIRMATION。"))
+        active_direction_targets = {
+            item.get("target_id")
+            for item in self.ndjson_latest("approvals").values()
+            if item.get("status") == "ACTIVE" and not item.get("stale") and item.get("approval_type") == "DIRECTION"
+        }
+        for code, node in nodes.items():
+            if node.get("status") == "APPROVED" and node["node_id"] not in active_direction_targets:
+                errors.append(self._issue("E-APPROVAL-NO-PROVENANCE", node["node_id"], "direction approval -> approved node", f"{code} 标为 APPROVED，但没有范围匹配、带原话的 DIRECTION 审批。", "将节点降为 NEEDS_APPROVAL，或登记精确 DIRECTION 审批。"))
+
+        for identifier, claim in self.ndjson_latest("claims").items():
+            scope = claim.get("scope", {})
+            locality = scope.get("locality") if isinstance(scope, dict) else None
+            if locality != "local" or claim.get("truth_status") in {"UNVERIFIED", "SUPPORTED_HYPOTHESIS"}:
+                continue
+            referenced = [sources[item] for item in claim.get("source_refs", []) if item in sources]
+            if referenced and all(item.get("scope", {}).get("locality") in {"general", "external"} for item in referenced if isinstance(item.get("scope"), dict)):
+                errors.append(self._issue("E-EVIDENCE-SCOPE-MISMATCH", identifier, "evidence scope >= conclusion scope", "证据适用范围小于本地事实结论范围。", "缩窄为候选假设，或补足同地域同对象证据。"))
+            for conflict_id in claim.get("conflicts_with", []):
+                other = self.ndjson_latest("claims").get(conflict_id)
+                if not other:
+                    continue
+                pair = {claim.get("evidence_level"), other.get("evidence_level")}
+                if pair & {"E1_LOCAL_EXACT", "E2_LOCAL_ADJACENT"} and pair & {"E3_EXTERNAL_SAME_PATTERN", "E4_RESEARCH_ANALOG"}:
+                    warnings.append(self._issue("W-RESEARCH-CONFLICT", identifier, "external evidence <> local fact", "外部研究与本地一手事实冲突；不得自动覆盖本地事实。", "保留两条 claim 为 DISPUTED/待裁决，只请求能改变当前决策的最小本地证据。"))
+
+        if outcomes:
+            success_evidence = [item for item in outcomes[0].get("success_event", {}).get("evidence_required", []) if item]
+            if not success_evidence:
+                warnings.append(self._issue("W-LEADING-METRIC-ONLY", outcomes[0]["id"], "leading metrics without transaction evidence", "结果合同未声明交易验证证据。", "补充付款、合同或等价真实价值交换证据。"))
+        return errors, warnings
+
+    def validate(self, *, structural_only: bool = False) -> dict[str, Any]:
         self.ensure_initialized()
-        errors: list[str] = []
+        structural_errors: list[str] = []
         state = self.state()
         if state.get("schema_version") != STATE_SCHEMA:
-            errors.append("project-state schema_version 不匹配")
+            structural_errors.append("project-state schema_version 不匹配")
         if state.get("runtime_version") != RUNTIME_VERSION:
-            errors.append("runtime_version 不匹配；先运行 migrate")
+            structural_errors.append("runtime_version 不匹配；先运行 migrate --to 4")
         if state.get("active_stage") not in STAGES:
-            errors.append("active_stage 不是五阶段")
+            structural_errors.append("active_stage 不是五阶段")
+        if state.get("current_node") not in {f"NODE-{code}" for code in NODE_ORDER}:
+            structural_errors.append("current_node 不是 B0–O1 原子节点")
         if state.get("state_hash") != digest_value(without_hash(state)):
-            errors.append("project-state 哈希不匹配")
+            structural_errors.append("project-state 哈希不匹配")
         if set(state.get("next_action", {})) != NEXT_ACTION_FIELDS:
-            errors.append("next_action 字段不完整")
+            structural_errors.append("next_action 字段不完整")
         try:
             self.method_registry()
         except RuntimeErrorUser as error:
-            errors.append(str(error))
+            structural_errors.append(str(error))
+        try:
+            self.invariant_registry()
+        except RuntimeErrorUser as error:
+            structural_errors.append(str(error))
         try:
             records = self.all_latest()
         except RuntimeErrorUser as error:
             records = {}
-            errors.append(str(error))
+            structural_errors.append(str(error))
         for identifier, record in records.items():
             if record.get("payload_hash") != digest_value(without_hash(record)):
-                errors.append(f"{identifier} payload_hash 不匹配")
+                structural_errors.append(f"{identifier} payload_hash 不匹配")
             for dependency in record.get("depends_on", []):
                 if dependency not in records:
-                    errors.append(f"{identifier} 依赖不存在: {dependency}")
-            for source_ref in record.get("source_refs", []):
+                    structural_errors.append(f"{identifier} 依赖不存在: {dependency}")
+            for source_ref in record.get("source_refs", []) + record.get("sources", []):
                 if source_ref not in records or not source_ref.startswith("SRC-"):
-                    errors.append(f"{identifier} 来源不存在: {source_ref}")
+                    structural_errors.append(f"{identifier} 来源不存在: {source_ref}")
             for evidence_ref in record.get("evidence_refs", []):
                 if evidence_ref not in records:
-                    errors.append(f"{identifier} 证据引用不存在: {evidence_ref}")
+                    structural_errors.append(f"{identifier} 证据引用不存在: {evidence_ref}")
             for claim_ref in record.get("hypothesis_claim_ids", []) + record.get("target_claim_ids", []):
                 if claim_ref not in records or not claim_ref.startswith("CLM-"):
-                    errors.append(f"{identifier} claim 引用不存在: {claim_ref}")
+                    structural_errors.append(f"{identifier} claim 引用不存在: {claim_ref}")
             if identifier.startswith("ART-"):
                 relative = record.get("relative_path")
                 if relative:
                     target = self.root / relative
                     if not target.is_file() or sha256_file(target) != record.get("content_sha256"):
-                        errors.append(f"{identifier} 成果内容不存在或哈希不匹配")
-        registered_paths = {
-            str(record.get("relative_path"))
-            for identifier, record in records.items()
-            if identifier.startswith("ART-") and record.get("relative_path")
-        }
+                        structural_errors.append(f"{identifier} 成果内容不存在或哈希不匹配")
+        registered_paths = {str(record.get("relative_path")) for identifier, record in records.items() if identifier.startswith("ART-") and record.get("relative_path")}
         artifacts_root = self.root / "artifacts"
         if artifacts_root.is_dir():
             for target in sorted(path for path in artifacts_root.rglob("*") if path.is_file() and not path.name.startswith(".")):
                 relative = target.relative_to(self.root).as_posix()
                 if relative not in registered_paths:
-                    errors.append(f"成果文件未登记: {relative}")
+                    structural_errors.append(f"成果文件未登记: {relative}")
         for approval in self.ndjson_latest("approvals").values():
-            for target in approval.get("target_ids", []):
-                if target not in records:
-                    errors.append(f"{approval['approval_id']} 目标不存在: {target}")
-        return {"ok": not errors, "errors": errors, "project_id": state.get("project_id"), "active_stage": state.get("active_stage"), "records": len(records)}
+            target = approval.get("target_id")
+            if target and target not in records:
+                structural_errors.append(f"{approval['approval_id']} 目标不存在: {target}")
+        business_errors: list[dict[str, str]] = []
+        business_warnings: list[dict[str, str]] = []
+        if not structural_only and not structural_errors:
+            business_errors, business_warnings = self.business_validate(records)
+        errors: list[Any] = list(structural_errors) + list(business_errors)
+        return {
+            "ok": not structural_errors and (structural_only or not business_errors),
+            "structural_ok": not structural_errors,
+            "business_ok": None if structural_only else not business_errors,
+            "structural_only": structural_only,
+            "structural_errors": structural_errors,
+            "business_errors": business_errors,
+            "business_warnings": business_warnings,
+            "errors": errors,
+            "project_id": state.get("project_id"),
+            "active_stage": state.get("active_stage"),
+            "current_node": state.get("current_node"),
+            "records": len(records),
+        }
 
     def status(self) -> dict[str, Any]:
         result = self.validate()
         if not result["ok"]:
-            raise RuntimeErrorUser("项目校验失败: " + "; ".join(result["errors"]))
+            raise RuntimeErrorUser("项目校验失败: " + "; ".join(str(item) for item in result["errors"]))
         state = self.state()
         counts = {kind: len(self.ndjson_latest(kind)) for kind in NDJSON_FILES}
         counts.update({kind: len(self.object_records(kind)) for kind in OBJECT_FILES})
@@ -582,6 +920,8 @@ class ProjectRuntime:
             "project_name": state["project_name"],
             "runtime_version": state["runtime_version"],
             "active_stage": state["active_stage"],
+            "current_node": state["current_node"],
+            "node_status": {code: self.node_records()[code]["status"] for code in NODE_ORDER},
             "current_bottleneck": state["current_bottleneck"],
             "objective_30d": state["objective_30d"],
             "forecast_90d": state["forecast_90d"],
@@ -590,6 +930,7 @@ class ProjectRuntime:
             "next_action": state["next_action"],
             "counts": counts,
             "effective_approval_types": dict(Counter(record["approval_type"] for record in effective_approvals)),
+            "business_warnings": result["business_warnings"],
             "legacy_skill_warning": legacy,
         }
 
@@ -607,7 +948,8 @@ class ProjectRuntime:
             "stage_method_map": stage_map,
             "methods": public_methods,
             "qualification_counts": dict(Counter(item["classification"] for item in registry["items"])),
-            "commands": ["doctor", "capabilities", "init", "validate", "status", "handoff", "migrate", "invalidate", "reconcile-portfolio", "can-publish", "export-feedback"],
+            "business_nodes": [{"code": code, "name": NODE_NAMES[code], "stage": NODE_STAGE[code], "dependencies": NODE_DEPENDENCIES[code]} for code in NODE_ORDER],
+            "commands": ["doctor", "capabilities", "init", "set-outcome", "set-node", "add-alternative", "add-information-request", "preflight", "validate", "status", "handoff", "migrate", "invalidate", "reconcile-portfolio", "can-publish", "export-feedback"],
         }
 
     def doctor(self) -> dict[str, Any]:
@@ -662,20 +1004,18 @@ class ProjectRuntime:
         payload = copy.deepcopy(payload)
         payload.setdefault("status", "ACTIVE")
         targets = self.all_latest()
-        for target in payload.get("target_ids", []):
-            if target not in targets:
-                raise RuntimeErrorUser(f"审批目标不存在: {target}")
+        target = payload.get("target_id")
+        if target not in targets:
+            raise RuntimeErrorUser(f"审批目标不存在: {target}")
         approval_type = payload.get("approval_type")
-        for target in payload.get("target_ids", []):
-            record = targets[target]
-            if approval_type == "FACT_CONFIRMED" and record.get("truth_status") != "CONFIRMED_FACT":
-                raise RuntimeErrorUser("FACT_CONFIRMED 只能指向 CONFIRMED_FACT")
-            if approval_type == "HYPOTHESIS_ACCEPTED" and record.get("truth_status") not in {"SUPPORTED_HYPOTHESIS", "UNVERIFIED"}:
-                raise RuntimeErrorUser("HYPOTHESIS_ACCEPTED 只能指向假设")
-            if approval_type == "EXPERIMENT_AUTHORIZED" and not target.startswith("EXP-"):
-                raise RuntimeErrorUser("EXPERIMENT_AUTHORIZED 只能指向实验")
-            if approval_type == "PRODUCTION_APPROVED" and not target.startswith(("ART-", "CNT-", "EXP-")):
-                raise RuntimeErrorUser("PRODUCTION_APPROVED 只能指向成果、内容或实验")
+        if approval_type == "EXPERIMENT" and not (target.startswith("EXP-") or target.startswith("NODE-")):
+            raise RuntimeErrorUser("EXPERIMENT 只能指向实验或待验证节点")
+        if approval_type == "ARTIFACT" and not target.startswith(("ART-", "CNT-")):
+            raise RuntimeErrorUser("ARTIFACT 只能指向成果或内容")
+        if approval_type == "PUBLISH" and not target.startswith(("ART-", "CNT-", "EXP-")):
+            raise RuntimeErrorUser("PUBLISH 只能指向成果、内容或实验")
+        if str(payload.get("user_quote", "")).strip() in AMBIGUOUS_APPROVAL_QUOTES and approval_type != "EXPERIMENT":
+            payload["status"] = "NEEDS_RECONFIRMATION"
         return self.add_ndjson("approvals", payload, revise=revise)
 
     def register_artifact(self, payload: dict[str, Any], *, replace: bool = False) -> dict[str, Any]:
@@ -753,7 +1093,8 @@ class ProjectRuntime:
             dependencies = set(record.get("depends_on", []))
             dependencies.update(record.get("derived_from", []))
             if identifier.startswith("APR-"):
-                dependencies.update(record.get("target_ids", []))
+                if record.get("target_id"):
+                    dependencies.add(record["target_id"])
             for dependency in dependencies:
                 children[dependency].add(identifier)
         affected: set[str] = set()
@@ -772,7 +1113,7 @@ class ProjectRuntime:
                 payload["stale"] = True
                 payload["stale_reason"] = reason
                 if kind == "approvals":
-                    payload["status"] = "REVOKED"
+                    payload["status"] = "NEEDS_RECONFIRMATION"
                 stage = payload.get("business_stage")
                 if stage in STAGES:
                     stages.add(stage)
@@ -787,6 +1128,9 @@ class ProjectRuntime:
                 payload = copy.deepcopy(record)
                 payload["stale"] = True
                 payload["stale_reason"] = reason
+                if kind == "nodes":
+                    payload["status"] = "INVALIDATED"
+                    payload["approval_state"] = "NEEDS_RECONFIRMATION"
                 stage = payload.get("business_stage")
                 if stage in STAGES:
                     stages.add(stage)
@@ -818,10 +1162,10 @@ class ProjectRuntime:
             raise RuntimeErrorUser(f"发布目标不存在: {target_id}")
         matches = []
         for approval in self.ndjson_latest("approvals").values():
-            if approval.get("approval_type") != "PRODUCTION_APPROVED" or not self.approval_effective(approval):
+            if approval.get("approval_type") != "PUBLISH" or not self.approval_effective(approval):
                 continue
             scope = approval.get("scope", {})
-            if target_id not in approval.get("target_ids", []):
+            if target_id != approval.get("target_id"):
                 continue
             if scope.get("channel") not in {channel, "*"}:
                 continue
@@ -838,12 +1182,14 @@ class ProjectRuntime:
         legacy = sorted(path.name for path in self.skill_dir.parent.glob("jw-*") if path.is_dir())
         return {"found": bool(legacy), "skills": legacy, "action": "提示用户按升级说明清理；运行时不会调用或删除" if legacy else "none"}
 
-    def migrate(self, project_id: str | None, name: str | None) -> dict[str, Any]:
+    def migrate(self, project_id: str | None, name: str | None, *, to_version: int = 4) -> dict[str, Any]:
+        if to_version != 4:
+            raise RuntimeErrorUser("当前运行时只支持迁移到 Schema v4")
         if not self.root.exists():
             raise RuntimeErrorUser("没有可迁移的 .jw-project")
         old_state = load_json(self.state_path, {})
         if old_state.get("runtime_version") == RUNTIME_VERSION and old_state.get("schema_version") == STATE_SCHEMA:
-            return {"migrated": False, "reason": "already_v3.0.0"}
+            return {"migrated": False, "reason": "already_v4", "state_hash": old_state.get("state_hash")}
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         backup = self.project_root / f".jw-project-legacy-{timestamp}"
         if backup.exists():
@@ -867,6 +1213,7 @@ class ProjectRuntime:
                 "evidence_level": old.get("evidence_level") if old.get("evidence_level") in EVIDENCE_LEVELS else "E5_PROJECT_JUDGMENT",
                 "privacy": old.get("privacy", "PROJECT_PRIVATE"),
                 "scope": old.get("scope", {"migration": "legacy"}),
+                "cannot_prove": old.get("cannot_prove", ["旧来源不能自动证明 v4 业务结论"]),
                 "migration_origin_id": source_id,
             }
             self.add_object("sources", payload)
@@ -883,6 +1230,7 @@ class ProjectRuntime:
                     "evidence_level": "E5_PROJECT_JUDGMENT",
                     "privacy": "PROJECT_PRIVATE",
                     "scope": {"backup": backup.name},
+                    "cannot_prove": ["只读备份不能自动批准旧业务结论"],
                 },
             )
             imported_source_ids.add(fallback["source_id"])
@@ -906,68 +1254,244 @@ class ProjectRuntime:
             }
             self.add_ndjson("claims", payload)
             imported_facts += 1
+        leading_candidates: list[str] = []
+        for old in latest_by(old_claims, "claim_id").values():
+            statement = str(old.get("statement", ""))
+            if any(token in statement for token in ("咨询", "预约", "到店", "留资", "检查", "方案沟通")) and any(token in statement for token in ("成功", "成交", "结果")):
+                leading_candidates.append(statement)
+        if leading_candidates:
+            self.set_outcome(
+                {
+                    "id": "OUTCOME-LEGACY-001",
+                    "version": 1,
+                    "core_offer": {
+                        "name": "旧项目核心产品待复核",
+                        "scope": "NEEDS_REQUALIFICATION",
+                        "price_basis": "待用户定义正价口径",
+                        "capacity_constraints": [],
+                        "material_exclusions": leading_candidates,
+                    },
+                    "success_event": {
+                        "name": "真实价值交换待定义",
+                        "definition": "旧项目没有可复用的 v4 成交定义",
+                        "event_category": "VALUE_EXCHANGE",
+                        "requires_full_price": True,
+                        "evidence_required": ["用户重新确认的付款或等价价值交换证据"],
+                        "attribution_window": "待确认",
+                    },
+                    "leading_events": [{"name": item, "purpose": "旧记录中的过程信号", "not_success_reason": "v4 不允许自动视为成交"} for item in leading_candidates],
+                    "excluded_success_events": leading_candidates,
+                    "economics": {
+                        "minimum_viable_margin_basis": "待确认",
+                        "capacity_basis": "待确认",
+                        "repeatability_basis": "待确认",
+                    },
+                    "status": "HYPOTHESIS",
+                    "sources": [sorted(imported_source_ids)[0]],
+                    "approved_by": None,
+                    "approved_at": None,
+                    "migration_semantic_downgrade": "旧领先事件不再视为成功事件",
+                }
+            )
         imported_approvals = 0
         for old in latest_by(old_approvals, "approval_id").values():
             historical = {
-                "approval_type": old.get("approval_type") if old.get("approval_type") in APPROVAL_TYPES else "HYPOTHESIS_ACCEPTED",
-                "target_ids": [],
-                "approved_by": old.get("approved_by", "legacy_user"),
+                "target_id": "NODE-B0",
+                "approval_type": "DIRECTION",
+                "user_quote": old.get("user_quote", "[旧审批缺少用户原话]"),
+                "interpreted_scope": canonical(redact(old.get("scope", {}))),
+                "explicit_exclusions": ["不自动批准 v4 结果合同、节点、成果或发布"],
+                "assumptions_acknowledged": ["旧审批语义未满足 v4 溯源要求"],
+                "source_turn_or_file": old.get("source_turn_or_file", backup.name),
                 "scope": {"historical_scope": redact(old.get("scope", {})), "migration_origin_id": old.get("approval_id")},
-                "status": "NEEDS_REQUALIFICATION",
+                "status": "NEEDS_RECONFIRMATION",
             }
             self.add_ndjson("approvals", historical)
             imported_approvals += 1
-        state = self.state()
-        self.write_state({"migration_status": "NEEDS_REQUALIFICATION", "legacy_backup": backup.name, "active_stage": "POSITIONING", "current_bottleneck": "旧业务结论需要按五阶段重新资格审查"})
+        self.write_state({"migration_status": "NEEDS_REQUALIFICATION", "legacy_backup": backup.name, "active_stage": "POSITIONING", "current_node": "NODE-B0", "current_bottleneck": "旧业务结论需要按 B0–O1 重新资格审查"})
+        report = {
+            "schema_version": "jw.migration-report.v4",
+            "generated_at": utc_now(),
+            "source_schema": old_state.get("schema_version"),
+            "target_schema": STATE_SCHEMA,
+            "backup": backup.name,
+            "automatic_mappings": {"sources": imported_sources, "confirmed_facts": imported_facts},
+            "semantic_downgrades": {
+                "historical_approvals": imported_approvals,
+                "leading_success_claims": leading_candidates,
+                "old_business_conclusions": "NEEDS_REQUALIFICATION",
+            },
+            "unmapped": ["旧内容、人物路线、脚本、生产和运营结论"],
+            "user_confirmations_required": ["B0 结果合同", "旧审批原话与范围", "B1–O1 业务节点"],
+            "rollback": f"运行 `rollback-migration`：恢复 {backup.name}，并把当前 v4 状态移入隔离快照",
+        }
+        write_json(self.root / "migration-report.json", report)
         for path in sorted(backup.rglob("*"), reverse=True):
             try:
                 path.chmod(0o555 if path.is_dir() else 0o444)
             except OSError:
                 pass
         self.handoff()
-        return {"migrated": True, "backup": str(backup), "imported_facts": imported_facts, "imported_sources": imported_sources, "historical_approvals": imported_approvals, "business_conclusions": "NEEDS_REQUALIFICATION", "state_revision": state.get("revision")}
+        state = self.state()
+        return {"migrated": True, "backup": str(backup), "imported_facts": imported_facts, "imported_sources": imported_sources, "historical_approvals": imported_approvals, "leading_success_downgrades": len(leading_candidates), "business_conclusions": "NEEDS_REQUALIFICATION", "state_revision": state.get("revision")}
+
+    def rollback_migration(self) -> dict[str, Any]:
+        if not self.root.exists():
+            raise RuntimeErrorUser("没有可回滚的 .jw-project")
+        state = load_json(self.state_path, {})
+        backup_name = state.get("legacy_backup")
+        if not isinstance(backup_name, str) or not backup_name:
+            raise RuntimeErrorUser("当前项目没有可验证的 v3 迁移备份")
+        backup = self.project_root / backup_name
+        if not backup.is_dir():
+            raise RuntimeErrorUser(f"迁移备份不存在: {backup}")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        quarantine = self.project_root / f".jw-project-v4-rollback-{timestamp}"
+        if quarantine.exists():
+            raise RuntimeErrorUser(f"回滚隔离目录已存在: {quarantine}")
+        os.replace(self.root, quarantine)
+        try:
+            os.replace(backup, self.root)
+        except Exception:
+            os.replace(quarantine, self.root)
+            raise
+        for path in sorted(self.root.rglob("*")):
+            try:
+                path.chmod(0o755 if path.is_dir() else 0o644)
+            except OSError:
+                pass
+        try:
+            self.root.chmod(0o755)
+        except OSError:
+            pass
+        return {
+            "rolled_back": True,
+            "restored_schema": load_json(self.state_path, {}).get("schema_version"),
+            "restored_project": str(self.root),
+            "v4_quarantine": str(quarantine),
+            "data_deleted": False,
+        }
 
     def handoff(self) -> Path:
         state = self.state()
         claims = self.ndjson_latest("claims")
         decisions = self.ndjson_latest("decisions")
         approvals = self.ndjson_latest("approvals")
-        contents = self.object_records("content")
         active_claims = [record for record in claims.values() if not record.get("stale")]
         active_decisions = [record for record in decisions.values() if not record.get("stale")]
         effective_approvals = [record for record in approvals.values() if self.approval_effective(record)]
+        outcomes = [item for item in self.object_records("outcomes") if not item.get("stale")]
+        nodes = self.node_records()
+        validation = self.validate()
         next_action = state["next_action"]
         lines = [
             f"# HANDOFF — {state['project_name']}",
             "",
             f"- Runtime: `{state['runtime_version']}`",
             f"- Active business stage: `{state['active_stage']}`",
+            f"- Current atomic node: `{state['current_node']}`",
             f"- Current bottleneck: {state['current_bottleneck']}",
             f"- Migration: `{state['migration_status']}`",
             "",
-            "## 30-day objective",
-            "",
-            str(state["objective_30d"].get("statement", "待确定")),
-            "",
-            "## 90-day forecast",
-            "",
-            f"- Baseline: {state['forecast_90d'].get('baseline', '待确定')}",
-            f"- Upside: {state['forecast_90d'].get('upside', '待确定')}",
-            f"- Risk: {state['forecast_90d'].get('risk', '待确定')}",
-            "",
-            "## Effective state",
-            "",
-            f"- Active claims: {len(active_claims)} / total {len(claims)}",
-            f"- Active decisions: {len(active_decisions)} / total {len(decisions)}",
-            f"- Effective approvals: {len(effective_approvals)} / total {len(approvals)}",
-            f"- Content plans: {len(contents)}; actual units: {sum(float(item.get('actual_units', 0)) for item in contents)}",
-            "",
-            "## Unique next action",
+            "## Approved outcome contract",
             "",
         ]
+        approved_outcomes = [item for item in outcomes if item.get("status") == "APPROVED"]
+        if approved_outcomes:
+            outcome = approved_outcomes[-1]
+            lines.extend(
+                [
+                    f"- Offer: {outcome['core_offer'].get('name')}",
+                    f"- Success event: {outcome['success_event'].get('name')}",
+                    f"- Definition: {outcome['success_event'].get('definition')}",
+                    f"- Attribution window: {outcome['success_event'].get('attribution_window')}",
+                    f"- Leading events are not success: {', '.join(str(item.get('name')) for item in outcome.get('leading_events', [])) or 'none'}",
+                ]
+            )
+        else:
+            lines.append("- No approved outcome contract. B0 remains the controlling bottleneck.")
+        lines.extend(
+            [
+                "",
+                "## B0–O1 node state",
+                "",
+                "| Node | Meaning | Status | Summary |",
+                "| --- | --- | --- | --- |",
+            ]
+        )
+        for code in NODE_ORDER:
+            node = nodes[code]
+            lines.append(f"| {code} | {NODE_NAMES[code]} | `{node['status']}` | {str(node.get('summary', ''))[:160]} |")
+        lines.extend(["", "## Five current business conclusions", ""])
+        top = [item for item in active_decisions if item.get("status") == "ACTIVE"][-5:]
+        if not top:
+            lines.append("- None approved or active yet.")
+        for decision in top:
+            lines.extend(
+                [
+                    f"### {decision['decision_id']}",
+                    "",
+                    f"- Conclusion: {decision.get('statement')}",
+                    f"- Evidence: {', '.join(decision.get('evidence_refs', [])) or 'none'}",
+                    f"- Counterevidence: {canonical(decision.get('counterevidence', []))}",
+                    f"- Invalidated by: {canonical(decision.get('invalidation_conditions', ['new contradictory evidence']))}",
+                    "",
+                ]
+            )
+        rejected = [item for item in active_decisions if item.get("status") == "REJECTED"]
+        lines.extend(["## Explicitly rejected paths", ""])
+        lines.extend([f"- {item.get('statement')} — {item.get('rationale_summary', '')}" for item in rejected] or ["- None recorded."])
+        earliest = self._earliest_open_node()
+        lines.extend(
+            [
+                "",
+                "## Largest current business unknown",
+                "",
+                f"- `{earliest}` {NODE_NAMES[earliest]}: {nodes[earliest].get('summary', '待判断')}",
+                "",
+                "## Unique next action",
+                "",
+            ]
+        )
         for field in ("owner", "minimum_input", "timebox", "artifact", "decision_threshold", "stop_rule", "expansion_condition"):
             lines.append(f"- {field}: {next_action[field]}")
-        lines.extend(["", "## Safety", "", "No external production, publishing, outreach or media spend without a matching `PRODUCTION_APPROVED` and an available execution tool.", ""])
+        affected = sorted({item for record in active_decisions for item in record.get("downstream_impacts", [])})
+        pending_approvals = [record for record in approvals.values() if record.get("status") in {"NEEDS_RECONFIRMATION"}]
+        lines.extend(
+            [
+                "",
+                "## Downstream impact",
+                "",
+                f"- Potentially affected: {', '.join(affected) or 'none'}",
+                "",
+                "## Pending approvals",
+                "",
+            ]
+        )
+        lines.extend([f"- {item['approval_id']}: {item.get('target_id')} needs reconfirmation" for item in pending_approvals] or ["- None."])
+        lines.extend(
+            [
+                "",
+                "## Validation",
+                "",
+                f"- Structural: `{'PASS' if validation['structural_ok'] else 'FAIL'}`",
+                f"- Business: `{'PASS' if validation['business_ok'] else 'FAIL'}`",
+                f"- Business errors: {', '.join(item['code'] for item in validation['business_errors']) or 'none'}",
+                f"- Business warnings: {', '.join(item['code'] for item in validation['business_warnings']) or 'none'}",
+                "",
+                "## 30-day and 90-day horizon",
+                "",
+                f"- 30-day: {state['objective_30d'].get('statement', '待确定')}",
+                f"- 90-day baseline: {state['forecast_90d'].get('baseline', '待确定')}",
+                f"- 90-day upside: {state['forecast_90d'].get('upside', '待确定')}",
+                f"- 90-day risk: {state['forecast_90d'].get('risk', '待确定')}",
+                "",
+                "## Safety",
+                "",
+                "No external production, publishing, outreach or media spend without a matching `PUBLISH` approval and an available execution tool.",
+                "",
+            ]
+        )
         target = self.root / "HANDOFF_LATEST.md"
         atomic_write(target, "\n".join(lines))
         return target
@@ -993,7 +1517,7 @@ class ProjectRuntime:
         corrections = sum(len(item.get("user_corrections", [])) for item in latest_feedback)
         repeated = sum(len(item.get("repeated_questions", [])) for item in latest_feedback)
         markdown = [
-            "# JW v3.0.0 实测反馈",
+            "# JW v4.0.0-rc.1 实测反馈",
             "",
             f"- 项目：{redact(state['project_name'])}",
             f"- 当前阶段：{state['active_stage']}",
@@ -1015,7 +1539,7 @@ class ProjectRuntime:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="线索获客4.0 v3.0.0 项目运行时")
+    parser = argparse.ArgumentParser(description="线索获客4.0 v4.0.0-rc.1 业务推理与项目控制运行时")
     sub = parser.add_subparsers(dest="command", required=True)
 
     def project_command(name: str, help_text: str) -> argparse.ArgumentParser:
@@ -1026,7 +1550,8 @@ def build_parser() -> argparse.ArgumentParser:
     init = project_command("init", "初始化项目")
     init.add_argument("--project-id", required=True)
     init.add_argument("--name", required=True)
-    project_command("validate", "校验项目")
+    validate = project_command("validate", "同时校验结构和业务语义")
+    validate.add_argument("--structural-only", action="store_true", help="仅用于迁移和维修，不得作为发行验收")
     project_command("status", "读取当前状态")
     project_command("doctor", "检查 Skill 版本、完整性、旧版残留和运行环境")
     project_command("capabilities", "显示五阶段、七方法和调用关系")
@@ -1035,6 +1560,22 @@ def build_parser() -> argparse.ArgumentParser:
     migrate = project_command("migrate", "迁移旧项目")
     migrate.add_argument("--project-id")
     migrate.add_argument("--name")
+    migrate.add_argument("--to", type=int, default=4, choices=(4,))
+    project_command("rollback-migration", "非破坏式恢复迁移前项目，并隔离当前 v4 状态")
+
+    outcome = project_command("set-outcome", "设置结果合同")
+    outcome.add_argument("--json", required=True)
+    node = project_command("set-node", "设置 B0–O1 原子节点")
+    node.add_argument("--node", choices=NODE_ORDER, required=True)
+    node.add_argument("--json", required=True)
+    alternative = project_command("add-alternative", "登记结构化替代方案")
+    alternative.add_argument("--json", required=True)
+    alternative.add_argument("--replace", action="store_true")
+    information = project_command("add-information-request", "登记最小信息请求")
+    information.add_argument("--json", required=True)
+    information.add_argument("--replace", action="store_true")
+    preflight = project_command("preflight", "检查目标节点依赖、阻断和最小修复")
+    preflight.add_argument("--target", required=True)
 
     objectives = project_command("set-objectives", "设置30天目标与90天预测")
     objectives.add_argument("--objective-30d-json", required=True)
@@ -1086,7 +1627,7 @@ def main() -> int:
         if args.command == "init":
             result = runtime.initialize(args.project_id, args.name)
         elif args.command == "validate":
-            result = runtime.validate()
+            result = runtime.validate(structural_only=args.structural_only)
         elif args.command == "status":
             result = runtime.status()
         elif args.command == "doctor":
@@ -1098,7 +1639,19 @@ def main() -> int:
         elif args.command == "legacy-scan":
             result = runtime.legacy_scan()
         elif args.command == "migrate":
-            result = runtime.migrate(args.project_id, args.name)
+            result = runtime.migrate(args.project_id, args.name, to_version=args.to)
+        elif args.command == "rollback-migration":
+            result = runtime.rollback_migration()
+        elif args.command == "set-outcome":
+            result = runtime.set_outcome(parse_json_argument(args.json))
+        elif args.command == "set-node":
+            result = runtime.set_node(args.node, parse_json_argument(args.json))
+        elif args.command == "add-alternative":
+            result = runtime.add_alternative(parse_json_argument(args.json), replace=args.replace)
+        elif args.command == "add-information-request":
+            result = runtime.add_information_request(parse_json_argument(args.json), replace=args.replace)
+        elif args.command == "preflight":
+            result = runtime.preflight(args.target)
         elif args.command == "set-objectives":
             result = runtime.set_objectives(parse_json_argument(args.objective_30d_json), parse_json_argument(args.forecast_90d_json))
         elif args.command == "set-stage":

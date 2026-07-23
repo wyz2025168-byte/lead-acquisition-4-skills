@@ -1,16 +1,45 @@
 {
   "name": "lead-acquisition-4-skills",
-  "version": "v3.0.0",
-  "publication_status": "FIELD_VALIDATION_RELEASE",
+  "version": "v4.0.0-rc.1",
+  "publication_status": "LOCAL_RELEASE_CANDIDATE_NOT_PUBLISHED",
+  "base_commit": "0557c0d28331b82f4a147b6501c69b9367179aac",
+  "candidate_commit": null,
   "skills": ["jw"],
   "method_count": 7,
   "business_stages": ["POSITIONING", "CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS"],
-  "field_validation_notice_required": true,
+  "business_nodes": ["B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "C1", "C2", "P1", "O1"],
+  "runtime_schema": "jw.project-state.v4",
+  "method_registry_version": "4.0.0",
+  "test_set_version": "R01-R15 + natural-v1 + synthetic-replay-v1",
+  "rubric_sha256": "51b77d618f32f5408f032f5dd5cf64a21c3d9375f2fe106343c2c9c86b4de690",
   "validation": {
-    "deterministic": "REQUIRED_PASS",
-    "isolated_model": "REQUIRED_PASS",
-    "G7": "DEFERRED_TO_FIELD_VALIDATION",
-    "G8": "DEFERRED_TO_FIELD_VALIDATION"
+    "deterministic_business_tests": "19/19 PASS",
+    "r01_r15": "15/15 PASS",
+    "node_dependencies": "PASS",
+    "v3_to_v4_migration": "PASS",
+    "non_destructive_rollback": "PASS",
+    "natural_eval_isolation": "7/7 PASS",
+    "synthetic_replay": "10/10 PASS",
+    "package_gate": "21/21 PASS",
+    "clean_install_doctor": "PASS",
+    "independent_model_runs": "21/21 PASS",
+    "blind_eval_individual_runs": "19/21 PASS",
+    "blind_eval_scenarios": "6/7 PASS; threshold 5/7",
+    "blind_eval_hard_failures": 0,
+    "field_validation": "READY_TO_START_NOT_PROVEN"
   },
-  "external_actions_require": "PRODUCTION_APPROVED"
+  "evaluation_evidence": {
+    "filename": "线索获客4.0_v4.0.0-rc.1_自然评测完整证据_20260723.zip",
+    "sha256": "f96d8c22d0d00755b7555bf39dbb27e69023f45b89107ba3e77c45060424998d",
+    "public_package_included": false
+  },
+  "test_commands": [
+    "python3 -m unittest discover -s tests -v",
+    "python3 evals/natural/run_eval.py --scan",
+    "python3 tools/run-synthetic-replay.py",
+    "python3 tools/validate-package.py"
+  ],
+  "external_actions_require": "PUBLISH",
+  "field_validation_notice_required": true,
+  "unverified_capabilities": ["真实获客效果", "真实成交提升", "连续现场任务耐久性"]
 }

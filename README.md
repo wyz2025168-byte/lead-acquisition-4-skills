@@ -1,49 +1,36 @@
-# 线索获客 4.0 v3.0.0
+# 线索获客 4.0 v4.0.0-rc.1
 
-> Field Validation Release：完整能力已重建并通过自动与隔离模型验收；真实流量和成交效果由实际业务继续验证。
+> Semantic Rebuild Candidate：保留 v3 控制能力，新增从真实价值交换倒推的业务推理内核。确定性门禁与独立自然盲评已通过，可进入受控 Field Validation；当前尚未 commit、push 或发布。
 
-## 一句话安装
+## 安装与启动
+
+公开发布后仍使用：
 
 ```bash
 npx -y skills add wyz2025168-byte/lead-acquisition-4-skills -g --all
 ```
 
-安装后说：
+启动：`使用 $jw，初始化并接管这个项目。`
 
-```text
-使用 $jw，初始化并接管这个项目。
-```
+## v4 解决什么
 
-继续项目：
+v4 不再把“文件完整”当成“业务正确”。内部以 B0–O1 推进：结果合同 → 产品边界 → 交易角色 → 触发阶段 → 线上可转化 → W1–W6 → 内容 → 脚本 → 生产 → 组合运营。
 
-```text
-使用 $jw，根据当前状态推进最关键的下一步。
-```
+- 咨询、预约、到店、检查和方案沟通只能是领先事件，不能替代真实正价或等价价值交换。
+- 本地人群不能只靠泛行业研究排序；线上可触达、识别、影响和归因必须分别判断。
+- 人物路线必须通过去头衔和客户侧障碍测试，内部职责不能直接成为购买理由。
+- 信息请求必须说明它会改变哪个决定，并限制为最小样本。
+- `validate` 默认同时检查工程结构和业务不变量；业务 FAIL 时整体 FAIL。
+- 五阶段仍面向用户，七个课程方法仍按需调用；课程原理不能覆盖项目事实。
 
-查看是否完整安装：
+## 关键命令
 
-```text
-使用 $jw，运行 doctor 并把结果解释给我。
-```
+`doctor`、`capabilities`、`set-outcome`、`set-node`、`add-alternative`、`add-information-request`、`preflight`、`validate`、`status`、`migrate --to 4`、`rollback-migration`、`handoff`。
 
-查看完整能力：
+审批分为 `DIRECTION / EXPERIMENT / ARTIFACT / PUBLISH`。没有范围匹配的 `PUBLISH` 和可用工具，不会真实发布、投流、外发或联系客户。
 
-```text
-使用 $jw，运行 capabilities，并用业务语言展示五阶段和七个方法。
-```
+## 状态边界
 
-## 它不是七个旧 Skill 的集合
-
-v3 只有一个 `$jw`。内部装入七个完整九段判断方法，由五个业务阶段按当前最早瓶颈主动组合：定位 → 内容 → 拍摄 → 内容配比 → 发布运营。方法负责判断，阶段负责推进，运行时负责证据、审批、项目记忆、30天执行、90天预判和局部失效。
-
-它应直接交付定位决策、客群矩阵、选题与完整脚本、CTA、拍摄分镜、批量排期、内容库存对账、发布实验和运营复盘，而不是只给方法说明或验收报告。
-
-## 重要边界
-
-- 项目事实与真实结果优先；课程原理不能替代行业和客户证据。
-- 没有范围匹配的 `PRODUCTION_APPROVED` 和可用工具，不会真实发布、投流、外发或联系客户。
-- 不保证流量、咨询、预约或成交。
-- 原始课程、真实客户资料、历史项目结论和评测答案不在公开包。
-- 旧版升级见 [UPGRADE](docs/UPGRADE.md)，从零实测见 [FIELD_TESTING](docs/FIELD_TESTING.md)。
+本候选已通过19项确定性测试、10项脱敏回放和21次独立自然运行盲评（6/7场景稳定通过、硬失败0）。真实获客与成交效果仍需现场验证；不保证流量、咨询或成交。升级见 [UPGRADE](docs/UPGRADE.md)，测试见 [FIELD_TESTING](docs/FIELD_TESTING.md)。
 
 许可证：[Restricted Evaluation License 1.0](LICENSE.md)。

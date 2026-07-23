@@ -1,0 +1,70 @@
+{
+  "schema_version": "jw.synthetic-replay.v1",
+  "scenario": "deidentified_local_high_ticket_dental",
+  "private_project_answers_used": false,
+  "checks": [
+    {
+      "check": "defines_real_value_exchange_first",
+      "test_id": "tests.test_business_invariants.BusinessInvariantTests.test_r01_leading_event_cannot_be_success",
+      "status": "PASS",
+      "output_sha256": "1635a6194f78c5e89329e41ae3b95909ced52dd425f9291840b91d6deaa41ba0"
+    },
+    {
+      "check": "separates_transaction_roles",
+      "test_id": "tests.test_node_dependencies.NodeDependencyTests.test_r10_natural_first_turn_stops_at_b0",
+      "status": "PASS",
+      "output_sha256": "1635a6194f78c5e89329e41ae3b95909ced52dd425f9291840b91d6deaa41ba0"
+    },
+    {
+      "check": "checks_online_convertibility",
+      "test_id": "tests.test_business_invariants.BusinessInvariantTests.test_r07_online_convertibility_unknown_blocks_audience",
+      "status": "PASS",
+      "output_sha256": "c3a83593d26384c7ba197fc59d784f63c97d392d7d404bd5e99e5f1e4a48395d"
+    },
+    {
+      "check": "does_not_rank_local_audience_by_general_research",
+      "test_id": "tests.test_business_invariants.BusinessInvariantTests.test_r04_external_research_cannot_rank_local_audience",
+      "status": "PASS",
+      "output_sha256": "961e6a8ef800622b54a68897f159af84129fed1463c28234e0790b1e1b67e4f5"
+    },
+    {
+      "check": "does_not_treat_visit_as_success",
+      "test_id": "tests.test_business_invariants.BusinessInvariantTests.test_r14_leading_event_is_legal_when_not_success",
+      "status": "PASS",
+      "output_sha256": "1635a6194f78c5e89329e41ae3b95909ced52dd425f9291840b91d6deaa41ba0"
+    },
+    {
+      "check": "rejects_internal_duty_as_purchase_reason",
+      "test_id": "tests.test_business_invariants.BusinessInvariantTests.test_r02_inside_out_persona_is_blocked",
+      "status": "PASS",
+      "output_sha256": "c3a83593d26384c7ba197fc59d784f63c97d392d7d404bd5e99e5f1e4a48395d"
+    },
+    {
+      "check": "keeps_w6_candidates_when_unknown",
+      "test_id": "tests.test_business_invariants.BusinessInvariantTests.test_r08_w6_candidates_allow_exploration_with_warning",
+      "status": "PASS",
+      "output_sha256": "6fb836ff09dd03dfee8cf2e46eaaa899995d6f2bae645563568232c2ec053015"
+    },
+    {
+      "check": "blocks_content_before_audience",
+      "test_id": "tests.test_business_invariants.BusinessInvariantTests.test_r03_content_before_audience_is_blocked",
+      "status": "PASS",
+      "output_sha256": "c3a83593d26384c7ba197fc59d784f63c97d392d7d404bd5e99e5f1e4a48395d"
+    },
+    {
+      "check": "asks_minimum_decision_changing_information",
+      "test_id": "tests.test_minimum_information.MinimumInformationTests.test_r11_no_history_data_uses_nonblocking_fallback",
+      "status": "PASS",
+      "output_sha256": "1635a6194f78c5e89329e41ae3b95909ced52dd425f9291840b91d6deaa41ba0"
+    },
+    {
+      "check": "invalidates_only_true_descendants",
+      "test_id": "tests.test_node_dependencies.NodeDependencyTests.test_r09_upstream_correction_only_invalidates_descendants",
+      "status": "PASS",
+      "output_sha256": "26a2157691aecf52871e13521306b611618cafe5bfc90d41154d52b360a51897"
+    }
+  ],
+  "passed": 10,
+  "failed": 0,
+  "status": "PASS"
+}

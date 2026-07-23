@@ -1,0 +1,21 @@
+{
+  "schema_version": "jw.business-invariants.v1",
+  "runtime_version": "4.0.0-rc.1",
+  "rules": [
+    {"code":"E-OUTCOME-MISSING","severity":"BLOCK","relation":"B0 -> B5..O1","message":"高影响定位没有批准的结果合同","minimal_repair":"先定义真实价值交换、领先事件、排除事件和归因窗"},
+    {"code":"E-OUTCOME-SUBSTITUTION","severity":"BLOCK","relation":"success_event != leading_event","message":"咨询、预约、到店、留资等替代真实价值交换","minimal_repair":"把过程事件移入 leading_events，重新定义 success_event"},
+    {"code":"E-NODE-DEPENDENCY","severity":"BLOCK","relation":"approved dependency graph","message":"节点在依赖未批准时被批准","minimal_repair":"先批准最早缺失依赖或把下游降为假设"},
+    {"code":"E-CONTENT-BEFORE-AUDIENCE","severity":"BLOCK","relation":"B5 -> C1/C2/P1","message":"未批准目标人和阶段就批准内容或生产","minimal_repair":"先完成 B5 的候选、反证和批准"},
+    {"code":"E-PERSONA-BEFORE-W3-W6","severity":"BLOCK","relation":"B6/B7 precheck -> B5/persona","message":"缺少 W3–W6 候选链就锁定人物或人群","minimal_repair":"建立至少两个客户侧候选和最小否证测试"},
+    {"code":"E-PERSONA-INSIDE-OUT","severity":"BLOCK","relation":"internal responsibility != customer purchase reason","message":"内部职务或职责被直接写成客户购买理由","minimal_repair":"通过去头衔测试、客户障碍测试和可感知行为测试"},
+    {"code":"E-LOCAL-RANKING-BY-GENERAL-RESEARCH","severity":"BLOCK","relation":"external evidence -> local ranking","message":"只凭泛行业研究排列本地客群优先级","minimal_repair":"补 E1/E2 或降级为待验证候选"},
+    {"code":"E-ONLINE-CONVERTIBILITY-UNKNOWN","severity":"BLOCK","relation":"B4 -> B5","message":"未判断线上四维可转化就锁客","minimal_repair":"分别判断可触达、可识别、可影响和可归因"},
+    {"code":"E-DATA-REQUEST-NO-DECISION","severity":"BLOCK","relation":"information request -> decision","message":"信息请求未说明能改变哪个决定","minimal_repair":"补目标决定、当前候选和答案分支"},
+    {"code":"E-DATA-REQUEST-OVERSIZED","severity":"BLOCK","relation":"requested sample <= minimum necessary","message":"索取超出最小必要范围且无理由","minimal_repair":"缩小到能区分当前候选的最小样本"},
+    {"code":"E-APPROVAL-NO-PROVENANCE","severity":"BLOCK","relation":"user quote -> interpreted scope","message":"高影响审批缺少原话、来源、范围或排除","minimal_repair":"重新确认精确对象和未批准范围"},
+    {"code":"E-EVIDENCE-SCOPE-MISMATCH","severity":"BLOCK","relation":"evidence scope >= conclusion scope","message":"证据范围小于结论范围","minimal_repair":"缩窄结论或补同范围证据"},
+    {"code":"W-LEADING-METRIC-ONLY","severity":"WARN","relation":"leading metrics -> transaction evidence","message":"只有领先指标，没有交易验证","minimal_repair":"补真实价值交换证据"},
+    {"code":"W-W6-UNKNOWN","severity":"WARN","relation":"W6 hypothesis","message":"W6 未知但已有候选和最小验证","minimal_repair":"允许探索，不得假装批准"},
+    {"code":"W-RESEARCH-CONFLICT","severity":"WARN","relation":"external evidence <> local fact","message":"外部研究与一手事实冲突","minimal_repair":"保留冲突并请求最小裁决，不自动覆盖一手事实"}
+  ]
+}

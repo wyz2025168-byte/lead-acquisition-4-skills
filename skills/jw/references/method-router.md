@@ -1,32 +1,34 @@
 # 方法路由与跨阶段调用
 
-阶段决定当前业务任务，方法提供判断程序。不得让方法编号或课程章节决定推进顺序；先定位最早瓶颈，再加载最少充分方法。
+按“当前原子节点 + 最高影响未知 + 可逆性”路由。阶段只提供用户导航，一个回合默认推进一个高影响节点；大量资料可一次摄取，但逐节点批准。
 
-| 阶段 | 主方法 | 条件调用 | 典型输入 | 典型输出 |
-|---|---|---|---|---|
-| `POSITIONING` | `positioning-competition`、`audience-stage` | `conversion-journey` 用于购买角色和正价交易链校验；`orchestration-control` 始终调用 | 产品、价格、利润、历史交易、替代、人物、容量 | 候选定位比较、客群矩阵、排除人群、最小验证 |
-| `CONTENT` | `audience-continuity`、`conversion-journey` | `belief-mindshare` 规划长期心智；必要时回查前两方法 | 已批准目标人与阶段、真实语言、人物事实、关卡 | 选题、完整脚本、CTA、承接、验证内容 |
-| `PRODUCTION` | `production-presentation` | 继承 `audience-continuity`、`conversion-journey`、理念语义 | 脚本、人物、场地、设备、预算、产能、合规 | 拍摄形式、分镜、动作、布光、声音、排期 |
-| `PORTFOLIO` | `conversion-journey`、`belief-mindshare` | `audience-continuity` 查同一人；`production-presentation` 查库存可实现性 | 关卡、内容角色、计划与实拍库存 | 计划/实际配比、旅程缺口、重剪/补拍 |
-| `OPERATIONS` | `conversion-journey`、`orchestration-control` | 按异常回调任一上游方法；研究和反证始终可用 | 发布资产、渠道、承接、指标、真实反馈 | 发布实验、归因、30天动作、90天情景、局部失效 |
+| 节点 | 必调方法 | 读 | 写 |
+| --- | --- | --- | --- |
+| B0–B1 | `positioning-competition`、`orchestration-control` | 产品、价格、容量、真实价值交换 | OutcomeContract、产品边界 |
+| B2–B4 | `audience-stage`、`conversion-journey` | 交易角色、触发、替代、渠道事实 | 角色链、阶段、线上四维 |
+| B5 | `audience-stage`、`conversion-journey` | B0–B4、B6/B7 最小候选预检 | W1/W2、目标人与排除对象 |
+| B6–B7 | `conversion-journey` | B2–B5、人物事实、交易记录 | W3–W6、客户侧人物与付款候选 |
+| C1–C2 | `audience-continuity`、`conversion-journey` | 已批准 B0、B5–B7 | 内容策略、四圈与脚本 |
+| P1 | `production-presentation` | C2、人物、资源和合规 | 生产呈现 |
+| O1 | `conversion-journey`、`orchestration-control` | B0、C1、P1、反馈 | 配比、运营、归因和局部失效 |
 
-## 高影响判断的共同输入
+所有 B5 决策前强制调用 `conversion-journey` 做 W3–W6 预检。W6 可以未知，但必须有至少两个候选、反证和最小验证；不得把到店、检查或方案沟通作为替代。
 
-- 当前业务目标与最早瓶颈；
-- 已确认事实、冲突、未知、限制和历史反证；
-- 上游决定、版本、依赖和审批范围；
-- 利润、时间、人员、内容产能、咨询与交付容量；
-- 目标地域、平台、合规与数据时效。
+## 共同输入与输出
 
-## 共同输出契约
+输入：当前节点、结果合同、事实/冲突/未知、上游版本、容量、利润、地域、平台和合规。输出：节点状态、方法、证据与范围、结构化候选、被拒候选、反证与推翻条件、依赖、30/90天、可逆性、审批和下一最小动作。
 
-每项高影响决定必须携带：`business_stage`、`method_refs`、`evidence_refs`、`counterevidence`、`alternatives`、`selected_path`、`depends_on`、`upstream_impacts`、`downstream_impacts`、`horizon_30d`、`horizon_90d`、`approval_state`、`status`。
+首轮、项目恢复和上游纠错时，业务答复必须同时给出四项紧凑门禁快照，但只推进最早节点：
 
-## 路由失败条件
+1. `B0`：真实价值交换、领先/排除事件、证据和归因窗；
+2. `B2`：使用、付款、决策、影响和否决角色分别为谁，未知则逐项 `UNKNOWN`；
+3. `B4`：可触达、可识别、可影响、可归因分别为 `YES / NO / UNKNOWN`；
+4. `W1–W6`：每一问的当前结论、候选或 `UNKNOWN`。
 
-- 上游事实或批准版本失效；
-- 当前方法缺必需输入，却能通过更上游方法或最小研究解决；
-- 目标要求跨越生产批准、隐私、医疗、平台或法律边界；
-- 方法注册表将该项标为 `RETIRED` 或其适用状态为 `REJECTED_FOR_PROJECT`。
+快照用于防止概念被省略，不代表后续节点已批准。不得用“还没走到该节点”作为省略 B2/B4/W1–W6 状态的理由。
 
-失败时返回最早可修复节点，不整库重写。
+## 路由与停止
+
+路由前运行 `preflight`。依赖缺失或失效时返回最早节点，给出最小修复；不自动补事实，不整库重写。未知且有安全回退时输出候选和实验，不停止。若最早节点是 B0，只能索取定义 B0/B1 所需的一条最小信息，不得同时索取 B2–B7 全链资料。
+
+不得因为用户说“帮我做获客方案”就一次性交付全链。首轮模糊目标只推进 B0 的最小定义；真实发布仍需精确 `PUBLISH` 批准。

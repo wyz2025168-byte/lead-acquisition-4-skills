@@ -1,0 +1,42 @@
+{
+  "schema_version": "jw.natural-model-eval-summary.v1",
+  "rubric_version": "v4-natural-rubric-1",
+  "rubric_sha256": "51b77d618f32f5408f032f5dd5cf64a21c3d9375f2fe106343c2c9c86b4de690",
+  "candidate_skill_sha256": "71c6b6e0086202664afc5b218ba5a4902818169c979d8cdb3b198e3a9d7d94cf",
+  "generator_visibility": "scenario + candidate skill only",
+  "judge_visibility": "anonymous outputs + frozen rubric only",
+  "runs_per_scenario": 3,
+  "scenario_count": 7,
+  "run_count": 21,
+  "successful_runs": 21,
+  "failed_runs": 0,
+  "blind_judge_count": 7,
+  "hard_failure_total": 0,
+  "individual_runs_passed": 19,
+  "passing_scenarios": 6,
+  "passing_scenarios_required": 5,
+  "scenario_results": [
+    {"scenario": 1, "runs_passed": 1, "runs_total": 3, "hard_failures": 0, "passed": false},
+    {"scenario": 2, "runs_passed": 3, "runs_total": 3, "hard_failures": 0, "passed": true},
+    {"scenario": 3, "runs_passed": 3, "runs_total": 3, "hard_failures": 0, "passed": true},
+    {"scenario": 4, "runs_passed": 3, "runs_total": 3, "hard_failures": 0, "passed": true},
+    {"scenario": 5, "runs_passed": 3, "runs_total": 3, "hard_failures": 0, "passed": true},
+    {"scenario": 6, "runs_passed": 3, "runs_total": 3, "hard_failures": 0, "passed": true},
+    {"scenario": 7, "runs_passed": 3, "runs_total": 3, "hard_failures": 0, "passed": true}
+  ],
+  "failed_baseline": {
+    "candidate_skill_sha256": "76a8e692dd034f512cada7fc891a1da32e88d9562926fea23bbee13a48a85dc0",
+    "run_count": 21,
+    "successful_runs": 21,
+    "passing_scenarios": 0,
+    "hard_failure_total": 0,
+    "status": "FAIL"
+  },
+  "evidence_archive": {
+    "filename": "线索获客4.0_v4.0.0-rc.1_自然评测完整证据_20260723.zip",
+    "sha256": "f96d8c22d0d00755b7555bf39dbb27e69023f45b89107ba3e77c45060424998d",
+    "included_in_public_candidate": false
+  },
+  "natural_eval_passed": true,
+  "field_validation_readiness": "READY_TO_START_NOT_PROVEN"
+}
