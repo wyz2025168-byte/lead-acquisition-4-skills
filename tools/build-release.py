@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild v4.0.0-rc.1 manifests and deterministic candidate archive."""
+"""Rebuild v4.0.0 manifests and deterministic candidate archive."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "jw"
 DIST = ROOT / "dist"
-VERSION = "4.0.0-rc.1"
+VERSION = "4.0.0"
 NAME = "lead-acquisition-4-skills"
 
 

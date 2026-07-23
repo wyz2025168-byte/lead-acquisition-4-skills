@@ -20,7 +20,7 @@ FORBIDDEN = (
     "/Users/", "/home/", "01_SOURCE_NEW", "03_COURSE_KERNEL", "泰成", "苍南",
     "杨璇", "宋鸿易", "讨厌摘戴", "行政院长", "技术院长", "RCA-G", "70/70 PASS",
 )
-VERSION = "4.0.0-rc.1"
+VERSION = "4.0.0"
 REQUIRED_RULES = {
     "E-OUTCOME-MISSING", "E-OUTCOME-SUBSTITUTION", "E-CONTENT-BEFORE-AUDIENCE",
     "E-PERSONA-BEFORE-W3-W6", "E-PERSONA-INSIDE-OUT",
@@ -133,7 +133,7 @@ def main() -> None:
         natural_ok, natural_output = run([sys.executable, "evals/natural/run_eval.py", "--scan", "--manifest", str(temp / "natural.json")], root)
         natural_manifest = json.loads((temp / "natural.json").read_text(encoding="utf-8")) if (temp / "natural.json").is_file() else {}
         checks.append(("natural_eval_prompt_and_fixture_isolation", natural_ok and natural_manifest.get("status") == "PASS", f"scenarios={natural_manifest.get('scenario_count')} failures={len(natural_manifest.get('scan_failures', []))}"))
-        model_summary_path = root / "reports" / "v4-rc1" / "NATURAL_MODEL_EVAL_SUMMARY.json"
+        model_summary_path = root / "reports" / "v4" / "NATURAL_MODEL_EVAL_SUMMARY.json"
         model_summary = json.loads(model_summary_path.read_text(encoding="utf-8")) if model_summary_path.is_file() else {}
         model_eval_ok = (
             model_summary.get("natural_eval_passed") is True
@@ -186,8 +186,8 @@ def main() -> None:
             expected_names = {f"lead-acquisition-4-skills/{relative}" for relative in files_under(root)}
             archive_ok = archive_ok and set(handle.namelist()) == expected_names and handle.testzip() is None
     checks.append(("archive_integrity", archive_ok, archive.name))
-    disclosure_ok = release.get("version") == f"v{VERSION}" and release.get("publication_status") == "LOCAL_RELEASE_CANDIDATE_NOT_PUBLISHED" and release.get("external_actions_require") == "PUBLISH" and bool(release.get("unverified_capabilities"))
-    checks.append(("honest_candidate_disclosure", disclosure_ok, str(release.get("publication_status"))))
+    disclosure_ok = release.get("version") == f"v{VERSION}" and release.get("publication_status") == "FIELD_VALIDATION_RELEASE_PUBLISHED" and release.get("external_actions_require") == "PUBLISH" and bool(release.get("unverified_capabilities"))
+    checks.append(("honest_release_disclosure", disclosure_ok, str(release.get("publication_status"))))
     checks.append(("structural_only_not_release_gate", all("--structural-only" not in command for command in release.get("test_commands", [])), "release test commands"))
 
     failed = [name for name, ok, _ in checks if not ok]

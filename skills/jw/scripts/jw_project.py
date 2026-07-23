@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 
-RUNTIME_VERSION = "4.0.0-rc.1"
+RUNTIME_VERSION = "4.0.0"
 STATE_SCHEMA = "jw.project-state.v4"
 REGISTRY_SCHEMA = "4.0.0"
 STAGES = ("POSITIONING", "CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS")
@@ -1517,7 +1517,7 @@ class ProjectRuntime:
         corrections = sum(len(item.get("user_corrections", [])) for item in latest_feedback)
         repeated = sum(len(item.get("repeated_questions", [])) for item in latest_feedback)
         markdown = [
-            "# JW v4.0.0-rc.1 实测反馈",
+            "# JW v4.0.0 实测反馈",
             "",
             f"- 项目：{redact(state['project_name'])}",
             f"- 当前阶段：{state['active_stage']}",
@@ -1539,7 +1539,7 @@ class ProjectRuntime:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="线索获客4.0 v4.0.0-rc.1 业务推理与项目控制运行时")
+    parser = argparse.ArgumentParser(description="线索获客4.0 v4.0.0 业务推理与项目控制运行时")
     sub = parser.add_subparsers(dest="command", required=True)
 
     def project_command(name: str, help_text: str) -> argparse.ArgumentParser:

@@ -33,7 +33,7 @@
     "status": "FAIL"
   },
   "evidence_archive": {
-    "filename": "线索获客4.0_v4.0.0-rc.1_自然评测完整证据_20260723.zip",
+    "filename": "线索获客4.0_v4.0.0_自然评测完整证据_20260723.zip",
     "sha256": "f96d8c22d0d00755b7555bf39dbb27e69023f45b89107ba3e77c45060424998d",
     "included_in_public_candidate": false
   },

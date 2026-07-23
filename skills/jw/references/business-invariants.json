@@ -1,6 +1,6 @@
 {
   "schema_version": "jw.business-invariants.v1",
-  "runtime_version": "4.0.0-rc.1",
+  "runtime_version": "4.0.0",
   "rules": [
     {"code":"E-OUTCOME-MISSING","severity":"BLOCK","relation":"B0 -> B5..O1","message":"高影响定位没有批准的结果合同","minimal_repair":"先定义真实价值交换、领先事件、排除事件和归因窗"},
     {"code":"E-OUTCOME-SUBSTITUTION","severity":"BLOCK","relation":"success_event != leading_event","message":"咨询、预约、到店、留资等替代真实价值交换","minimal_repair":"把过程事件移入 leading_events，重新定义 success_event"},

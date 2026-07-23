@@ -1,9 +1,8 @@
 {
   "name": "lead-acquisition-4-skills",
-  "version": "v4.0.0-rc.1",
-  "publication_status": "LOCAL_RELEASE_CANDIDATE_NOT_PUBLISHED",
-  "base_commit": "0557c0d28331b82f4a147b6501c69b9367179aac",
-  "candidate_commit": null,
+  "version": "v4.0.0",
+  "publication_status": "FIELD_VALIDATION_RELEASE_PUBLISHED",
+  "release_track": "v4-stable",
   "skills": ["jw"],
   "method_count": 7,
   "business_stages": ["POSITIONING", "CONTENT", "PRODUCTION", "PORTFOLIO", "OPERATIONS"],
@@ -29,7 +28,7 @@
     "field_validation": "READY_TO_START_NOT_PROVEN"
   },
   "evaluation_evidence": {
-    "filename": "线索获客4.0_v4.0.0-rc.1_自然评测完整证据_20260723.zip",
+    "filename": "线索获客4.0_v4.0.0_自然评测完整证据_20260723.zip",
     "sha256": "f96d8c22d0d00755b7555bf39dbb27e69023f45b89107ba3e77c45060424998d",
     "public_package_included": false
   },
