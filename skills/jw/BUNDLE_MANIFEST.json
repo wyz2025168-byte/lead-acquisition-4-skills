@@ -1,13 +1,13 @@
 {
   "schema_version": "4.0",
   "skill": "jw",
-  "version": "4.0.0-rc.1",
-  "release": "v4.0.0-rc.1",
+  "version": "4.0.0",
+  "release": "v4.0.0",
   "files": [
     {
       "path": "SKILL.md",
-      "sha256": "be34eb8a0eb273c012547c9c041d35c83758bd17c73b8201b6496dc3ab96d66e",
-      "bytes": 8873
+      "sha256": "4b10d291ed4097543563e81a331165c22e3ad1d894ddd4040ed1afd4d0139418",
+      "bytes": 8868
     },
     {
       "path": "agents/openai.yaml",
@@ -16,8 +16,8 @@
     },
     {
       "path": "references/business-invariants.json",
-      "sha256": "53df16192a770ee0b43c783004b92b659290fd04c4f3f3b60c9e3dca409eebac",
-      "bytes": 3488
+      "sha256": "260071a005beb611e2a71b8019205d7a1c5871e3155bc2082c55692972b1b0f2",
+      "bytes": 3483
     },
     {
       "path": "references/business-node-map.md",
@@ -176,8 +176,8 @@
     },
     {
       "path": "scripts/jw_project.py",
-      "sha256": "1337d55ad25399cae4c0a53be062526c770f47535b4d2e576164ddf5299f37b8",
-      "bytes": 95047
+      "sha256": "252d6f54d8d32bf4139c217dbd4f97131d9154429c506d97eb2d1b5e61f6996f",
+      "bytes": 95032
     }
   ]
 }
